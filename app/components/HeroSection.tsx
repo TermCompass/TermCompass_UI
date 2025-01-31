@@ -3,11 +3,13 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
+import { useChatbot } from '../contexts/ChatbotContext'
 
 const words = ['약관', '개인정보', '서비스', '혁신']
 
 export default function HeroSection() {
   const [currentWord, setCurrentWord] = useState(0)
+  const { setIsChatbotOpen } = useChatbot()
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -43,12 +45,12 @@ export default function HeroSection() {
               animate={{ scale: 1 }}
               transition={{ delay: 0.5, type: 'spring', stiffness: 260, damping: 20 }}
             >
-              <a
-                href="/ai-chatbot"
+              <button
+                onClick={() => setIsChatbotOpen(true)}
                 className="bg-white text-blue-600 px-8 py-3 rounded-full text-lg font-semibold hover:bg-blue-100 transition-colors"
               >
                 AI 챗봇 시작하기
-              </a>
+              </button>
             </motion.div>
           </div>
           <div className="absolute inset-0 overflow-hidden">

@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { MessageCircle, X, Send, Maximize2, Minimize2, User, Building2, Clock } from 'lucide-react';
 import { useUser } from '../contexts/UserContext';
 import { useToast } from "@/hooks/use-toast";
+import { useChatbot } from '../contexts/ChatbotContext';
 
 interface Message {
   type: 'bot' | 'user';
@@ -22,7 +23,7 @@ interface ChatHistory {
 }
 
 const MiniChatbot: React.FC = () => {
-  const [isOpen, setIsOpen] = useState(false);
+  const { isChatbotOpen, setIsChatbotOpen } = useChatbot();
   const [isExpanded, setIsExpanded] = useState(false);
   const [input, setInput] = useState('');
   const chatRef = useRef<HTMLDivElement>(null);
@@ -164,13 +165,13 @@ const MiniChatbot: React.FC = () => {
 
   return (
     <div className={`fixed bottom-4 right-4 z-50 transition-all duration-300 ${
-      isOpen 
+      isChatbotOpen 
         ? isExpanded 
           ? 'w-[70vw] h-[70vh]' 
           : 'w-80 h-[450px]'
         : 'w-12 h-12'
     }`}>
-      {isOpen && (
+      {isChatbotOpen && (
         <div className="flex h-full bg-white rounded-lg shadow-lg overflow-hidden">
           {/* 채팅 히스토리 사이드바 */}
           {isExpanded && user && (
@@ -223,7 +224,7 @@ const MiniChatbot: React.FC = () => {
                 ) : (
                   <Maximize2 className="cursor-pointer" onClick={() => setIsExpanded(true)} />
                 )}
-                <X className="cursor-pointer" onClick={() => setIsOpen(false)} />
+                <X className="cursor-pointer" onClick={() => setIsChatbotOpen(false)} />
               </div>
             </div>
 
@@ -288,9 +289,9 @@ const MiniChatbot: React.FC = () => {
         </div>
       )}
       
-      {!isOpen && (
+      {!isChatbotOpen && (
         <button
-          onClick={() => setIsOpen(true)}
+          onClick={() => setIsChatbotOpen(true)}
           className="w-full h-full bg-gradient-to-r from-blue-600 to-blue-500 text-white rounded-full 
                    flex items-center justify-center hover:from-blue-700 hover:to-blue-600 
                    transition-all duration-300 shadow-lg"
