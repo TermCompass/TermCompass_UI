@@ -66,7 +66,7 @@ export default function ServicesSection() {
   };
 
   return (
-      <section className="h-screen py-4 bg-gray-100 flex flex-col overflow-hidden">
+      <section className="h-screen py-12 bg-gray-100 flex flex-col overflow-hidden">
         <div className="container mx-auto px-4 flex flex-col h-full">
           <h3
               className="text-xl md:text-2xl lg:text-3xl font-bold text-center mb-6"
@@ -120,7 +120,7 @@ export default function ServicesSection() {
                           flexGrow: 1,
                         }}
                     >
-                      <div className="w-full md:w-1/2">
+                      <div className="w-full md:w-1/2 overflow-hidden">
                         <h4
                             className="text-lg font-semibold text-green-600 my-3"
                             style={{
@@ -130,19 +130,21 @@ export default function ServicesSection() {
                           장점
                         </h4>
                         <ul className="list-disc list-inside text-sm text-gray-700">
-                          {website.benefits.map((benefit, i) => (
+                          {(window.innerWidth >= 1024 ? website.benefits : website.benefits.slice(0, 1)).map((benefit, i) => (
                               <li
                                   key={i}
+                                  className="block truncate lg:whitespace-normal"
                                   style={{
                                     fontSize: 'clamp(12px, 1vw, 18px)',
                                   }}
+                                  title={benefit}
                               >
                                 {benefit}
                               </li>
                           ))}
                         </ul>
                       </div>
-                      <div className="w-full md:w-1/2">
+                      <div className="w-full md:w-1/2 overflow-hidden">
                         <h4
                             className="text-lg font-semibold text-red-600 my-3"
                             style={{
@@ -152,12 +154,14 @@ export default function ServicesSection() {
                           단점
                         </h4>
                         <ul className="list-disc list-inside text-sm text-gray-700">
-                          {website.drawbacks.map((drawback, i) => (
+                          {(window.innerWidth >= 1024 ? website.drawbacks : website.drawbacks.slice(0, 1)).map((drawback, i) => (
                               <li
                                   key={i}
+                                  className="block truncate lg:whitespace-normal"
                                   style={{
                                     fontSize: 'clamp(12px, 1vw, 18px)',
                                   }}
+                                  title={drawback}
                               >
                                 {drawback}
                               </li>
@@ -187,10 +191,10 @@ export default function ServicesSection() {
             </Button>
           </div>
 
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 h-[45%]"
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4"
                style={{
                  marginBottom: `calc(3vh)`,
-                 height: 'calc(25vh)',
+                 height: 'calc(35vh)',
                }}>
             {services.map((service, index) => (
                 <Link href={service.url} key={index} legacyBehavior>
@@ -200,20 +204,24 @@ export default function ServicesSection() {
                   >
                     <div className="flip-card h-full">
                       <div className="flip-card-inner">
-                        <Card className="flip-card-front h-full flex flex-col items-center justify-center p-4">
-                          <div className="w-12 h-12 mb-3 text-blue-600">
+                        <Card className="flip-card-front h-full flex flex-col items-center justify-center p-6">
+                          <div className="w-16 h-16 mb-4 text-blue-600 flex-shrink-0">
                             <service.icon className="w-full h-full" />
                           </div>
-                          <CardTitle className="text-base lg:text-lg text-center mb-2">
+                          <CardTitle className="text-lg lg:text-xl text-center mb-3 flex-shrink-0 w-full truncate">
                             {service.title}
                           </CardTitle>
-                          <CardDescription className="text-sm text-center">
-                            {service.description}
+                          <CardDescription className="text-sm lg:text-base text-center w-full overflow-hidden">
+                            <div className="truncate lg:whitespace-normal">
+                              {service.description}
+                            </div>
                           </CardDescription>
                         </Card>
-                        <Card className="flip-card-back h-full flex flex-col justify-center items-center p-4">
-                          <CardDescription className="text-sm text-center">
-                            {service.description}
+                        <Card className="flip-card-back h-full flex flex-col justify-center items-center p-6">
+                          <CardDescription className="text-sm lg:text-base text-center w-full overflow-hidden">
+                            <div className="truncate lg:whitespace-normal">
+                              {service.description}
+                            </div>
                           </CardDescription>
                         </Card>
                       </div>

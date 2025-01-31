@@ -14,98 +14,93 @@ export default function Home() {
   const scrollContainerRef = useRef<HTMLDivElement>(null)
   const [activeSection, setActiveSection] = useState(0)
   const isScrollingRef = useRef(false)
+  const lastWheelEventRef = useRef<number>(0)
 
   useEffect(() => {
     const container = scrollContainerRef.current
     if (!container) return
 
     const handleWheel = (e: WheelEvent) => {
+      e.preventDefault()
+
+      // 스크롤 중이면 무시
       if (isScrollingRef.current) return
 
-      e.preventDefault()
+      // 휠 이벤트 쓰로틀링 (연속 이벤트 방지)
+      const now = Date.now()
+      if (now - lastWheelEventRef.current < 50) return // 50ms 내 연속 이벤트 무시
+      lastWheelEventRef.current = now
+
       const direction = e.deltaY > 0 ? 1 : -1
-      const height = container.clientHeight
-      const targetIndex = Math.min(
-        Math.max(0, activeSection + direction),
-        container.children.length - 1
-      )
+      const nextSection = activeSection + direction
 
-      if (targetIndex !== activeSection) {
-        isScrollingRef.current = true
-        setActiveSection(targetIndex)
+      // 범위 체크
+      if (nextSection < 0 || nextSection >= container.children.length) return
 
-        container.scrollTo({
-          top: targetIndex * height,
-          behavior: 'smooth',
-        })
+      isScrollingRef.current = true
+      setActiveSection(nextSection)
 
-        setTimeout(() => {
-          isScrollingRef.current = false
-          // 위로 스크롤할 때 스크롤바 위치 초기화
-          if (direction < 0) {
-            container.scrollTop = targetIndex * height
-          }
-        }, 500)
-      }
+      // URL 해시 업데이트
+      const sectionIds = ['hero', 'services', 'news', 'footer']
+      window.location.hash = sectionIds[nextSection]
+
+      // 부드러운 스크롤 이동
+      const targetSection = container.children[nextSection] as HTMLElement
+      targetSection.scrollIntoView({ 
+        behavior: 'smooth',
+        block: 'start'
+      })
+
+      // 스크롤 완료 대기
+      setTimeout(() => {
+        isScrollingRef.current = false
+      }, 800) // 스크롤 애니메이션 완료 시간
     }
 
-    const handleManualScroll = () => {
-      if (!isScrollingRef.current) {
-        const currentScroll = container.scrollTop
-        const height = container.clientHeight
-        const newIndex = Math.round(currentScroll / height)
-        
-        if (newIndex !== activeSection) {
-          setActiveSection(newIndex)
-        }
-      }
-    }
-
+    // passive: false로 설정하여 preventDefault 허용
     container.addEventListener('wheel', handleWheel, { passive: false })
-    container.addEventListener('scroll', handleManualScroll)
-    
-    return () => {
-      container.removeEventListener('wheel', handleWheel)
-      container.removeEventListener('scroll', handleManualScroll)
-    }
+    return () => container.removeEventListener('wheel', handleWheel)
   }, [activeSection])
 
   const scrollToSection = (index: number) => {
     const container = scrollContainerRef.current
-    if (container) {
-      const currentIndex = activeSection
-      container.scrollTo({
-        top: index * container.clientHeight,
-        behavior: 'smooth'
-      })
+    if (!container || isScrollingRef.current || index === activeSection) return
 
-      setActiveSection(index)
+    isScrollingRef.current = true
+    setActiveSection(index)
 
-      if (index < currentIndex) {
-        setTimeout(() => {
-          container.scrollTop = index * container.clientHeight
-        }, 500)
-      }
-    }
+    const sectionIds = ['hero', 'services', 'news', 'footer']
+    window.location.hash = sectionIds[index]
+
+    const targetSection = container.children[index] as HTMLElement
+    targetSection.scrollIntoView({ 
+      behavior: 'smooth',
+      block: 'start'
+    })
+
+    setTimeout(() => {
+      isScrollingRef.current = false
+    }, 800)
   }
 
   return (
-    <Layout>
+    <Layout activeSection={activeSection}>
       <div
         ref={scrollContainerRef}
-        className="h-screen overflow-y-scroll snap-y scrollbar-hide"
+        className="h-screen overflow-y-scroll snap-y snap-mandatory scrollbar-hide pt-20 scroll-smooth"
+        style={{ scrollBehavior: 'smooth' }}
       >
-        <div className="snap-start h-screen">
+        <div id="hero" className="snap-start h-screen">
           <HeroSection />
         </div>
-        <div className="snap-start h-screen">
+        <div id="services" className="snap-start h-screen">
           <ServicesSection />
         </div>
-        <div className="snap-start h-screen">
+        <div id="news" className="snap-start h-screen">
           <NewsAndNoticeSection />
         </div>
-        <div className="snap-start h-[20vh]">
-           <FooterSection />
+        <div id="footer" className="snap-start h-[20vh]">
+          <FooterSection />
         </div>
       </div>
       <SectionNavigation activeSection={activeSection} onNavigate={scrollToSection} />
