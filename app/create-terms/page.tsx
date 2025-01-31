@@ -53,7 +53,7 @@ export default function CreateTerms() {
   
   return (
     <Layout>
-      <div className="max-w-4xl mx-auto p-8">
+      <div className="max-w-4xl mx-auto p-8 min-h-[calc(100vh-13rem)]">
         <h1 className="text-3xl font-bold mb-6 text-blue-800">약관 생성</h1>
         {step === 1 && <DomainSelection onSelect={handleDomainSelect} />}
         {step === 2 && (
@@ -69,7 +69,6 @@ export default function CreateTerms() {
             onFinish={handleCustomClauseFinish}
             onBack={() => setStep(2)}
             clauses={customClauses}
-            
           />
         )}
         {step === 4 && (

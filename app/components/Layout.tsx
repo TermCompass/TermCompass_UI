@@ -115,7 +115,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     }
 
     return (
-        <div className={`min-h-screen w-full flex flex-col bg-gray-50 ${pathname === '/' ? 'overflow-hidden scrollbar-hide' : ''}`}>
+        <div className={`min-h-screen w-full flex flex-col bg-gray-50 ${pathname === '/' ? 'overflow-hidden' : ''}`}>
             <header className="bg-gray-500 text-white shadow-md sticky top-0 z-50 h-20">
                 <div className="container mx-auto px-4 py-4 flex justify-between items-center">
                     <div className="cursor-pointer" onClick={handleHomeClick}>
@@ -172,9 +172,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                     )}
                 </div>
             </header>
-            <main
-                className={`flex-grow ${pathname !== '/' ? 'pb-20' : ''} h-[calc(100vh-5rem)]`}
-            >
+            <main className={`flex-grow ${pathname === '/' ? 'h-[calc(100vh-5rem)]' : 'pb-32'}`}>
                 {children}
             </main>
             {pathname !== '/' && <FixedFooter />}
