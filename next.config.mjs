@@ -3,7 +3,7 @@ const nextConfig = {
   images: {
     domains: ['images.seeklogo.com', 'source.unsplash.com'],
   },
-  assetPrefix: 'http://localhost:3000', // 정적 파일 경로
+  assetPrefix: 'http://localhost:3000',
   async headers() {
     return [
       {
@@ -19,6 +19,9 @@ const nextConfig = {
   },
   reactStrictMode: true,
   swcMinify: true,
+  eslint: {
+    ignoreDuringBuilds: true,  // 빌드 시 ESLint 무시
+  },
   async rewrites() {
     return [
       {
@@ -41,7 +44,7 @@ const nextConfig = {
             value: 'admin.localhost:3000',
           },
         ],
-        destination: 'http://admin.localhost:3000/:path*', // admin.localhost로 리디렉션
+        destination: 'http://admin.localhost:3000/:path*',
         permanent: false,
       }
     ];

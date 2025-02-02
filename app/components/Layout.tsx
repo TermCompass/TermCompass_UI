@@ -9,7 +9,7 @@ import AuthForm from './AuthForm'
 import { useUser } from '../contexts/UserContext'
 import { useToast } from "@/hooks/use-toast"
 import { useRouter } from 'next/navigation'
-import { Menu } from 'lucide-react'
+import {Menu, User} from 'lucide-react'
 import MobileNav from './MobileNav'
 import FooterSection from './FooterSection'
 import FixedFooter from './FixedFooter'
@@ -44,7 +44,8 @@ export default function Layout({ children, activeSection = 0 }: LayoutProps) {
         '/business-history',
         '/review-history',
         '/review-request',
-        '/ai-chatbot'
+        '/ai-chatbot',
+        '/my-page'
     ]
 
     const isAuthenticatedPage = authenticatedPaths.some(path => pathname.startsWith(path))
@@ -113,14 +114,13 @@ export default function Layout({ children, activeSection = 0 }: LayoutProps) {
                 ? [
                     { href: '/create-terms', label: '약관 생성' },
                     { href: '/modify-terms', label: '약관 수정' },
-                    { href: '/business-history', label: '이용 내역' },
                 ]
                 : [
-                    { href: '/review-history', label: '검토 내역' },
                 ]
             : []
         ),
         { href: '/board', label: '게시판' },
+        ...(user ? [{ href: "/my-page", label: "마이페이지", icon: User }] : []),
     ]
 
     const handleAuthSubmit = (
@@ -128,10 +128,11 @@ export default function Layout({ children, activeSection = 0 }: LayoutProps) {
         email: string,
         password: string,
         userType: 'PERSONAL' | 'COMPANY',
+        created_at: string,
         businessNumber: string,
         isLogin: boolean
     ) => {
-        login(email, userType)
+        login(name, email, userType, created_at, businessNumber)
         setShowAuthForm(false)
     }
 
