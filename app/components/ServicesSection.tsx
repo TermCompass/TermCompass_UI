@@ -8,6 +8,8 @@ import { useUser } from '@/app/contexts/UserContext';
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
 import { useSwipeable } from "react-swipeable";
+import { useChatbot } from '@/app/contexts/ChatbotContext';
+
 const services = [
   {
     title: '약관 검토',
@@ -41,6 +43,8 @@ export default function ServicesSection() {
   const { user } = useUser();
   const { toast } = useToast();
   const [isDragging, setIsDragging] = useState(false);
+  const { setIsChatbotOpen } = useChatbot();
+
   const nextSlide = () => {
     setCurrentIndex((prevIndex) => {
       const newIndex = prevIndex + slidesToShow;
@@ -56,7 +60,10 @@ export default function ServicesSection() {
   };
 
   const handleCardClick = (e: React.MouseEvent, url: string) => {
-    if (url === '/create-terms' && (!user || user.userType !== 'COMPANY')) {
+    if (url === '/ai-chatbot') {
+      e.preventDefault();
+      setIsChatbotOpen(true);
+    } else if (url === '/create-terms' && (!user || user.userType !== 'COMPANY')) {
       e.preventDefault();
       toast({
         title: "접근 제한",
