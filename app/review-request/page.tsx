@@ -27,31 +27,36 @@ export default function ReviewRequest() {
   })
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
+    const file = e.target.files?.[0];
     if (file) {
-      if (  file.type === 'application/pdf' ||
-          file.name.endsWith('.hwp') ||
-          file.name.endsWith('.hwpx')) {
-        setPdfContent("이것은 업로드된 파일의 내용입니다. 실제 구현에서는 PDF에서 추출한 텍스트가 여기에 표시됩니다.")
-        setReviewResult(null)
-        setIsPdfUploaded(true)
+      // 파일 확장자 및 MIME 타입 검사
+      const allowedExtensions = ['.pdf', '.hwp', '.hwpx'];
+      const fileExtension = file.name.slice(file.name.lastIndexOf('.')).toLowerCase();
+      if (
+          file.type === 'application/pdf' ||
+          fileExtension === '.hwp' ||
+          fileExtension === '.hwpx'
+      ) {
+        setPdfContent("이것은 업로드된 파일의 내용입니다. 실제 구현에서는 PDF에서 추출한 텍스트가 여기에 표시됩니다.");
+        setReviewResult(null);
+        setIsPdfUploaded(true);
         toast({
           title: "파일 업로드 성공",
-          description: "PDF 파일이 성공적으로 업로드되었습니다.",
-        })
+          description: "파일이 성공적으로 업로드되었습니다.",
+        });
       } else {
         toast({
           title: "파일 형식 오류",
-          description: "PDF 파일만 업로드 가능합니다.",
+          description: "허용된 파일 형식은 PDF, HWP, HWPX 입니다.",
           variant: "destructive"
-        })
+        });
       }
     }
     // 파일 입력 필드 리셋
     if (e.target) {
-      e.target.value = ''
+      e.target.value = '';
     }
-  }
+  };
 
   const handleReviewRequest = () => {
     if (!pdfContent) {
@@ -111,7 +116,7 @@ export default function ReviewRequest() {
                     <div className="mb-4">
                       <input
                         type="file"
-                        accept=".pdf"
+                        accept=".pdf,.hwp,.hwpx"
                         ref={fileInputRef}
                         onChange={handleFileUpload}
                         style={{ display: 'none' }}
