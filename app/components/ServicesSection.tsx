@@ -90,53 +90,33 @@ export default function ServicesSection() {
               {topWebsites.map((website, index) => (
                   <div
                       key={index}
-                      className="w-1/3 flex-shrink-0 p-8 py-12 border rounded-lg shadow-md bg-white mx-2"
+                      className="w-1/3 flex-shrink-0 p-2 sm:p-4 border rounded-lg shadow-md bg-white mx-2 overflow-hidden"
                       style={{
                         height: 'calc(30vh)',
                       }}
                   >
-                    <div className="flex items-center gap-3 mb-3"
-                         style={{
-                           marginBottom: 'calc(1vh)',
-                         }}>
-                      <div className="w-10">
+                    <div className="flex items-center gap-2 mb-1">
+                      <div className="w-6 sm:w-8">
                         <img
                             src="/TermCompass_logo.png"
                             alt="Example"
                             className="w-full h-auto rounded-lg shadow-lg"
                         />
                       </div>
-                      <h3 className="text-base font-bold"
-                          style={{
-                            fontSize: 'calc(1rem + 0.5vw)',
-                          }}>
+                      <h3 className="text-sm sm:text-base font-bold truncate">
                         {website.name}
                       </h3>
                     </div>
-                    <div
-                        className="flex flex-col md:flex-row gap-2"
-                        style={{
-                          marginTop: 'calc(2vh)',
-                          flexGrow: 1,
-                        }}
-                    >
-                      <div className="w-full md:w-1/2 overflow-hidden">
-                        <h4
-                            className="text-lg font-semibold text-green-600 my-3"
-                            style={{
-                              fontSize: 'clamp(16px, 1.5vw, 24px)',
-                            }}
-                        >
+                    <div className="flex flex-col gap-1 h-[calc(100%-2.5rem)] overflow-hidden">
+                      <div className="w-full overflow-hidden">
+                        <h4 className="text-sm sm:text-base font-semibold text-green-600 my-0.5">
                           장점
                         </h4>
-                        <ul className="list-disc list-inside text-sm text-gray-700">
-                          {(window.innerWidth >= 1024 ? website.benefits : website.benefits.slice(0, 1)).map((benefit, i) => (
+                        <ul className="list-disc list-inside text-xs sm:text-sm text-gray-700">
+                          {(window.innerWidth >= 1024 ? website.benefits.slice(0, 2) : website.benefits.slice(0, 1)).map((benefit, i) => (
                               <li
                                   key={i}
-                                  className="block truncate lg:whitespace-normal"
-                                  style={{
-                                    fontSize: 'clamp(12px, 1vw, 18px)',
-                                  }}
+                                  className="truncate"
                                   title={benefit}
                               >
                                 {benefit}
@@ -144,23 +124,15 @@ export default function ServicesSection() {
                           ))}
                         </ul>
                       </div>
-                      <div className="w-full md:w-1/2 overflow-hidden">
-                        <h4
-                            className="text-lg font-semibold text-red-600 my-3"
-                            style={{
-                              fontSize: 'clamp(16px, 1.5vw, 24px)',
-                            }}
-                        >
+                      <div className="w-full overflow-hidden">
+                        <h4 className="text-sm sm:text-base font-semibold text-red-600 my-0.5">
                           단점
                         </h4>
-                        <ul className="list-disc list-inside text-sm text-gray-700">
-                          {(window.innerWidth >= 1024 ? website.drawbacks : website.drawbacks.slice(0, 1)).map((drawback, i) => (
+                        <ul className="list-disc list-inside text-xs sm:text-sm text-gray-700">
+                          {(window.innerWidth >= 1024 ? website.drawbacks.slice(0, 2) : website.drawbacks.slice(0, 1)).map((drawback, i) => (
                               <li
                                   key={i}
-                                  className="block truncate lg:whitespace-normal"
-                                  style={{
-                                    fontSize: 'clamp(12px, 1vw, 18px)',
-                                  }}
+                                  className="truncate"
                                   title={drawback}
                               >
                                 {drawback}

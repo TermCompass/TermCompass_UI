@@ -154,7 +154,7 @@ export default function Layout({ children, activeSection = 0 }: LayoutProps) {
                 className={`fixed w-full top-0 z-50 h-20 transition-all duration-300 ${
                     pathname === '/' && isTransparent
                         ? 'bg-transparent border-b border-white/20' 
-                        : 'bg-gradient-to-r from-blue-900 to-blue-800 shadow-md'
+                        : 'bg-white shadow-md'
                 }`}
                 onMouseEnter={() => pathname === '/' && setIsHovered(true)}
                 onMouseLeave={() => pathname === '/' && setIsHovered(false)}
@@ -162,11 +162,16 @@ export default function Layout({ children, activeSection = 0 }: LayoutProps) {
                 <div className="container mx-auto px-4 py-4 flex justify-between items-center">
                     <div className="cursor-pointer" onClick={handleHomeClick}>
                         <Image
-                            src="/TermCompass_logo.png"
-                            alt="TermCompass Logo"
+                            src="/logo.png"
+                            alt="KOTS Logo"
                             width={50}
-                            height={50}
+                            height={35}
                         />
+                        <span className={`text-center block mt-0 text-sm font-bold ${
+                            pathname === '/' && isTransparent
+                                ? 'text-white'
+                                : 'text-gray-900'
+                        }`}>KOTS</span>
                     </div>
                     {isMobile ? (
                         <MobileNav
@@ -186,12 +191,15 @@ export default function Layout({ children, activeSection = 0 }: LayoutProps) {
                                                 className={`relative py-2 transition-colors duration-300 ${
                                                     pathname === '/' && isTransparent
                                                         ? 'text-white font-bold'
-                                                        : 'text-white font-bold'
+                                                        : 'text-gray-900 font-bold'
                                                 } group`}
                                             >
                                                 {item.label}
-                                                <span className={`absolute bottom-0 left-0 w-0 h-0.5 bg-blue-200 
-                                                    transition-all duration-300 group-hover:w-full ${
+                                                <span className={`absolute bottom-0 left-0 w-0 h-0.5 ${
+                                                    pathname === '/' && isTransparent
+                                                        ? 'bg-white'
+                                                        : 'bg-blue-600'
+                                                } transition-all duration-300 group-hover:w-full ${
                                                     pathname === item.href ? 'w-full' : ''
                                                 }`}></span>
                                             </Link>
