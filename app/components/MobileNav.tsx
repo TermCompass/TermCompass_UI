@@ -17,16 +17,17 @@ interface MobileNavProps {
   user: { email: string; userType: 'PERSONAL' | 'COMPANY' } | null
   onLogout: () => void
   onLogin: () => void
+  buttonColor: string
 }
 
-export default function MobileNav({ navItems, user, onLogout, onLogin }: MobileNavProps) {
+export default function MobileNav({ navItems, user, onLogout, onLogin, buttonColor }: MobileNavProps) {
   const [open, setOpen] = useState(false)
   const pathname = usePathname()
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <Button variant="ghost" size="icon" className="text-white">
+        <Button variant="ghost" size="icon" className={buttonColor}>
           <Menu />
         </Button>
       </SheetTrigger>
