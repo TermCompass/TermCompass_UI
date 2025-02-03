@@ -96,84 +96,61 @@ export default function ServicesSection() {
               {topWebsites.map((website, index) => (
                   <Link
                       key={index}
-                      className="w-1/3 flex-shrink-0 p-8 py-12 border rounded-lg shadow-md bg-white mx-2"
+                      href={isDragging ? "#" : website.link ?? "#"}
+                      draggable="false"
+                      className="w-1/3 flex-shrink-0 p-4 border rounded-lg shadow-md bg-white mx-2 overflow-hidden flex flex-col transition-transform duration-200 hover:shadow-lg hover:bg-gray-200"
                       style={{
-                        height: 'calc(30vh)',
+                          height: 'calc(30vh)',
                       }}
                   >
-                    <div className="flex items-center gap-3 mb-3"
-                         style={{
-                           marginBottom: 'calc(1vh)',
-                         }}>
-                      <div className="w-10">
-                        <img
-                            src="/TermCompass_logo.png"
-                            alt="Example"
-                            className="w-full h-auto rounded-lg shadow-lg"
-                        />
-                      </div>
-                      <h3 className="text-base font-bold"
-                          style={{
-                            fontSize: 'calc(1rem + 0.5vw)',
-                          }}>
-                        {website.name}
-                      </h3>
+                    <div className="flex items-center gap-2 mb-2">
+                        <div className="w-8">
+                            <img
+                                src="/TermCompass_logo.png"
+                                alt="Example"
+                                className="w-full h-auto rounded-lg shadow-lg"
+                            />
+                        </div>
+                        <h3 className="text-sm font-bold truncate" 
+                            style={{fontSize: "clamp(14px, 1.2vw, 18px)"}}>
+                            {website.name}
+                        </h3>
                     </div>
-                    <div
-                        className="flex flex-col md:flex-row gap-2"
-                        style={{
-                          marginTop: 'calc(2vh)',
-                          flexGrow: 1,
-                        }}
-                    >
-                      <div className="w-full md:w-1/2 overflow-hidden">
-                        <h4
-                            className="text-lg font-semibold text-green-600 my-3"
-                            style={{
-                              fontSize: 'clamp(16px, 1.5vw, 24px)',
-                            }}
-                        >
-                          장점
-                        </h4>
-                        <ul className="list-disc list-inside text-sm text-gray-700">
-                          {(window.innerWidth >= 1024 ? website.benefits : website.benefits.slice(0, 1)).map((benefit, i) => (
-                              <li
-                                  key={i}
-                                  className="block truncate lg:whitespace-normal"
-                                  style={{
-                                    fontSize: 'clamp(12px, 1vw, 18px)',
-                                  }}
-                                  title={benefit}
-                              >
-                                {benefit}
-                              </li>
-                          ))}
-                        </ul>
-                      </div>
-                      <div className="w-full md:w-1/2 overflow-hidden">
-                        <h4
-                            className="text-lg font-semibold text-red-600 my-3"
-                            style={{
-                              fontSize: 'clamp(16px, 1.5vw, 24px)',
-                            }}
-                        >
-                          단점
-                        </h4>
-                        <ul className="list-disc list-inside text-sm text-gray-700">
-                          {(window.innerWidth >= 1024 ? website.drawbacks : website.drawbacks.slice(0, 1)).map((drawback, i) => (
-                              <li
-                                  key={i}
-                                  className="block truncate lg:whitespace-normal"
-                                  style={{
-                                    fontSize: 'clamp(12px, 1vw, 18px)',
-                                  }}
-                                  title={drawback}
-                              >
-                                {drawback}
-                              </li>
-                          ))}
-                        </ul>
-                      </div>
+
+                    <div className="flex flex-col gap-1 mt-1">
+                        <div className="w-full">
+                            <h4 className="text-sm font-semibold text-green-600 mb-1" 
+                                style={{fontSize: "clamp(12px, 1.1vw, 16px)"}}>
+                                장점
+                            </h4>
+                            <ul className="list-disc list-inside">
+                                {website.benefits.slice(0, 2).map((benefit, i) => (
+                                    <li key={i} 
+                                        className="truncate text-xs text-gray-700" 
+                                        style={{fontSize: "clamp(10px, 1vw, 14px)"}}
+                                        title={benefit}>
+                                        {benefit}
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+
+                        <div className="w-full">
+                            <h4 className="text-sm font-semibold text-red-600 mb-1"
+                                style={{fontSize: "clamp(12px, 1.1vw, 16px)"}}>
+                                단점
+                            </h4>
+                            <ul className="list-disc list-inside">
+                                {website.drawbacks.slice(0, 2).map((drawback, i) => (
+                                    <li key={i} 
+                                        className="truncate text-xs text-gray-700"
+                                        style={{fontSize: "clamp(10px, 1vw, 14px)"}}
+                                        title={drawback}>
+                                        {drawback}
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
                     </div>
                   </Link>
               ))}
