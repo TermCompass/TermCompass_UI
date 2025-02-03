@@ -29,8 +29,10 @@ export default function ReviewRequest() {
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
-      if (file.type === 'application/pdf') {
-        setPdfContent("이것은 업로드된 PDF 파일의 내용입니다. 실제 구현에서는 PDF에서 추출한 텍스트가 여기에 표시됩니다.")
+      if (  file.type === 'application/pdf' ||
+          file.name.endsWith('.hwp') ||
+          file.name.endsWith('.hwpx')) {
+        setPdfContent("이것은 업로드된 파일의 내용입니다. 실제 구현에서는 PDF에서 추출한 텍스트가 여기에 표시됩니다.")
         setReviewResult(null)
         setIsPdfUploaded(true)
         toast({

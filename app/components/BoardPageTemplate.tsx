@@ -33,7 +33,7 @@ export default function BoardPageTemplate({
             <div className="relative w-full h-[200px] overflow-hidden">
                 <div
                     className="absolute inset-0 w-full h-full bg-cover bg-center filter blur-md"
-                    style={{ backgroundImage: "url('/board_img.jpg')" }}
+                    style={{backgroundImage: "url('/board_img.jpg')"}}
                 ></div>
                 <div className="absolute inset-0 flex items-center justify-center">
                     <div className="flex flex-col items-center">
@@ -57,10 +57,12 @@ export default function BoardPageTemplate({
                 </div>
             </div>
 
-            {/* 게시판 테이블 */}
-            <div className="container mx-auto px-4 py-8 flex">
-                <div className="flex-grow">
-                <table className="w-full max-w-5xl border-collapse border-t-4 border-b border-gray-300 mx-auto">
+            {/* 게시판 + 메뉴바 수평 배치 */}
+            <div className="container mx-auto px-4 py-8 flex flex-col md:flex-row gap-6">
+
+                {/* 게시판 (메뉴바보다 넓게 차지) */}
+                <div className="flex-grow md:w-3/4">
+                    <table className="w-full border-collapse border-t-4 border-b border-gray-300 mx-auto">
                         <thead className="bg-gray-100">
                         <tr>
                             <th className="px-4 py-2 border-t border-b border-gray-300 font-bold w-1/12">
@@ -113,7 +115,7 @@ export default function BoardPageTemplate({
                                     &lt; 이전
                                 </button>
                             </li>
-                            {Array.from({ length: totalPages }, (_, i) => i + 1)
+                            {Array.from({length: totalPages}, (_, i) => i + 1)
                                 .slice(
                                     Math.floor((currentPage - 1) / 5) * 5,
                                     Math.min(Math.floor((currentPage - 1) / 5) * 5 + 5, totalPages)
@@ -148,8 +150,11 @@ export default function BoardPageTemplate({
                         </ul>
                     </div>
                 </div>
-                {/* 우측 메뉴바 */}
-                <BoardBar />
+
+                {/* 메뉴바 (게시판 옆으로 배치) */}
+                <div className="md:w-1/4 hidden md:block">
+                    <BoardBar/>
+                </div>
             </div>
         </div>
     );

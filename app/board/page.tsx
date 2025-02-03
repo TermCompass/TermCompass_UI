@@ -8,7 +8,7 @@ import BoardBar from "@/app/components/BoardBar";
 //db에서 데이터를 연동해야할곳
 import BoardPageTemplate from '@/app/components/BoardPageTemplate';
 
-const dummyPosts = Array.from({ length: 50 }, (_, i) => ({
+const dummyPosts = Array.from({ length: 100 }, (_, i) => ({
     id: i + 1,
     title: `${i + 1} 번째 게시글`,
     author: `작성자 ${i + 1}`,

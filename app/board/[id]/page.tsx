@@ -7,7 +7,7 @@ import Link from 'next/link';
 import PostDetail from '@/app/components/PostDetail';
 import BoardBar from "@/app/components/BoardBar";
 //실제 api연동해야할곳
-const dummyPosts = Array.from({ length: 50 }, (_, i) => ({
+const dummyPosts = Array.from({ length: 100 }, (_, i) => ({
     id: i + 1,
     title: `${i + 1} 번째 게시글`,
     author: `작성자 ${i + 1}`,
@@ -17,7 +17,7 @@ const dummyPosts = Array.from({ length: 50 }, (_, i) => ({
 }));
 
 export default function BoardPage() {
-    const postsPerPage = 10;
+    const postsPerPage = 12;
     const totalPages = Math.ceil(dummyPosts.length / postsPerPage);
 
     const router = useRouter();
@@ -48,21 +48,18 @@ export default function BoardPage() {
 
     return (
         <Layout>
+            {/* 헤더 배경 및 타이틀 */}
             <div className="relative w-full h-[200px] overflow-hidden">
-                {/* 배경 이미지 */}
                 <div
                     className="absolute inset-0 w-full h-full bg-cover bg-center filter blur-md"
-                    style={{backgroundImage: "url('/board_img.jpg')"}}
+                    style={{ backgroundImage: "url('/board_img.jpg')" }}
                 ></div>
-
-                {/* 텍스트 콘텐츠 */}
                 <div className="absolute inset-0 flex items-center justify-center">
-
                     <div className="flex flex-col items-center">
                         <h1 className="font-custom text-white text-6xl font-bold mb-4">공지사항</h1>
                         <div className="flex items-center space-x-4 px-4 py-2 rounded-lg">
                             <a href="/" className="hover:opacity-80 transition-opacity">
-                                <img src="/ic_sub_nav_home.png" alt="Home" className="w-6 h-6"/>
+                                <img src="/ic_sub_nav_home.png" alt="Home" className="w-6 h-6" />
                             </a>
                             <div className="flex items-center space-x-2">
                                 <span className="text-gray-500 text-lg">&gt;</span>
@@ -72,15 +69,20 @@ export default function BoardPage() {
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
 
-            <PostDetail/>
+            {/* 게시글 상세 내용 */}
+            <div className="container w-full mx-auto px-4 py-8 flex flex-col md:flex-row">
+                {/* 게시글 상세 정보 */}
+                <div className="w-full md:w-3/4 lg:w-4/5">
+                    <PostDetail />
+                </div>
 
-            <div className="container w-full mx-auto px-4 py-8 flex ">
-                {/* 우측 메뉴바 */}
-                <BoardBar/>
+                {/* 우측 메뉴 (반응형 적용) */}
+                <div className="hidden md:block w-full md:w-1/4 lg:w-1/5">
+                    <BoardBar />
+                </div>
             </div>
         </Layout>
     );

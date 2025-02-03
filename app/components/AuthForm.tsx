@@ -12,7 +12,7 @@ import TermsAgreement from './TermsAgreement'
 interface AuthFormProps {
   onSubmit: (name: string, email: string, password: string, userType: 'PERSONAL' | 'COMPANY', businessNumber: string, isLogin: boolean) => void
   onCancel: () => void
-}
+}``
 
 export default function AuthForm({ onSubmit, onCancel }: AuthFormProps) {
   const [isLogin, setIsLogin] = useState(true)

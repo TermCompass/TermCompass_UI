@@ -128,7 +128,7 @@ export default function Layout({ children, activeSection = 0 }: LayoutProps) {
         businessNumber: string,
         isLogin: boolean
     ) => {
-        login(name, email, userType, created_at, businessNumber)
+        login( email, userType )
         setShowAuthForm(false)
     }
 
