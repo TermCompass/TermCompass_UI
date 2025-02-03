@@ -238,7 +238,7 @@ export default function Layout({ children, activeSection = 0 }: LayoutProps) {
             </main>
             {pathname !== '/' && <FixedFooter />}
             {showAuthForm && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[9999]">
                     <AuthForm
                         onSubmit={handleAuthSubmit}
                         onCancel={() => setShowAuthForm(false)}
