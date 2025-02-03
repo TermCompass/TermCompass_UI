@@ -22,12 +22,7 @@ interface LayoutProps {
 
 export default function Layout({ children, activeSection = 0 }: LayoutProps) {
     const [showAuthForm, setShowAuthForm] = useState(false)
-    const [isMobile, setIsMobile] = useState(() => {
-        if (typeof window !== 'undefined') {
-            return window.innerWidth < 768
-        }
-        return false
-    })
+    const [isMobile, setIsMobile] = useState(false)
     const { user, login, logout } = useUser()
     const [isLoggingOut, setIsLoggingOut] = useState(false)
     const [showFooter, setShowFooter] = useState(false)
@@ -72,6 +67,7 @@ export default function Layout({ children, activeSection = 0 }: LayoutProps) {
             setIsMobile(window.innerWidth < 768)
         }
 
+        handleResize()
         window.addEventListener('resize', handleResize)
         return () => window.removeEventListener('resize', handleResize)
     }, [])
@@ -179,6 +175,7 @@ export default function Layout({ children, activeSection = 0 }: LayoutProps) {
                             user={user}
                             onLogout={handleLogout}
                             onLogin={() => setShowAuthForm(true)}
+                            buttonColor={pathname === '/' && isTransparent ? 'text-white' : 'text-black'}
                         />
                     ) : (
                         <>
