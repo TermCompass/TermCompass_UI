@@ -6,7 +6,8 @@ import { Button } from "@/components/ui/button";
 import Link from 'next/link';
 import { useUser } from '@/app/contexts/UserContext';
 import { useToast } from "@/hooks/use-toast";
-
+import { useRouter } from "next/navigation";
+import { useSwipeable } from "react-swipeable";
 const services = [
   {
     title: '약관 검토',
@@ -39,7 +40,7 @@ export default function ServicesSection() {
   const slidesToShow = 3;
   const { user } = useUser();
   const { toast } = useToast();
-
+  const [isDragging, setIsDragging] = useState(false);
   const nextSlide = () => {
     setCurrentIndex((prevIndex) => {
       const newIndex = prevIndex + slidesToShow;
@@ -64,7 +65,12 @@ export default function ServicesSection() {
       });
     }
   };
-
+  const handlers = useSwipeable({
+    onSwipedLeft: () => nextSlide(),
+    onSwipedRight: () => prevSlide(),
+    trackMouse: true,
+    preventScrollOnSwipe: true,
+  });
   return (
       <section className="h-screen py-12 bg-gray-100 flex flex-col overflow-hidden">
         <div className="container mx-auto px-4 flex flex-col h-full">
@@ -80,7 +86,7 @@ export default function ServicesSection() {
             사이트들의 약관의 평가를 한눈에!
           </h3>
 
-          <div className="relative h-[35%] mb-6">
+          <div className="relative h-[35%] mb-6" {...handlers}>
             <div
                 className="flex transition-transform duration-500 h-full"
                 style={{
@@ -88,17 +94,14 @@ export default function ServicesSection() {
                 }}
             >
               {topWebsites.map((website, index) => (
-                  <div
+                  <Link
                       key={index}
-                      className="w-1/3 flex-shrink-0 p-8 py-12 border rounded-lg shadow-md bg-white mx-2"
-                      style={{
-                        height: 'calc(30vh)',
-                      }}
+                      href={isDragging ? "#" : website.link ?? "#"}
+                      draggable="false"
+                      className="w-1/3 flex-shrink-0 p-8 py-12 border rounded-lg shadow-md bg-white mx-2 cursor-pointer block
+              hover:bg-gray-200 transition-all duration-200"
                   >
-                    <div className="flex items-center gap-3 mb-3"
-                         style={{
-                           marginBottom: 'calc(1vh)',
-                         }}>
+                    <div className="flex items-center gap-3 mb-3">
                       <div className="w-10">
                         <img
                             src="/TermCompass_logo.png"
@@ -106,70 +109,39 @@ export default function ServicesSection() {
                             className="w-full h-auto rounded-lg shadow-lg"
                         />
                       </div>
-                      <h3 className="text-base font-bold"
-                          style={{
-                            fontSize: 'calc(1rem + 0.5vw)',
-                          }}>
+                      <h3 className="text-base font-bold" style={{fontSize: "clamp(16px, 1.5vw, 24px)"}}>
                         {website.name}
                       </h3>
                     </div>
-                    <div
-                        className="flex flex-col md:flex-row gap-2"
-                        style={{
-                          marginTop: 'calc(2vh)',
-                          flexGrow: 1,
-                        }}
-                    >
-                      <div className="w-full md:w-1/2 overflow-hidden">
-                        <h4
-                            className="text-lg font-semibold text-green-600 my-3"
-                            style={{
-                              fontSize: 'clamp(16px, 1.5vw, 24px)',
-                            }}
-                        >
+
+                    <div className="flex flex-col gap-2">
+                      {/* 장점 섹션 */}
+                      <div className="w-full overflow-hidden">
+                        <h4 className="text-lg font-semibold text-green-600 my-3"
+                            style={{fontSize: "clamp(16px, 1.5vw, 24px)"}}>
                           장점
                         </h4>
                         <ul className="list-disc list-inside text-sm text-gray-700">
-                          {(window.innerWidth >= 1024 ? website.benefits : website.benefits.slice(0, 1)).map((benefit, i) => (
-                              <li
-                                  key={i}
-                                  className="block truncate lg:whitespace-normal"
-                                  style={{
-                                    fontSize: 'clamp(12px, 1vw, 18px)',
-                                  }}
-                                  title={benefit}
-                              >
-                                {benefit}
-                              </li>
+                          {website.benefits.map((benefit, i) => (
+                              <li key={i} className="truncate lg:whitespace-normal" style={{fontSize: "clamp(16px, 1.5vw, 20px)"}} >{benefit}</li>
                           ))}
                         </ul>
                       </div>
-                      <div className="w-full md:w-1/2 overflow-hidden">
-                        <h4
-                            className="text-lg font-semibold text-red-600 my-3"
-                            style={{
-                              fontSize: 'clamp(16px, 1.5vw, 24px)',
-                            }}
-                        >
+
+                      {/* 단점 섹션 */}
+                      <div className="w-full overflow-hidden">
+                        <h4 className="text-lg font-semibold text-red-600 my-3"
+                            style={{fontSize: "clamp(16px, 1.5vw, 24px)"}}>
                           단점
                         </h4>
                         <ul className="list-disc list-inside text-sm text-gray-700">
-                          {(window.innerWidth >= 1024 ? website.drawbacks : website.drawbacks.slice(0, 1)).map((drawback, i) => (
-                              <li
-                                  key={i}
-                                  className="block truncate lg:whitespace-normal"
-                                  style={{
-                                    fontSize: 'clamp(12px, 1vw, 18px)',
-                                  }}
-                                  title={drawback}
-                              >
-                                {drawback}
-                              </li>
+                          {website.drawbacks.map((drawback, i) => (
+                              <li key={i} className="truncate lg:whitespace-normal" style={{fontSize: "clamp(16px, 1.5vw, 20px)"}}>{drawback}</li>
                           ))}
                         </ul>
                       </div>
                     </div>
-                  </div>
+                  </Link>
               ))}
             </div>
 
@@ -201,12 +173,13 @@ export default function ServicesSection() {
                   <a
                       onClick={(e) => handleCardClick(e, service.url)}
                       className="h-full"
+                      draggable="false"
                   >
                     <div className="flip-card h-full">
                       <div className="flip-card-inner">
                         <Card className="flip-card-front h-full flex flex-col items-center justify-center p-6">
                           <div className="w-16 h-16 mb-4 text-blue-600 flex-shrink-0">
-                            <service.icon className="w-full h-full" />
+                            <service.icon className="w-full h-full"/>
                           </div>
                           <CardTitle className="text-lg lg:text-xl text-center mb-3 flex-shrink-0 w-full truncate">
                             {service.title}

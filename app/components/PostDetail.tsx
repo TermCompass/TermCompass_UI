@@ -48,7 +48,7 @@ export default function PostDetail() {
 
         <div className="container mx-auto px-4 py-8 w-full rounded-none border-none items-center">
             <div
-                className="flex ml-5  font-custom w-[82%] space-x-4 py-2 mx-auto rounded-lg mt-2 text-4xl border-b-2 text-left">
+                className="flex ml-5  font-goverment w-[82%] space-x-4 py-2 mx-auto rounded-lg mt-2 text-4xl border-b-2 text-left">
                 소통창구
             </div>
             <div className="p-6 bg-green rounded-md w-[85%]">
@@ -75,7 +75,7 @@ export default function PostDetail() {
         />
                     <button
                         type="submit"
-                        className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 self-end"
+                        className="px-4 py-2 bg-blue-500 text-white my-3 rounded-lg hover:bg-blue-600 self-end"
                     >
                         등록
                     </button>
@@ -83,7 +83,7 @@ export default function PostDetail() {
             </div>
 
 
-            <table className="w-[85%] right-[100%] border-collapse border border-gray-300 mx-auto">
+            <table className="w-[87%] right-[100%] ml-[50px] border-collapse border border-gray-300 mx-auto">
                 <tbody>
                 {nextPost && (
                     <tr>
@@ -112,7 +112,7 @@ export default function PostDetail() {
                 )}
                 {previousPost && (
                     <tr>
-                        <td className="px-4 py-2 border bg-gray-200 w-[12%] border-b-gray-500 border-t-gray-500 border-l-0  text-center font-semibold">
+                        <td className="px-4 py-2 border bg-gray-200 w-[12%]   border-b-gray-500 border-t-gray-500 border-l-0  text-center font-semibold">
                             ▼ 이전글
                         </td>
                         <td className="px-4 py-2 border border-gray-300 border-l-0">
@@ -138,8 +138,6 @@ export default function PostDetail() {
                 )}
                 </tbody>
             </table>
-
-
         </div>
     );
 }

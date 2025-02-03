@@ -3,12 +3,13 @@
 @tailwind utilities;
 
 body {
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Goverment', Arial, sans-serif;
 }
+
 @font-face {
-  font-family: 'goverment';
-  src: url('../app/fonts/goverment.ttf') format('truetype');
-  font-weight: normal; /* Add more weights if applicable */
+  font-family: 'Goverment';
+  src: url('/fonts/Goverment.ttf') format('truetype');
+  font-weight: normal;
   font-style: normal;
 }
 @layer utilities {
