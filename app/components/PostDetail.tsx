@@ -36,7 +36,7 @@ export default function PostDetail() {
     const handleCommentSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (newComment.trim()) {
-            setComments([...comments, { id: comments.length + 1, author: '익명', content: newComment, date: new Date().toISOString() }]);
+            setComments([...dummyComments, { id: comments.length + 1, author: '익명', content: newComment, date: new Date().toISOString() }]);
             setNewComment('');
         }
     };

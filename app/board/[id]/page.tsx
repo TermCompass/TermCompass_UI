@@ -6,6 +6,7 @@ import Layout from '@/app/components/Layout';
 import Link from 'next/link';
 import PostDetail from '@/app/components/PostDetail';
 import BoardBar from "@/app/components/BoardBar";
+import HeaderBanner from "@/app/components/BoardBanner";
 //실제 api연동해야할곳
 const dummyPosts = Array.from({ length: 100 }, (_, i) => ({
     id: i + 1,
@@ -49,28 +50,13 @@ export default function BoardPage() {
     return (
         <Layout>
             {/* 헤더 배경 및 타이틀 */}
-            <div className="relative w-full h-[200px] overflow-hidden">
-                <div
-                    className="absolute inset-0 w-full h-full bg-cover bg-center filter blur-md"
-                    style={{ backgroundImage: "url('/board_img.jpg')" }}
-                ></div>
-                <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="flex flex-col items-center">
-                        <h1 className="font-custom text-white text-6xl font-bold mb-4">공지사항</h1>
-                        <div className="flex items-center space-x-4 px-4 py-2 rounded-lg">
-                            <a href="/" className="hover:opacity-80 transition-opacity">
-                                <img src="/ic_sub_nav_home.png" alt="Home" className="w-6 h-6" />
-                            </a>
-                            <div className="flex items-center space-x-2">
-                                <span className="text-gray-500 text-lg">&gt;</span>
-                                <span className="text-gray-700 text-xl font-semibold">게시판</span>
-                                <span className="text-gray-500 text-lg">&gt;</span>
-                                <span className="text-gray-900 text-xl font-semibold">공지사항</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <HeaderBanner
+                title="공지사항"
+                breadcrumb={[
+                    { label: "게시판", href: "/board" },
+                    { label: "공지사항", href: "/board" },
+                ]}
+            />
 
             {/* 게시글 상세 내용 */}
             <div className="container w-full mx-auto px-4 py-8 flex flex-col md:flex-row">

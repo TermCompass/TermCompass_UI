@@ -2,7 +2,8 @@
 
 import Link from 'next/link';
 import BoardBar from '@/app/components/BoardBar';
-
+import HeaderBanner from '@/app/components/BoardBanner';
+import { useRouter } from "next/navigation";
 interface BoardPageTemplateProps {
     title: string;
     breadcrumb: { label: string; href: string }[];
@@ -27,35 +28,17 @@ export default function BoardPageTemplate({
         currentPage * postsPerPage
     );
 
+    const router = useRouter();
     return (
         <div>
             {/* 배경 이미지 및 제목 */}
-            <div className="relative w-full h-[200px] overflow-hidden">
-                <div
-                    className="absolute inset-0 w-full h-full bg-cover bg-center filter blur-md"
-                    style={{backgroundImage: "url('/board_img.jpg')"}}
-                ></div>
-                <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="flex flex-col items-center">
-                        <h1 className="font-custom text-white text-6xl font-bold mb-4">{title}</h1>
-                        <div className="flex items-center space-x-4 px-4 py-2 rounded-lg">
-                            <a href="/" className="hover:opacity-80 transition-opacity">
-                                <img src="/ic_sub_nav_home.png" alt="Home" className="w-6 h-6"/>
-                            </a>
-                            {breadcrumb.map((crumb, index) => (
-                                <div key={index} className="flex items-center space-x-2">
-                                    {index > 0 && <span className="text-gray-500 text-lg">&gt;</span>}
-                                    <Link href={crumb.href} className="hover:opacity-80">
-                    <span className="text-gray-700 text-xl font-semibold">
-                      {crumb.label}
-                    </span>
-                                    </Link>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <HeaderBanner
+                title="공지사항"
+                breadcrumb={[
+                    { label: "게시판", href: "/board" },
+                    { label: "공지사항", href: "/board" },
+                ]}
+            />
 
             {/* 게시판 + 메뉴바 수평 배치 */}
             <div className="container mx-auto px-4 py-8 flex flex-col md:flex-row gap-6">
@@ -100,55 +83,82 @@ export default function BoardPageTemplate({
                     </table>
 
                     {/* 페이지네이션 */}
-                    <div className="flex justify-center mt-4">
-                        <ul className="flex space-x-2 items-center">
-                            <li>
-                                <button
-                                    onClick={() => onPageChange(Math.max(currentPage - 5, 1))}
-                                    className={`px-4 py-2 border ${
-                                        currentPage <= 5
-                                            ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                                            : 'bg-white text-gray-700 hover:bg-blue-100'
-                                    }`}
-                                    disabled={currentPage <= 5}
-                                >
-                                    &lt; 이전
-                                </button>
-                            </li>
-                            {Array.from({length: totalPages}, (_, i) => i + 1)
-                                .slice(
-                                    Math.floor((currentPage - 1) / 5) * 5,
-                                    Math.min(Math.floor((currentPage - 1) / 5) * 5 + 5, totalPages)
-                                )
-                                .map((page) => (
-                                    <li key={page}>
-                                        <button
-                                            onClick={() => onPageChange(page)}
-                                            className={`px-4 py-2 border ${
-                                                currentPage === page
-                                                    ? 'bg-gray-700 text-white'
-                                                    : 'bg-white text-gray-700'
-                                            } hover:bg-blue-100`}
-                                        >
-                                            {page}
-                                        </button>
-                                    </li>
-                                ))}
-                            <li>
-                                <button
-                                    onClick={() => onPageChange(Math.min(currentPage + 5, totalPages))}
-                                    className={`px-4 py-2 border ${
-                                        currentPage + 5 > totalPages
-                                            ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                                            : 'bg-white text-gray-700 hover:bg-blue-100'
-                                    }`}
-                                    disabled={currentPage + 5 > totalPages}
-                                >
-                                    다음 &gt;
-                                </button>
-                            </li>
-                        </ul>
+                    <div className="flex flex-col md:flex-row  justify-between items-center mt-4">
+                        {/* 🔹 글쓰기 버튼 */}
+                        <button
+                            onClick={() => {
+                                if (breadcrumb.length > 0) {
+                                    const lastBreadcrumb = breadcrumb[breadcrumb.length - 1].href; // ✅ 마지막 페이지 가져오기
+                                    router.push(`${lastBreadcrumb}/write`); // ✅ 해당 페이지의 /write로 이동
+                                }
+                            }}
+                            className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 mb-4 md:mb-0"
+                        >
+                            글쓰기
+                        </button>
+
+                        {/* 🔹 페이지네이션 */}
+                        <div className="flex justify-center">
+                            <ul className="flex space-x-2 items-center">
+                                {/* 이전 페이지 버튼 */}
+                                <li>
+                                    <button
+                                        onClick={() => onPageChange(Math.max(currentPage - 5, 1))}
+                                        className={`px-4 py-2 border ${
+                                            currentPage <= 5
+                                                ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                                                : "bg-white text-gray-700 hover:bg-blue-100"
+                                        }`}
+                                        disabled={currentPage <= 5}
+                                    >
+                                        &lt; 이전
+                                    </button>
+                                </li>
+
+                                {/* 페이지 번호 */}
+                                {Array.from({length: totalPages}, (_, i) => i + 1)
+                                    .slice(
+                                        Math.floor((currentPage - 1) / 5) * 5,
+                                        Math.min(
+                                            Math.floor((currentPage - 1) / 5) * 5 + 5,
+                                            totalPages
+                                        )
+                                    )
+                                    .map((page) => (
+                                        <li key={page}>
+                                            <button
+                                                onClick={() => onPageChange(page)}
+                                                className={`px-4 py-2 border ${
+                                                    currentPage === page
+                                                        ? "bg-gray-700 text-white"
+                                                        : "bg-white text-gray-700"
+                                                } hover:bg-blue-100`}
+                                            >
+                                                {page}
+                                            </button>
+                                        </li>
+                                    ))}
+
+                                {/* 다음 페이지 버튼 */}
+                                <li>
+                                    <button
+                                        onClick={() =>
+                                            onPageChange(Math.min(currentPage + 5, totalPages))
+                                        }
+                                        className={`px-4 py-2 border ${
+                                            currentPage + 5 > totalPages
+                                                ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                                                : "bg-white text-gray-700 hover:bg-blue-100"
+                                        }`}
+                                        disabled={currentPage + 5 > totalPages}
+                                    >
+                                        다음 &gt;
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
+
                 </div>
 
                 {/* 메뉴바 (게시판 옆으로 배치) */}
