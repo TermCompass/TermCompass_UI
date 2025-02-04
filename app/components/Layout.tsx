@@ -120,6 +120,7 @@ export default function Layout({ children, activeSection = 0 }: LayoutProps) {
     ]
 
     const handleAuthSubmit = (
+        id: number,
         name: string,
         email: string,
         userType: 'PERSONAL' | 'COMPANY',
@@ -127,7 +128,7 @@ export default function Layout({ children, activeSection = 0 }: LayoutProps) {
         businessNumber: string,
         isLogin: boolean
     ) => {
-        login( email, userType )
+        login( id, name, email, userType, created_at, businessNumber )
         setShowAuthForm(false)
     }
 

@@ -10,7 +10,7 @@ import { X } from 'lucide-react'
 import TermsAgreement from './TermsAgreement'
 
 interface AuthFormProps {
-  onSubmit: (name: string, email: string, userType: 'PERSONAL' | 'COMPANY', created_at: string, businessNumber: string, isLogin: boolean) => void
+  onSubmit: (id: number, name: string, email: string, userType: 'PERSONAL' | 'COMPANY', created_at: string, businessNumber: string, isLogin: boolean) => void
   onCancel: () => void
 }``
 
@@ -71,6 +71,7 @@ export default function AuthForm({ onSubmit, onCancel }: AuthFormProps) {
             // 로그인 성공 시 처리
             setUserType(responseData.account_type)
             onSubmit(
+                responseData.id,
                 responseData.name,
                 responseData.email,
                 responseData.account_type,

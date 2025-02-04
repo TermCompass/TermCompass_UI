@@ -4,6 +4,7 @@ import { createContext, useContext, useState, useEffect, type ReactNode } from "
 import axios from "axios"
 
 interface IndividualUser {
+  id: number
   email: string
   userType: "PERSONAL"
   name: string
@@ -11,6 +12,7 @@ interface IndividualUser {
 }
 
 interface BusinessUser {
+  id: number
   email: string
   userType: "COMPANY"
   name: string
@@ -22,7 +24,7 @@ type User = IndividualUser | BusinessUser
 
 interface UserContextType {
   user: User | null
-  login: (name: string, email: string, userType: "PERSONAL" | "COMPANY", created_at: string, businessNumber?: string) => void
+  login: (id: number, name: string, email: string, userType: "PERSONAL" | "COMPANY", created_at: string, businessNumber?: string) => void
   logout: () => void
   updateUser: (updatedInfo: Partial<User>) => void
 }
@@ -39,6 +41,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
           let currentUser = response.data
           if (currentUser.account_type === "PERSONAL") {
             setUser({
+              id: currentUser.id,
               email: currentUser.email,
               userType: currentUser.account_type,
               name: currentUser.name,
@@ -46,6 +49,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
             })
           } else {
             setUser({
+              id: currentUser.id,
               email: currentUser.email,
               userType: currentUser.account_type,
               name: currentUser.name,
@@ -59,12 +63,12 @@ export function UserProvider({ children }: { children: ReactNode }) {
         });
   }, []);
 
-  const login = (name: string, email: string, userType: "PERSONAL" | "COMPANY", created_at: string, businessNumber?: string) => {
+  const login = (id: number, name: string, email: string, userType: "PERSONAL" | "COMPANY", created_at: string, businessNumber?: string) => {
     if (userType === "PERSONAL") {
-      setUser({ email: email, userType: userType, name: name, created_at: created_at })
+      setUser({ id: id, email: email, userType: userType, name: name, created_at: created_at })
     } else {
       // @ts-ignore
-      setUser({ email: email, userType: userType, name: name, created_at: created_at, businessNumber: businessNumber })
+      setUser({ id: id, email: email, userType: userType, name: name, created_at: created_at, businessNumber: businessNumber })
     }
   }
 
