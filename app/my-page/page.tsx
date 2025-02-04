@@ -38,7 +38,7 @@ export default function MyPage() {
           </CardHeader>
           <CardContent>
             <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as "info" | "history")}>
-              <TabsList>
+              <TabsList className={"mb-5"}>
                 <TabsTrigger value="info">개인 정보</TabsTrigger>
                 <TabsTrigger value="history">{user.userType === "PERSONAL" ? "검토 내역" : "이용 내역"}</TabsTrigger>
               </TabsList>

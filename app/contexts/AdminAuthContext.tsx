@@ -4,12 +4,13 @@ import type React from "react"
 import { createContext, useContext, useState, useEffect } from "react"
 
 interface AdminUser {
-  username: string
+  email: string
+  token: string
 }
 
 interface AdminAuthContextType {
   admin: AdminUser | null
-  login: (username: string, password: string) => void
+  login: (username: string, password: string) => Promise<void>
   logout: () => void
   isLoading: boolean
 }
@@ -21,7 +22,6 @@ export function AdminAuthProvider({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    // Check for existing admin session
     const storedAdmin = localStorage.getItem("admin")
     if (storedAdmin) {
       setAdmin(JSON.parse(storedAdmin))
@@ -29,14 +29,28 @@ export function AdminAuthProvider({ children }: { children: React.ReactNode }) {
     setIsLoading(false)
   }, [])
 
-  const login = (username: string, password: string) => {
-    // In a real application, you would verify the credentials here
-    if (username && password) {
-      const adminUser = { username }
+  const login = async (email: string, password: string) => {
+    try {
+      const response = await fetch("http://localhost:8080/admin/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      })
+
+      if (!response.ok) {
+        throw new Error("로그인 실패: 잘못된 사용자명 또는 비밀번호입니다.")
+      }
+
+      const data = await response.json()
+      const adminUser = { email, token: data.token }
+
       setAdmin(adminUser)
       localStorage.setItem("admin", JSON.stringify(adminUser))
-    } else {
-      throw new Error("Invalid credentials")
+    } catch (error) {
+      console.error("로그인 오류:", error)
+      throw error
     }
   }
 
@@ -55,4 +69,3 @@ export function useAdminAuth() {
   }
   return context
 }
-
