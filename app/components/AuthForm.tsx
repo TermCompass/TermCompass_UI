@@ -10,7 +10,7 @@ import { X } from 'lucide-react'
 import TermsAgreement from './TermsAgreement'
 
 interface AuthFormProps {
-  onSubmit: (name: string, email: string, password: string, userType: 'PERSONAL' | 'COMPANY', businessNumber: string, isLogin: boolean) => void
+  onSubmit: (name: string, email: string, userType: 'PERSONAL' | 'COMPANY', created_at: string, businessNumber: string, isLogin: boolean) => void
   onCancel: () => void
 }``
 
@@ -33,52 +33,61 @@ export default function AuthForm({ onSubmit, onCancel }: AuthFormProps) {
       return
     }
 
-    // // API 호출
-    // const apiUrl = isLogin
-    //     ? 'http://localhost:8080/login'
-    //     : 'http://localhost:8080/signup'
-    //
-    // const payload = isLogin
-    //     ? { email : email, password : password }
-    //     : {
-    //       name: name,
-    //       account_type: userType,
-    //       password1: password,
-    //       password2: passwordConfirm,
-    //       email: email,
-    //       businessNumber: userType === 'COMPANY' ? businessNumber : undefined
-    //     }
-    //
-    // try {
-    //     const response = await fetch(apiUrl, {
-    //         method: 'POST',
-    //         headers: {
-    //             'Content-Type': 'application/json',
-    //         },
-    //         body: JSON.stringify(payload)
-    //     })
-    //
-    //     if (!response.ok) {
-    //         throw new Error(isLogin ? '로그인 실패' : '회원가입 실패');
-    //     }
-    //
-    //     if (isLogin) {
-    //         // 로그인 성공 시 처리
-    //         const responseData = await response.json();
-    //         alert(`로그인 성공: ${responseData.account_type}님`);
-    //         setUserType(responseData.account_type)
-    //         onSubmit(responseData.name, responseData.email, password, responseData.account_type, businessNumber, isLogin);
-    //     } else {
-    //         // 회원가입 성공 시 처리
-    //         alert('회원가입 완료');
-    //         setIsLogin(true);
-    //     }
-    // } catch (error) {
-    //     // @ts-ignore
-    //     alert('에러 발생: ' + error.message);
-    // }
+    // API 호출
+    const apiUrl = isLogin
+        ? 'http://localhost:8080/login'
+        : 'http://localhost:8080/signup'
 
-    onSubmit(name, email, password, userType, businessNumber, isLogin);
+    const payload = isLogin
+        ? { email : email, password : password }
+        : {
+          name: name,
+          account_type: userType,
+          password1: password,
+          password2: passwordConfirm,
+          email: email,
+          businessNumber: userType === 'COMPANY' ? businessNumber : undefined
+        }
+
+    try {
+        const response = await fetch(apiUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(payload),
+            credentials: "include",
+        })
+
+        if (!response.ok) {
+            const errorData = await response.json(); // 서버에서 반환된 에러 메시지를 읽음
+            console.log(errorData)
+            throw new Error(errorData[0] || (isLogin ? '로그인 실패' : '회원가입 실패'));
+        }
+
+        const responseData = await response.json();
+
+        if (isLogin) {
+            // 로그인 성공 시 처리
+            setUserType(responseData.account_type)
+            onSubmit(
+                responseData.name,
+                responseData.email,
+                responseData.account_type,
+                responseData.created_at,
+                responseData.businessNumber,
+                isLogin)
+        } else {
+            // 회원가입 성공 시 처리
+            alert('회원가입 완료');
+            setIsLogin(true);
+        }
+    } catch (error) {
+        // @ts-ignore
+        alert(error.message);
+    }
+
+    // onSubmit(name, email, password, userType, businessNumber, isLogin);
   }
 
   const handleSignUpClick = () => {
@@ -125,34 +134,34 @@ export default function AuthForm({ onSubmit, onCancel }: AuthFormProps) {
       <form onSubmit={handleSubmit}>
         <CardContent>
           <div className="grid w-full items-center gap-4">
-            <div className="flex flex-col space-y-1.5">
-              <Label>사용자 유형</Label>
-              <RadioGroup defaultValue="PERSONAL" onValueChange={(value) => setUserType(value as 'PERSONAL' | 'COMPANY')}>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="PERSONAL" id="PERSONAL" />
-                  <Label htmlFor="PERSONAL">개인 사용자</Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="COMPANY" id="COMPANY" />
-                  <Label htmlFor="COMPANY">기업 사용자</Label>
-                </div>
-              </RadioGroup>
-            </div>
+            {/*<div className="flex flex-col space-y-1.5">*/}
+            {/*  <Label>사용자 유형</Label>*/}
+            {/*  <RadioGroup defaultValue="PERSONAL" onValueChange={(value) => setUserType(value as 'PERSONAL' | 'COMPANY')}>*/}
+            {/*    <div className="flex items-center space-x-2">*/}
+            {/*      <RadioGroupItem value="PERSONAL" id="PERSONAL" />*/}
+            {/*      <Label htmlFor="PERSONAL">개인 사용자</Label>*/}
+            {/*    </div>*/}
+            {/*    <div className="flex items-center space-x-2">*/}
+            {/*      <RadioGroupItem value="COMPANY" id="COMPANY" />*/}
+            {/*      <Label htmlFor="COMPANY">기업 사용자</Label>*/}
+            {/*    </div>*/}
+            {/*  </RadioGroup>*/}
+            {/*</div>*/}
             {!isLogin && (
               <>
-                {/*<div className="flex flex-col space-y-1.5">*/}
-                {/*  <Label>사용자 유형</Label>*/}
-                {/*  <RadioGroup defaultValue="PERSONAL" onValueChange={(value) => setUserType(value as 'PERSONAL' | 'COMPANY')}>*/}
-                {/*    <div className="flex items-center space-x-2">*/}
-                {/*      <RadioGroupItem value="PERSONAL" id="PERSONAL" />*/}
-                {/*      <Label htmlFor="PERSONAL">개인 사용자</Label>*/}
-                {/*    </div>*/}
-                {/*    <div className="flex items-center space-x-2">*/}
-                {/*      <RadioGroupItem value="COMPANY" id="COMPANY" />*/}
-                {/*      <Label htmlFor="COMPANY">기업 사용자</Label>*/}
-                {/*    </div>*/}
-                {/*  </RadioGroup>*/}
-                {/*</div>*/}
+                <div className="flex flex-col space-y-1.5">
+                  <Label>사용자 유형</Label>
+                  <RadioGroup defaultValue="PERSONAL" onValueChange={(value) => setUserType(value as 'PERSONAL' | 'COMPANY')}>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="PERSONAL" id="PERSONAL" />
+                      <Label htmlFor="PERSONAL">개인 사용자</Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="COMPANY" id="COMPANY" />
+                      <Label htmlFor="COMPANY">기업 사용자</Label>
+                    </div>
+                  </RadioGroup>
+                </div>
                 <div className="flex flex-col space-y-1.5">
                   <Label htmlFor="name">
                     {userType === 'PERSONAL' ? '이름' : '기업명'}
