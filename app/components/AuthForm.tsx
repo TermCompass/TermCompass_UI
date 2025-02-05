@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -12,12 +12,13 @@ import TermsAgreement from './TermsAgreement'
 interface AuthFormProps {
   onSubmit: (name: string, email: string, password: string, userType: 'PERSONAL' | 'COMPANY', businessNumber: string, isLogin: boolean) => void
   onCancel: () => void
-}``
+  initialUserType?: 'PERSONAL' | 'COMPANY'
+}
 
-export default function AuthForm({ onSubmit, onCancel }: AuthFormProps) {
+export default function AuthForm({ onSubmit, onCancel, initialUserType }: AuthFormProps) {
   const [isLogin, setIsLogin] = useState(true)
   const [showTerms, setShowTerms] = useState(false)
-  const [userType, setUserType] = useState<'PERSONAL' | 'COMPANY'>('PERSONAL')
+  const [userType, setUserType] = useState<'PERSONAL' | 'COMPANY'>(initialUserType || 'PERSONAL')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [passwordConfirm, setPasswordConfirm] = useState('')
@@ -25,6 +26,12 @@ export default function AuthForm({ onSubmit, onCancel }: AuthFormProps) {
   const [businessNumber, setBusinessNumber] = useState('')
   const [passwordMatch, setPasswordMatch] = useState(true)
   const [hasStartedConfirmation, setHasStartedConfirmation] = useState(false)
+
+  useEffect(() => {
+    if (initialUserType) {
+      setUserType(initialUserType);
+    }
+  }, [initialUserType]);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -127,7 +134,10 @@ export default function AuthForm({ onSubmit, onCancel }: AuthFormProps) {
           <div className="grid w-full items-center gap-4">
             <div className="flex flex-col space-y-1.5">
               <Label>사용자 유형</Label>
-              <RadioGroup defaultValue="PERSONAL" onValueChange={(value) => setUserType(value as 'PERSONAL' | 'COMPANY')}>
+              <RadioGroup 
+                value={userType}
+                onValueChange={(value) => setUserType(value as 'PERSONAL' | 'COMPANY')}
+              >
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value="PERSONAL" id="PERSONAL" />
                   <Label htmlFor="PERSONAL">개인 사용자</Label>
@@ -140,19 +150,6 @@ export default function AuthForm({ onSubmit, onCancel }: AuthFormProps) {
             </div>
             {!isLogin && (
               <>
-                {/*<div className="flex flex-col space-y-1.5">*/}
-                {/*  <Label>사용자 유형</Label>*/}
-                {/*  <RadioGroup defaultValue="PERSONAL" onValueChange={(value) => setUserType(value as 'PERSONAL' | 'COMPANY')}>*/}
-                {/*    <div className="flex items-center space-x-2">*/}
-                {/*      <RadioGroupItem value="PERSONAL" id="PERSONAL" />*/}
-                {/*      <Label htmlFor="PERSONAL">개인 사용자</Label>*/}
-                {/*    </div>*/}
-                {/*    <div className="flex items-center space-x-2">*/}
-                {/*      <RadioGroupItem value="COMPANY" id="COMPANY" />*/}
-                {/*      <Label htmlFor="COMPANY">기업 사용자</Label>*/}
-                {/*    </div>*/}
-                {/*  </RadioGroup>*/}
-                {/*</div>*/}
                 <div className="flex flex-col space-y-1.5">
                   <Label htmlFor="name">
                     {userType === 'PERSONAL' ? '이름' : '기업명'}
