@@ -10,7 +10,7 @@ import BoardPageTemplate from '@/app/components/BoardPageTemplate';
 
 const dummyPosts = Array.from({ length: 50 }, (_, i) => ({
     id: i + 1,
-    title: `${i + 1} 번째 게시글`,
+    title: `${i + 1} 번째 게시글 포토뉴스`,
     author: `작성자 ${i + 1}`,
     date: `2025-01-${String(i + 1).padStart(2, '0')}`,
     link: `/photonews/${i + 1}`,
