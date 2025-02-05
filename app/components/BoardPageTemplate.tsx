@@ -41,7 +41,7 @@ export default function BoardPageTemplate({
             />
 
             {/* 게시판 + 메뉴바 수평 배치 */}
-            <div className="container mx-auto px-4 py-8 flex flex-col md:flex-row pt-36 gap-6">
+            <div className="container mx-auto px-4 py-8 flex flex-col md:flex-row pt-24 gap-6">
                 {/* 🔹 게시판 (메뉴바보다 넓게 차지) */}
                 <div className="flex-grow md:w-3/4">
                     <table className="w-full border-collapse border-t-4 border-b border-gray-300 mx-auto">
