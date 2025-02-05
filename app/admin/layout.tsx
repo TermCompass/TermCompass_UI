@@ -10,7 +10,7 @@ const navItems = [
   { href: "/admin/update-caselaw", label: "판례 업데이트" },
   { href: "/admin/update-terms", label: "표준약관 업데이트" },
   { href: "/admin/generate", label: "표준약관 생성" },
-  { href: "/admin/report", label: "서비스 현황/리포트" },
+  //{ href: "/admin/report", label: "서비스 현황/리포트" },
 ]
 
 export default function AdminLayout({

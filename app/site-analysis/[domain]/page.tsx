@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button"
 const dummySiteData = {
   'naver.com': {
     name: '네이버',
-    logo: 'https://source.unsplash.com/random/100x100?logo',
+    logo: '/site-logo/naver_logo.png',
     domain: 'naver.com',
     rating: 'A',
     info: '대한민국의 대표적인 포털 사이트',
@@ -30,7 +30,7 @@ const dummySiteData = {
   },
   'kakao.com': {
     name: '카카오',
-    logo: 'https://images.seeklogo.com/logo-png/35/1/kakaotalk-logo-png_seeklogo-355085.png?v=1957906406423334432',
+    logo: '/site-logo/kakao_logo.png',
     domain: 'kakao.com',
     rating: 'B',
     info: '모바일 메신저를 기반으로 한 종합 IT 플랫폼',
@@ -52,7 +52,7 @@ const dummySiteData = {
   },
   'coupang.com': {
     name: '쿠팡',
-    logo: 'https://source.unsplash.com/random/100x100?logo',
+    logo: '/site-logo/coupang_logo.png',
     domain: 'coupang.com',
     rating: 'B',
     info: '대한민국의 대표적인 이커머스 플랫폼',
@@ -74,7 +74,7 @@ const dummySiteData = {
   },
   '11st.co.kr': {
     name: '11번가',
-    logo: 'https://source.unsplash.com/random/100x100?logo',
+    logo: '/site-logo/11st_logo.png',
     domain: '11st.co.kr',
     rating: 'B',
     info: 'SK그룹의 대표적인 온라인 쇼핑몰',
@@ -96,7 +96,7 @@ const dummySiteData = {
   },
   'yogiyo.co.kr': {
     name: '요기요',
-    logo: 'https://source.unsplash.com/random/100x100?logo',
+    logo: '/site-logo/yogiyo_logo.jpg',
     domain: 'yogiyo.co.kr',
     rating: 'C',
     info: '대한민국의 대표적인 음식 배달 플랫폼',
@@ -118,10 +118,11 @@ const dummySiteData = {
   },
   'gmarket.co.kr': {
     name: 'G마켓',
-    logo: 'https://source.unsplash.com/random/100x100?logo',
+    logo: '/site-logo/gmarket_logo.png',
     domain: 'gmarket.co.kr',
     rating: 'B',
     info: '이베이코리아가 운영하는 대형 온라인 쇼핑몰',
+
     unfavorableClauses: [
       '판매자 귀책사유에 대한 플랫폼의 면책 조항',
       '개인정보 활용 범위의 광범위성',
@@ -140,10 +141,11 @@ const dummySiteData = {
   },
   'baemin.com': {
     name: '배달의민족',
-    logo: 'https://source.unsplash.com/random/100x100?logo',
+    logo: '/site-logo/baemin_logo.png',
     domain: 'baemin.com',
     rating: 'B',
     info: '국내 최대 규모의 음식 배달 애플리케이션',
+
     unfavorableClauses: [
       '가격 정책 변경에 대한 광범위한 권한',
       '배달 지연에 대한 책임 제한',
@@ -162,9 +164,10 @@ const dummySiteData = {
   },
   'tmon.co.kr': {
     name: '티몬',
-    logo: 'https://source.unsplash.com/random/100x100?logo',
+    logo: '/site-logo/tmon_logo.png',
     domain: 'tmon.co.kr',
     rating: 'C',
+
     info: '소셜커머스 기반의 온라인 쇼핑 플랫폼',
     unfavorableClauses: [
       '상품 정보에 대한 책임 제한',
@@ -184,9 +187,10 @@ const dummySiteData = {
   },
   'wemakeprice.com': {
     name: '위메프',
-    logo: 'https://source.unsplash.com/random/100x100?logo',
+    logo: '/site-logo/wemakeprice_logo.png',
     domain: 'wemakeprice.com',
     rating: 'C',
+
     info: '다양한 상품을 할인된 가격에 제공하는 이커머스 플랫폼',
     unfavorableClauses: [
       '계정 해지 절차의 복잡성',
@@ -206,9 +210,10 @@ const dummySiteData = {
   },
   'daangn.com': {
     name: '당근마켓',
-    logo: 'https://source.unsplash.com/random/100x100?logo',
+    logo: '/site-logo/daangn_logo.png',
     domain: 'daangn.com',
     rating: 'B',
+
     info: '위치 기반 중고 거래 플랫폼',
     unfavorableClauses: [
       '거래 사기에 대한 플랫폼 책임 제한',
@@ -228,9 +233,10 @@ const dummySiteData = {
   },
   'interpark.com': {
     name: '인터파크',
-    logo: 'https://source.unsplash.com/random/100x100?logo',
+    logo: '/site-logo/interpark_logo.png',
     domain: 'interpark.com',
     rating: 'B',
+
     info: '여행, 티켓, 쇼핑 등 종합 서비스를 제공하는 플랫폼',
     unfavorableClauses: [
       '취소 수수료 정책의 엄격성',
@@ -250,10 +256,11 @@ const dummySiteData = {
   },
   'lotteon.com': {
     name: '롯데온',
-    logo: 'https://source.unsplash.com/random/100x100?logo',
+    logo: '/site-logo/lotteon_logo.png',
     domain: 'lotteon.com',
     rating: 'B',
     info: '롯데그룹의 통합 온라인 쇼핑 플랫폼',
+
     unfavorableClauses: [
       '온라인 전용 상품의 교환 제한',
       '멤버십 등급 조정 기준의 불투명성',
@@ -272,9 +279,10 @@ const dummySiteData = {
   },
   'bunjang.co.kr': {
     name: '번개장터',
-    logo: 'https://source.unsplash.com/random/100x100?logo',
+    logo: '/site-logo/bunjang_logo.png',
     domain: 'bunjang.co.kr',
     rating: 'C',
+
     info: '중고 거래 중심의 온라인 플랫폼',
     unfavorableClauses: [
       '허위매물 관리의 한계',
@@ -294,9 +302,10 @@ const dummySiteData = {
   },
   'yanolja.com': {
     name: '야놀자',
-    logo: 'https://source.unsplash.com/random/100x100?logo',
+    logo: '/site-logo/yanolja_logo.png',
     domain: 'yanolja.com',
     rating: 'B',
+
     info: '숙박 및 레저 중심의 종합 여가 플랫폼',
     unfavorableClauses: [
       '취소 및 환불 정책의 엄격성',
@@ -316,7 +325,7 @@ const dummySiteData = {
   },
   'goodchoice.kr': {
     name: '여기어때',
-    logo: 'https://source.unsplash.com/random/100x100?logo',
+    logo: '/site-logo/goodchoice_logo.png',
     domain: 'goodchoice.kr',
     rating: 'B',
     info: '국내 숙박 예약 중심의 여행 플랫폼',
@@ -362,7 +371,15 @@ export default function SiteEvaluation() {
         </div>
         <div className="bg-white p-6 rounded-lg shadow-md mb-6">
           <div className="flex items-center mb-4">
-            <Image src={`/TermCompass_logo.png`} alt={`${site.name} 로고`} width={100} height={100} className="mr-4" />
+            <div className="w-[100px] h-[100px] border-2 border-gray-300 rounded-lg overflow-hidden mr-4 flex items-center justify-center p-3">
+              <Image 
+                src={site.logo} 
+                alt={`${site.name} 로고`} 
+                width={80} 
+                height={80} 
+                className="object-contain w-auto h-auto max-w-[70px] max-h-[70px]" 
+              />
+            </div>
             <div>
               <h2 className="text-2xl font-semibold">{site.name}</h2>
               <p className="text-blue-600">{site.domain}</p>
@@ -372,7 +389,7 @@ export default function SiteEvaluation() {
           <p className="text-gray-700">{site.info}</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+        <div className="grid grid-rows-1 md:grid-rows-3 gap-6 mb-6">
           <div className="bg-red-100 p-4 rounded-lg">
             <h3 className="font-semibold text-red-800 mb-2">소비자에게 불리한 조항</h3>
             <ul className="list-disc list-inside">
