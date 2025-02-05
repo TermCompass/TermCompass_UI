@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import Image from 'next/image'
 import FooterSection from './FooterSection'
-
+// 실제 DB에서 가져와야함
 const notices = {
   government: [
     { title: '개인정보보호법 개정안 발표', date: '2023-06-15' },
@@ -23,7 +23,7 @@ const notices = {
     { title: '시스템 점검으로 인한 서비스 일시 중단 안내', date: '2023-06-17' },
   ],
 }
-
+//DB에서 사진데이터 가져와서 전시해야함
 const newsItems = [
   { title: '인공지능 기반 약관 분석 서비스 출시', image: '/herobackground.jpg' },
   { title: '소비자 권익 보호를 위한 새로운 법안 발의', image: '/herobackground.jpg' },
@@ -58,11 +58,6 @@ export default function NewsAndNoticeSection() {
             <div className="mt-12">
               <h2 className="text-3xl font-bold mb-6 text-center">공지사항</h2>
               <Tabs defaultValue="government" className="w-full">
-                <TabsList className="grid w-full grid-cols-3">
-                  <TabsTrigger value="government">정부 공지</TabsTrigger>
-                  <TabsTrigger value="agency">진흥원 공지</TabsTrigger>
-                  <TabsTrigger value="site">사이트 공지</TabsTrigger>
-                </TabsList>
                 {Object.entries(notices).map(([key, items]) => (
                   <TabsContent key={key} value={key}>
                     <ul className="space-y-2">
