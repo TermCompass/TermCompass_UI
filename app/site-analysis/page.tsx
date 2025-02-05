@@ -11,7 +11,7 @@ import { Badge } from "@/components/ui/badge"
 const dummySiteRatings = [
   { 
     name: '네이버', 
-    logo: 'https://source.unsplash.com/random/50x50?logo', 
+    logo: '/site-logo/naver_logo.png',
     domain: 'naver.com',
     rating: 'A',
     benefits: ['개인정보 보호 강화', '서비스 이용 편의성', '콘텐츠 권리 보장'],
@@ -19,7 +19,7 @@ const dummySiteRatings = [
   },
   { 
     name: '카카오', 
-    logo: 'https://source.unsplash.com/random/50x50?logo', 
+    logo: '/site-logo/kakao_logo.png', 
     domain: 'kakao.com',
     rating: 'B',
     benefits: ['통합 로그인 기능', '서비스 연동 용이성', '보안 정책 강화'],
@@ -27,7 +27,7 @@ const dummySiteRatings = [
   },
   { 
     name: '쿠팡', 
-    logo: 'https://source.unsplash.com/random/50x50?logo', 
+    logo: '/site-logo/coupang_logo.png', 
     domain: 'coupang.com',
     rating: 'B',
     benefits: ['반품 정책', '배송 서비스', '회원 혜택'],
@@ -35,7 +35,7 @@ const dummySiteRatings = [
   },
   { 
     name: '11번가', 
-    logo: 'https://source.unsplash.com/random/50x50?logo', 
+    logo: '/site-logo/11st_logo.png', 
     domain: '11st.co.kr',
     rating: 'B',
     benefits: ['상품 품질 보증', '개인정보 이용 내역 조회', '청약철회 기간'],
@@ -43,7 +43,7 @@ const dummySiteRatings = [
   },
   { 
     name: '요기요', 
-    logo: 'https://source.unsplash.com/random/50x50?logo', 
+    logo: '/site-logo/yogiyo_logo.jpg', 
     domain: 'yogiyo.co.kr',
     rating: 'C',
     benefits: ['음식점 위생 정보 제공', '주문 취소 및 환불 절차', '개인정보 제공 내역 공개'],
@@ -51,7 +51,7 @@ const dummySiteRatings = [
   },
   { 
     name: 'G마켓', 
-    logo: 'https://source.unsplash.com/random/50x50?logo', 
+    logo: '/site-logo/gmarket_logo.png', 
     domain: 'gmarket.co.kr',
     rating: 'B',
     benefits: ['구매자 보호 정책', '다양한 결제 옵션', '적립금 제도'],
@@ -59,7 +59,7 @@ const dummySiteRatings = [
   },
   { 
     name: '배달의민족', 
-    logo: 'https://source.unsplash.com/random/50x50?logo', 
+    logo: '/site-logo/baemin_logo.png', 
     domain: 'baemin.com',
     rating: 'B',
     benefits: ['주문 취소 및 환불 정책', '고객 리뷰 시스템', '개인정보 보호 정책'],
@@ -67,7 +67,7 @@ const dummySiteRatings = [
   },
   { 
     name: '티몬', 
-    logo: 'https://source.unsplash.com/random/50x50?logo', 
+    logo: '/site-logo/tmon_logo.png', 
     domain: 'tmon.co.kr',
     rating: 'C',
     benefits: ['쿠폰 및 할인 정책', '간편 결제 시스템', '고객 서비스 채널'],
@@ -75,7 +75,7 @@ const dummySiteRatings = [
   },
   { 
     name: '위메프', 
-    logo: 'https://source.unsplash.com/random/50x50?logo', 
+    logo: '/site-logo/wemakeprice_logo.png', 
     domain: 'wemakeprice.com',
     rating: 'C',
     benefits: ['가격 비교 시스템', '무료 배송 정책', '정기 구독 서비스'],
@@ -83,7 +83,7 @@ const dummySiteRatings = [
   },
   { 
     name: '당근마켓', 
-    logo: 'https://source.unsplash.com/random/50x50?logo', 
+    logo: '/site-logo/daangn_logo.png', 
     domain: 'daangn.com',
     rating: 'B',
     benefits: ['지역 기반 거래 시스템', '사용자 간 직거래 지원', '간편한 판매글 등록'],
@@ -91,7 +91,7 @@ const dummySiteRatings = [
   },
   { 
     name: '인터파크', 
-    logo: 'https://source.unsplash.com/random/50x50?logo', 
+    logo: '/site-logo/interpark_logo.png', 
     domain: 'interpark.com',
     rating: 'B',
     benefits: ['통합 예약 시스템', '다양한 카테고리 제공', '멤버십 혜택'],
@@ -99,7 +99,7 @@ const dummySiteRatings = [
   },
   { 
     name: '롯데온', 
-    logo: 'https://source.unsplash.com/random/50x50?logo', 
+    logo: '/site-logo/lotteon_logo.png', 
     domain: 'lotteon.com',
     rating: 'B',
     benefits: ['통합 포인트 시스템', '오프라인 연계 서비스', '프리미엄 회원 혜택'],
@@ -107,7 +107,7 @@ const dummySiteRatings = [
   },
   { 
     name: '번개장터', 
-    logo: 'https://source.unsplash.com/random/50x50?logo', 
+    logo: '/site-logo/bunjang_logo.png', 
     domain: 'bunjang.co.kr',
     rating: 'C',
     benefits: ['간편한 중고거래 시스템', '안전결제 서비스', '실시간 채팅 기능'],
@@ -115,7 +115,7 @@ const dummySiteRatings = [
   },
   { 
     name: '야놀자', 
-    logo: 'https://source.unsplash.com/random/50x50?logo', 
+    logo: '/site-logo/yanolja_logo.png', 
     domain: 'yanolja.com',
     rating: 'B',
     benefits: ['실시간 예약 시스템', '다양한 숙박 옵션', '포인트 적립 제도'],
@@ -123,7 +123,7 @@ const dummySiteRatings = [
   },
   { 
     name: '여기어때', 
-    logo: 'https://source.unsplash.com/random/50x50?logo', 
+    logo: '/site-logo/goodchoice_logo.png', 
     domain: 'goodchoice.kr',
     rating: 'B',
     benefits: ['가격비교 시스템', '쿠폰 할인 정책', '회원 등급별 혜택'],
@@ -147,7 +147,7 @@ export default function SiteRatings() {
     <Link href={`/site-analysis/${site.domain}`} key={site.domain} className="block">
       <div className="border p-4 rounded-lg hover:shadow-md transition-shadow">
         <div className="flex items-center mb-2">
-          <Image src={`/TermCompass_logo.png`} alt={`${site.name} 로고`} width={50} height={50} className="mr-4" />
+          <Image src={site.logo} alt={`${site.name} 로고`} width={50} height={50} className="mr-4" />
           <div>
             <h2 className="text-xl font-semibold">{site.name}</h2>
             <p className="text-blue-600">{site.domain}</p>

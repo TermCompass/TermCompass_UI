@@ -208,10 +208,10 @@ export default function Layout({ children, activeSection = 0 }: LayoutProps) {
                                 <Button
                                     onClick={handleLogout}
                                     variant="outline"
-                                    className={`transition-all duration-300 ${
+                                    className={`font-bold px-6 py-2.5 rounded-full transition-all duration-300 ${
                                         pathname === '/' && isTransparent
-                                            ? 'bg-transparent border-white text-white hover:bg-white/10'
-                                            : 'bg-white text-blue-700 hover:bg-blue-100'
+                                            ? 'bg-white/10 border-2 border-white text-white hover:bg-white/20 hover:scale-105 active:bg-white/30'
+                                            : 'bg-red-50 border-2 border-red-400 text-red-500 hover:bg-red-100 hover:scale-105 hover:shadow-md active:bg-red-200'
                                     }`}
                                 >
                                     로그아웃
@@ -220,10 +220,10 @@ export default function Layout({ children, activeSection = 0 }: LayoutProps) {
                                 <Button
                                     onClick={() => setShowAuthForm(true)}
                                     variant="outline"
-                                    className={`transition-all duration-300 ${
+                                    className={`font-bold px-6 py-2.5 rounded-full transition-all duration-300 ${
                                         pathname === '/' && isTransparent
-                                            ? 'bg-transparent border-white text-white hover:bg-white/10'
-                                            : 'bg-white text-blue-700 hover:bg-blue-100'
+                                            ? 'bg-transparent border-2 border-white text-white hover:bg-white/20 hover:scale-105 active:bg-white/30'
+                                            : 'bg-blue-50 border-2 border-blue-500 text-blue-600 hover:bg-blue-100 hover:scale-105 hover:shadow-md active:bg-blue-200'
                                     }`}
                                 >
                                     로그인 / 회원가입
