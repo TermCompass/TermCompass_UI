@@ -4,6 +4,7 @@ import Link from 'next/link';
 import BoardBar from '@/app/components/BoardBar';
 import HeaderBanner from '@/app/components/BoardBanner';
 import { useRouter } from "next/navigation";
+import {useUser} from '@/app/contexts/UserContext';
 interface BoardPageTemplateProps {
     title: string;
     breadcrumb: { label: string; href: string }[];
@@ -27,7 +28,7 @@ export default function BoardPageTemplate({
         (currentPage - 1) * postsPerPage,
         currentPage * postsPerPage
     );
-
+    const { user } = useUser();
     const router = useRouter();
     return (
         <div>
@@ -41,7 +42,7 @@ export default function BoardPageTemplate({
             />
 
             {/* 게시판 + 메뉴바 수평 배치 */}
-            <div className="container mx-auto px-4 py-8 flex flex-col md:flex-row pt-36 gap-6">
+            <div className="container mx-auto px-4 py-8 flex flex-col md:flex-row pt-24 gap-6">
                 {/* 🔹 게시판 (메뉴바보다 넓게 차지) */}
                 <div className="flex-grow md:w-3/4">
                     <table className="w-full border-collapse border-t-4 border-b border-gray-300 mx-auto">
@@ -123,17 +124,21 @@ export default function BoardPageTemplate({
 
                         {/* 🔹 글쓰기 버튼을 오른쪽 정렬 */}
                         <div className="ml-auto mt-4 md:mt-0">
-                            <button
-                                onClick={() => {
-                                    if (breadcrumb.length > 0) {
-                                        const lastBreadcrumb = breadcrumb[breadcrumb.length - 1].href; // ✅ 마지막 페이지 가져오기
-                                        router.push(`${lastBreadcrumb}/write`); // ✅ 해당 페이지의 /write로 이동
-                                    }
-                                }}
-                                className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
-                            >
-                                글쓰기
-                            </button>
+                            {user && ( // ✅ 로그인한 경우에만 버튼 표시
+                                <div className="ml-auto mt-4 md:mt-0">
+                                    <button
+                                        onClick={() => {
+                                            if (breadcrumb.length > 0) {
+                                                const lastBreadcrumb = breadcrumb[breadcrumb.length - 1].href;
+                                                router.push(`${lastBreadcrumb}/write`);
+                                            }
+                                        }}
+                                        className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+                                    >
+                                        글쓰기
+                                    </button>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>

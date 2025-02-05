@@ -389,7 +389,7 @@ export default function SiteEvaluation() {
           <p className="text-gray-700">{site.info}</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+        <div className="grid grid-rows-1 md:grid-rows-3 gap-6 mb-6">
           <div className="bg-red-100 p-4 rounded-lg">
             <h3 className="font-semibold text-red-800 mb-2">소비자에게 불리한 조항</h3>
             <ul className="list-disc list-inside">
