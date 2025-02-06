@@ -180,29 +180,29 @@ export default function Layout({ children, activeSection = 0 }: LayoutProps) {
                     ) : (
                         <>
                             <nav>
-                                <ul className="flex space-x-6">
+                                <ul className="flex space-x-6 ">
                                     {navItems.map((item) => (
                                         <li key={item.href}>
                                             <Link
                                                 href={item.href}
-                                                className={`relative py-2 transition-colors duration-300 ${
+                                                className={`relative transition-colors duration-300 ${
                                                     pathname === '/' && isTransparent
                                                         ? 'text-white font-bold'
                                                         : 'text-gray-900 font-bold'
-                                                } group`
-                                            }
-                                            onMouseEnter={() => item.label === '게시판' && setIsBoardOpen(true)}
-
+                                                } group`}
+                                                onMouseEnter={() => item.label === '게시판' && setIsBoardOpen(true)}
                                             >
+                                            <span className="relative w-fit inline-block px-12">
                                                 {item.label}
-                                                <span className={`absolute bottom-0 left-0 w-0 h-0.5 ${
-                                                    pathname === '/' && isTransparent
-                                                        ? 'bg-white'
-                                                        : 'bg-blue-600'
-                                                } transition-all duration-300 group-hover:w-full ${
-                                                    pathname === item.href ? 'w-full' : ''
-                                                }`}></span>
+                                                {/* 🔹 밑줄을 별도 span 태그로 분리하여 width 영향을 받지 않도록 설정 */}
+                                                <span
+                                                    className={`absolute bottom-0 left-0 h-0.5 w-0 bg-blue-600 transition-all duration-300 group-hover:w-full ${
+                                                        pathname === item.href ? 'w-full' : ''
+                                                    }`}
+                                                ></span>
+                                            </span>
                                             </Link>
+
                                             {item.label === "게시판" && isBoardOpen && (
                                                 <div
                                                     className={`absolute top-full left-0 w-screen justify-center bg-white shadow-lg rounded-b overflow-hidden transition-all duration-300 ease-in-out ${
@@ -211,11 +211,11 @@ export default function Layout({ children, activeSection = 0 }: LayoutProps) {
                                                     onMouseEnter={() => setIsBoardOpen(true)}   // ✅ 드롭다운 내부에서 마우스를 올리면 유지
                                                     onMouseLeave={() => setIsBoardOpen(false)}  // ✅ 드롭다운 외부로 벗어나면 닫힘
                                                 >
-                                                    <ul className="items-center justify-center flex flex-col pb-2 relative left-[60px]">
-                                                        <li className="hover:bg-gray-100 p-2 rounded-md">
+                                                    <ul className="items-center justify-center flex flex-col pb-2 relative left-[40px]">
+                                                        <li className="p-2 rounded-md border-b-2">
                                                             <Link href="/board">📌 공지사항</Link>
                                                         </li>
-                                                        <li className="hover:bg-gray-100 p-2 rounded-md">
+                                                        <li className="p-2 rounded-md border-b-2">
                                                             <Link href="/photonews">📷 포토뉴스</Link>
                                                         </li>
                                                     </ul>

@@ -9,6 +9,7 @@ import UserInfoForm from "../components/UserInfoForm"
 import ChangePasswordForm from "@/app/components/ChangePasswordForm"
 import ReviewHistory from "../components/ReviewHistory"
 import BusinessHistory from "../components/BusinessHistory"
+import HeaderBanner from "../components/BoardBanner";
 
 export default function MyPage() {
   const { user } = useUser()
@@ -31,6 +32,9 @@ export default function MyPage() {
 
   return (
     <Layout>
+      <HeaderBanner
+          title="마이페이지"
+      />
       <div className="max-w-4xl mx-auto mt-8">
         <Card>
           <CardHeader>
