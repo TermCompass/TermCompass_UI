@@ -143,9 +143,47 @@ export default function ReviewRequest() {
       }
     };
 
+
+    // ============================== 입력 테스트용 함수 ==================================
+
+    const addContent = (input: string, number: number = 1) => {
+      setIsPdfUploaded(true);
+      setPdfContent(prevResult => {
+        let newResult = prevResult || "";
+
+        newResult += `<div id="content-${number}" class="bg-gray-200 m-1 p-2 rounded">${input}</div>`;
+        return newResult;
+      });
+    }
+
+    const addResult = (input: string, grade: string = 'B', number: number = 1) => {
+      setIsPdfUploaded(true);
+      setReviewResult(prevResult => {
+        let newResult = prevResult || "";
+
+        // 색깔 지정
+        const gradeColorMap: { [key: string]: string } = {
+          "A": "green",
+          "B": "gray",
+          "C": "red"
+        };
+        const color = gradeColorMap[grade] || "gray";
+
+        newResult += `<div id="review-${number}" class="bg-${color}-200 m-1 p-2 rounded">${input}</div>`;
+        return newResult;
+      });
+
+
+    }
+
+    // 전역 범위에 함수 노출
+    (window as any).addContent = addContent;
+    (window as any).addResult = addResult;
+
     return () => {
       newSocket.close();
     };
+
   }, []);
 
   const handleSendMessage = () => {
