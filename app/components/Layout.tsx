@@ -135,7 +135,7 @@ export default function Layout({ children, activeSection = 0 }: LayoutProps) {
         setIsLoggingOut(true);
 
         try {
-            const response = await fetch('http://localhost:8080/logout', {
+            const response = await fetch('http://kyj9447.ddns.net:8080/logout', {
                 method: 'POST',
                 credentials: 'include', // 쿠키를 포함한 요청
             });

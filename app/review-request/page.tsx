@@ -70,7 +70,7 @@ export default function ReviewRequest() {
 
   useEffect(() => {
     // 웹소켓 연결 생성
-    const newSocket = new WebSocket('ws://localhost:8080/ws');
+    const newSocket = new WebSocket('ws://kyj9447.ddns.net:8080/ws');
     setSocket(newSocket);
 
     // open
