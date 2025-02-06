@@ -5,7 +5,7 @@ import { useUser } from '../contexts/UserContext'
 import AuthForm from './AuthForm'
 
 export default function AuthModal() {
-  const { isAuthFormOpen, setIsAuthFormOpen, authType } = useAuth()
+  const { isAuthFormOpen, setIsAuthFormOpen } = useAuth()
   const { login } = useUser()
 
   if (!isAuthFormOpen) return null
@@ -13,10 +13,9 @@ export default function AuthModal() {
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
       <AuthForm
-        initialUserType={authType}
         onSubmit={(name, email, password, userType, businessNumber, isLogin) => {
-          login(email, userType);
-          setIsAuthFormOpen(false);
+          login(email, 'PERSONAL')
+          setIsAuthFormOpen(false)
         }}
         onCancel={() => setIsAuthFormOpen(false)}
       />

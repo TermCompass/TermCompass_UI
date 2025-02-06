@@ -39,20 +39,47 @@ const MiniChatbot: React.FC = () => {
   const fixedOptions = [
     { 
       key: '약관 생성', 
-      response: '약관 생성 서비스는 기업회원 전용입니다.',
-      description: 'AI 기반 맞춤형 약관 생성 서비스를 이용해보세요.',
+      response: 'AI 기반 맞춤형 약관 생성 서비스를 이용해보세요.',
       path: '/create-terms',
       requiresAuth: true,
       requiresCompany: true,
-      icon: Building2
+      icon: Building2,
+      action: () => {
+        // 챗봇을 닫지 않고 설명과 로그인 유도 메시지 출력
+        setMessages((prev) => [
+          ...prev,
+          { type: 'bot', content: '약관 생성 서비스는 기업회원 전용입니다. 로그인 하시겠습니까?' },
+          { type: 'system', content: '로그인 버튼을 클릭하여 로그인하세요.' },
+        ]);
+      }
     },
     { 
       key: '약관 검토', 
-      response: '약관 검토 서비스는 모든 회원이 사용 가능합니다.',
-      description: 'AI가 약관의 문제점을 검토하고 개선점을 제안합니다.',
+      response: 'AI가 약관의 문제점을 검토하고 개선점을 제안합니다.',
       path: '/review-request',
       requiresAuth: false,
-      icon: FileText
+      icon: FileText,
+      action: () => {
+        setMessages((prev) => [
+          ...prev,
+          { type: 'bot', content: '약관 검토 서비스에 오신 것을 환영합니다.' },
+          { type: 'system', content: '서비스 이용하기 버튼을 클릭하여 검토를 시작하세요.' },
+        ]);
+      }
+    },
+    { 
+      key: '사이트 등급 확인', 
+      response: '주요 웹사이트의 약관을 분석하여 등급을 제공합니다.',
+      path: '/site-analysis',
+      requiresAuth: false,
+      icon: BarChart2,
+      action: () => {
+        setMessages((prev) => [
+          ...prev,
+          { type: 'bot', content: '사이트 등급 확인 서비스에 오신 것을 환영합니다.' },
+          { type: 'system', content: '서비스 이용하기 버튼을 클릭하여 등급 확인을 시작하세요.' },
+        ]);
+      }
     },
     { 
       key: '회원가입 및 로그인', 
@@ -64,18 +91,9 @@ const MiniChatbot: React.FC = () => {
       action: () => {
         setIsChatbotOpen(false);
         requestAnimationFrame(() => {
-          setAuthType('PERSONAL');  // 개인 사용자로 설정
-          setIsAuthFormOpen(true);
+          setIsAuthFormOpen(true);  // 회원가입 폼 열기
         });
       }
-    },
-    { 
-      key: '사이트 등급 확인', 
-      response: '사이트 등급 확인은 모든 회원이 사용 가능합니다.',
-      description: '주요 웹사이트의 약관을 분석하여 등급을 제공합니다.',
-      path: '/site-analysis',
-      requiresAuth: false,
-      icon: BarChart2
     },
   ];
 
@@ -118,6 +136,14 @@ const MiniChatbot: React.FC = () => {
     setIsChatbotOpen(false);
     requestAnimationFrame(() => {
       setIsAuthFormOpen(true);
+    });
+  };
+
+  // 로그인 버튼 클릭 핸들러 추가
+  const handleLoginButtonClick = () => {
+    setIsChatbotOpen(false);
+    requestAnimationFrame(() => {
+      setIsAuthFormOpen(true);  // 로그인 폼 열기
     });
   };
 
@@ -212,6 +238,12 @@ const MiniChatbot: React.FC = () => {
       chatRef.current.scrollTop = chatRef.current.scrollHeight;
     }
   }, [messages]);
+
+  // 서비스 이용하기 버튼 클릭 핸들러 추가
+  const handleServiceButtonClick = (path: string) => {
+    setIsChatbotOpen(false);
+    router.push(path);  // 해당 페이지로 이동
+  };
 
   return (
     <div className={`fixed bottom-4 right-4 z-50 transition-all duration-300 ${
@@ -345,7 +377,7 @@ const MiniChatbot: React.FC = () => {
                               <div className="mt-2 flex justify-between items-center bg-gray-50 
                                             p-2 rounded-md border border-gray-200">
                                 <span className="text-xs text-gray-600">
-                                  서비스 이용을 위해 로그인이 필요합니다
+                                  로그인이 필요합니다
                                 </span>
                                 <button
                                   onClick={() => {
