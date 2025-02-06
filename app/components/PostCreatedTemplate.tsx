@@ -2,6 +2,7 @@
 import Layout from '../components/Layout'
 import BoardBar from '../components/BoardBar'
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import HeaderBanner from "@/app/components/BoardBanner";
 
 interface PostCreateProps {
@@ -9,6 +10,7 @@ interface PostCreateProps {
 }
 
 export default function PostCreatePage({ boardTitle = "공지사항" }: PostCreateProps) {
+    const router = useRouter()
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
     const [category, setCategory] = useState(boardTitle);
@@ -17,12 +19,12 @@ export default function PostCreatePage({ boardTitle = "공지사항" }: PostCrea
 
     // ✅ 게시판별 API 주소 매핑
     const apiEndpoints: { [key: string]: string } = {
-        "공지사항": "/api/board",
+        "공지사항": "http://localhost:8080/board/create",
         "포토뉴스": "/api/photenews",
     };
 
     // ✅ 현재 게시판에 해당하는 API 주소 가져오기
-    const apiUrl = apiEndpoints[boardTitle] || "/api/default";
+    const apiUrl = apiEndpoints[boardTitle] || "http://localhost:8080/board/create";
 
     // ✅ 게시물 등록 함수
     const handleSubmit = async (e: React.FormEvent) => {
@@ -40,7 +42,7 @@ export default function PostCreatePage({ boardTitle = "공지사항" }: PostCrea
             const formData = new FormData();
             formData.append("title", title);
             formData.append("content", content);
-            formData.append("category", category);
+            // formData.append("category", category);
             if (file) {
                 formData.append("file", file);
             }
@@ -49,6 +51,7 @@ export default function PostCreatePage({ boardTitle = "공지사항" }: PostCrea
             const response = await fetch(apiUrl, {
                 method: "POST",
                 body: formData,
+                credentials: "include"
             });
 
             if (!response.ok) {
@@ -57,10 +60,14 @@ export default function PostCreatePage({ boardTitle = "공지사항" }: PostCrea
 
             alert("게시물이 성공적으로 등록되었습니다!");
 
-            // ✅ 입력값 초기화
+            // ✅ 입력 필드 초기화
             setTitle("");
             setContent("");
             setFile(null);
+
+            // ✅ /board 페이지로 이동
+            router.push("/board");
+
         } catch (error) {
             alert("게시물 등록 중 오류가 발생했습니다.");
             console.error(error);

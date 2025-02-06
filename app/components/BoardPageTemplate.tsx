@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 interface BoardPageTemplateProps {
     title: string;
     breadcrumb: { label: string; href: string }[];
-    posts: { id: number; title: string; author: string; date: string; link: string }[];
+    posts: { id: number; title: string; author: string; created_at: string;}[];
     currentPage: number;
     totalPages: number;
     postsPerPage: number;
@@ -58,12 +58,20 @@ export default function BoardPageTemplate({
                             <tr key={post.id} className="hover:bg-gray-50">
                                 <td className="px-4 py-2 border-t border-b border-gray-300 text-center">{post.id}</td>
                                 <td className="px-4 py-2 border-t border-b text-left">
-                                    <Link href={post.link} className="hover:underline">
+                                    <Link href={`/board/${post.id}`} className="text-blue-500 hover:text-blue-700">
                                         {post.title}
                                     </Link>
                                 </td>
                                 <td className="px-4 py-2 border-t border-b text-center">{post.author}</td>
-                                <td className="px-4 py-2 border-t border-b text-center">{post.date}</td>
+                                <td className="px-4 py-2 border-t border-b text-center">
+                                    {(() => {
+                                        const date = new Date(post.created_at);
+                                        date.setHours(date.getHours() + 9); // 9시간 추가
+
+                                        // ISO 문자열로 변환 후 원하는 형식으로 출력
+                                        return date.toISOString().split('T')[0] + ' ' + date.toISOString().split('T')[1].split('.')[0];
+                                    })()}
+                                </td>
                             </tr>
                         ))}
                         </tbody>
