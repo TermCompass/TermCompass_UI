@@ -31,7 +31,7 @@ export default function Layout({ children, activeSection = 0 }: LayoutProps) {
     const { toast } = useToast()
     const [isTransparent, setIsTransparent] = useState(true)
     const [isHovered, setIsHovered] = useState(false)
-
+    const [isBoardOpen, setIsBoardOpen] = useState(false);
     // 로그인한 사용자만 접근 가능한 페이지 목록
     const authenticatedPaths = [
         '/create-terms',
@@ -189,7 +189,10 @@ export default function Layout({ children, activeSection = 0 }: LayoutProps) {
                                                     pathname === '/' && isTransparent
                                                         ? 'text-white font-bold'
                                                         : 'text-gray-900 font-bold'
-                                                } group`}
+                                                } group`
+                                            }
+                                            onMouseEnter={() => item.label === '게시판' && setIsBoardOpen(true)}
+
                                             >
                                                 {item.label}
                                                 <span className={`absolute bottom-0 left-0 w-0 h-0.5 ${
@@ -200,6 +203,26 @@ export default function Layout({ children, activeSection = 0 }: LayoutProps) {
                                                     pathname === item.href ? 'w-full' : ''
                                                 }`}></span>
                                             </Link>
+                                            {item.label === "게시판" && isBoardOpen && (
+                                                <div
+                                                    className={`absolute top-full left-0 w-screen justify-center bg-white shadow-lg rounded-b overflow-hidden transition-all duration-300 ease-in-out ${
+                                                        isBoardOpen ? 'opacity-100 transform translate-y-0 h-auto max-h-60' : 'opacity-0 transform -translate-y-5 h-0 max-h-0'
+                                                    }`}
+                                                    onMouseEnter={() => setIsBoardOpen(true)}   // ✅ 드롭다운 내부에서 마우스를 올리면 유지
+                                                    onMouseLeave={() => setIsBoardOpen(false)}  // ✅ 드롭다운 외부로 벗어나면 닫힘
+                                                >
+                                                    <ul className="items-center justify-center flex flex-col pb-2 relative left-[60px]">
+                                                        <li className="hover:bg-gray-100 p-2 rounded-md">
+                                                            <Link href="/board">📌 공지사항</Link>
+                                                        </li>
+                                                        <li className="hover:bg-gray-100 p-2 rounded-md">
+                                                            <Link href="/photonews">📷 포토뉴스</Link>
+                                                        </li>
+                                                    </ul>
+
+                                                </div>
+
+                                            )}
                                         </li>
                                     ))}
                                 </ul>
