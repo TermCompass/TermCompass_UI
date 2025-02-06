@@ -9,6 +9,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
 import { useSwipeable } from "react-swipeable";
 import { useChatbot } from '@/app/contexts/ChatbotContext';
+import Image from "next/image";
 
 const services = [
   {
@@ -111,13 +112,13 @@ export default function ServicesSection() {
                       }}
                   >
                     <div className="flex items-center gap-2 mb-2">
-                        <div className="w-8">
-                            <img
-                                src="/TermCompass_logo.png"
-                                alt="Example"
-                                className="w-full h-auto rounded-lg shadow-lg"
-                            />
-                        </div>
+                        <Image
+                            src={website.logo}
+                            alt={`${website.name} 로고`}
+                            width={32}
+                            height={32}
+                            className="object-contain"
+                        />
                         <h3 className="text-sm font-bold truncate" 
                             style={{fontSize: "clamp(14px, 1.2vw, 18px)"}}>
                             {website.name}

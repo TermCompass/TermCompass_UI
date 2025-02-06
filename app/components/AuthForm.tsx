@@ -65,10 +65,8 @@ export default function AuthForm({ onSubmit, onCancel }: AuthFormProps) {
             throw new Error(errorData[0] || (isLogin ? '로그인 실패' : '회원가입 실패'));
         }
 
-        const responseData = await response.json();
-
         if (isLogin) {
-            // 로그인 성공 시 처리
+            const responseData = await response.json();
             setUserType(responseData.account_type)
             onSubmit(
                 responseData.id,

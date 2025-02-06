@@ -7,7 +7,7 @@ export default function ResponsiveMenu() {
         <div>
             {/* 메뉴바 (창 크기에 따라 위치 자동 조정) */}
             <div
-                className={`fixed top-[23%] p-4 border-l shadow-md transition-transform duration-300 ease-in-out"
+                className={`top-[23%] p-4 border-l shadow-md transition-transform duration-300 ease-in-out"
                 }`}
                 style={{width: "200px" }} // 오른쪽 끝과의 거리 적용
             >
