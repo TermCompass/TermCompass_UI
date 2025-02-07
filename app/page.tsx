@@ -16,6 +16,10 @@ export default function Home() {
   const isScrollingRef = useRef(false)
   const lastWheelEventRef = useRef<number>(0)
 
+  // 키보드 이벤트 처리를 위한 상태
+  const isTransitioningRef = useRef(false)
+  const TRANSITION_DELAY = 1000 // 애니메이션 지속 시간과 동일하게 설정
+
   useEffect(() => {
     const container = scrollContainerRef.current
     if (!container) return
@@ -23,64 +27,60 @@ export default function Home() {
     const handleWheel = (e: WheelEvent) => {
       e.preventDefault()
 
-      // 스크롤 중이면 무시
+      const currentTime = Date.now()
+      if (currentTime - lastWheelEventRef.current < 50) return
+      lastWheelEventRef.current = currentTime
+
       if (isScrollingRef.current) return
 
-      // 휠 이벤트 쓰로틀링 (연속 이벤트 방지)
-      const now = Date.now()
-      if (now - lastWheelEventRef.current < 50) return // 50ms 내 연속 이벤트 무시
-      lastWheelEventRef.current = now
+      const delta = e.deltaY
+      if (Math.abs(delta) < 50) return
 
-      const direction = e.deltaY > 0 ? 1 : -1
-      const nextSection = activeSection + direction
-
-      // 범위 체크
-      if (nextSection < 0 || nextSection >= container.children.length) return
-
-      isScrollingRef.current = true
-      setActiveSection(nextSection)
-
-      // URL 해시 업데이트
-      const sectionIds = ['hero', 'services', 'news', 'footer']
-      window.location.hash = sectionIds[nextSection]
-
-      // 부드러운 스크롤 이동
-      const targetSection = container.children[nextSection] as HTMLElement
-      targetSection.scrollIntoView({ 
-        behavior: 'smooth',
-        block: 'start'
-      })
-
-      // 스크롤 완료 대기
-      setTimeout(() => {
-        isScrollingRef.current = false
-      }, 800) // 스크롤 애니메이션 완료 시간
+      if (delta > 0 && activeSection < 3) {
+        scrollToSection(activeSection + 1)
+      } else if (delta < 0 && activeSection > 0) {
+        scrollToSection(activeSection - 1)
+      }
     }
 
-    // passive: false로 설정하여 preventDefault 허용
-    container.addEventListener('wheel', handleWheel, { passive: false })
+    container.addEventListener('wheel', handleWheel)
     return () => container.removeEventListener('wheel', handleWheel)
   }, [activeSection])
 
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (isTransitioningRef.current) return
+      
+      if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+        e.preventDefault()
+        
+        if (e.key === 'ArrowDown' && activeSection < 3) {
+          scrollToSection(activeSection + 1)
+        } else if (e.key === 'ArrowUp' && activeSection > 0) {
+          scrollToSection(activeSection - 1)
+        }
+      }
+    }
+    
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [activeSection])
+
   const scrollToSection = (index: number) => {
-    const container = scrollContainerRef.current
-    if (!container || isScrollingRef.current || index === activeSection) return
+    if (isTransitioningRef.current) return
+    isTransitioningRef.current = true
 
     isScrollingRef.current = true
     setActiveSection(index)
 
+    // URL 해시 업데이트
     const sectionIds = ['hero', 'services', 'news', 'footer']
     window.location.hash = sectionIds[index]
 
-    const targetSection = container.children[index] as HTMLElement
-    targetSection.scrollIntoView({ 
-      behavior: 'smooth',
-      block: 'start'
-    })
-
     setTimeout(() => {
       isScrollingRef.current = false
-    }, 800)
+      isTransitioningRef.current = false
+    }, TRANSITION_DELAY)
   }
 
   return (

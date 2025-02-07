@@ -8,22 +8,49 @@ import BoardBar from "@/app/components/BoardBar";
 //db에서 데이터를 연동해야할곳
 import BoardPageTemplate from '@/app/components/BoardPageTemplate';
 
-const dummyPosts = Array.from({ length: 100 }, (_, i) => ({
-    id: i + 1,
-    title: `${i + 1} 번째 게시글`,
-    author: `작성자 ${i + 1}`,
-    date: `2025-01-${String(i + 1).padStart(2, '0')}`,
-    link: `/board/${i + 1}`,
-}));
+interface Post {
+    id: number
+    title: string
+    author: string
+    created_at: string
+}
 
 export default function BoardPage() {
     const postsPerPage = 10;
-    const totalPages = Math.ceil(dummyPosts.length / postsPerPage);
-    const [currentPage, setCurrentPage] = useState(1);
+    const searchParams = useSearchParams()
+    const router = useRouter()
+
+    const currentPage = Number(searchParams.get('page')) || 1
+    const [posts, setPosts] = useState<Post[]>([])
+    const [totalPages, setTotalPages] = useState(1);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        const fetchPosts = async () => {
+            setLoading(true);
+            setError(null);
+            try {
+                const response = await fetch(`http://localhost:8080/board/list?page=${currentPage - 1}`);
+                if (!response.ok) {
+                    throw new Error("게시글을 불러오는 데 실패했습니다.");
+                }
+                const data = await response.json();
+                setPosts(data.content); // 백엔드에서 `Page<Question>` 형태라면 `.content` 사용
+                setTotalPages(data.totalPages);
+            } catch (err: any) {
+                setError(err.message);
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        fetchPosts();
+    }, [currentPage])
 
     const handlePageChange = (page: number) => {
-        setCurrentPage(page);
-    };
+        router.push(`/board?page=${page}`);
+    }
 
     return (
         <Layout>
@@ -34,7 +61,7 @@ export default function BoardPage() {
                 { label: '알림마당', href: '/board' },
                 { label: '게시판', href: '/board' },
             ]}
-            posts={dummyPosts}
+            posts={posts}
             currentPage={currentPage}
             totalPages={totalPages}
             postsPerPage={postsPerPage}
