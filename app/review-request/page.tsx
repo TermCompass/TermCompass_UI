@@ -111,7 +111,10 @@ export default function ReviewRequest() {
           let totalText = "";
           for (let i = 0; i < data.content.length; i++) {
             console.log(data.content[i])
-            totalText += `<div id="content-${i}" class="bg-gray-200 m-1 p-2 rounded">${data.content[i]}</div>`;
+            totalText += `<div class="flex items-center">
+                            <div class="bg-gray-100 m-1 p-2 rounded">${i + 1}</div>
+                            <div id="content-${i}" class="bg-gray-200 m-1 p-2 rounded">${data.content[i]}</div>
+                          </div>`;
           }
 
           // 진행바 총 길이 설정
@@ -133,7 +136,10 @@ export default function ReviewRequest() {
             };
             const colorClass = gradeColorMap[data.grade] || "bg-gray-200";
 
-            newResult += `<div id="review-${data.number}" class="${colorClass} m-1 p-2 rounded">${data.content}</div>`;
+            newResult += `<div class="flex items-center">
+                            <div class="bg-gray-100 m-1 p-2 rounded">${data.number}</div>
+                            <div id="review-${data.number}" class="${colorClass} m-1 p-2 rounded">${data.content}</div>
+                          </div>`;
             return newResult;
           });
           setCurrent(data.number);
@@ -148,7 +154,10 @@ export default function ReviewRequest() {
           let totalText = "";
           for (let i = 0; i < data.request.length; i++) {
             console.log(data.request[i])
-            totalText += `<div id="content-${i}" class="bg-gray-200 m-1 p-2 rounded">${data.request[i]}</div>`;
+            totalText += `<div class="flex items-center">
+                            <div class="bg-gray-100 m-1 p-2 rounded">${i + 1}</div>
+                            <div id="content-${i}" class="bg-gray-200 m-1 p-2 rounded">${data.request[i]}</div>
+                          </div>`;
           }
           setTotal(data.request.length)
           setPdfContent(totalText)
@@ -166,7 +175,10 @@ export default function ReviewRequest() {
             };
             const colorClass = gradeColorMap[message.grade] || "bg-gray-200";
 
-            resultText += `<div id="review-${message.number}" class="${colorClass} m-1 p-2 rounded">${message.answer}</div>`;
+            resultText += `<div class="flex items-center">
+                            <div class="bg-gray-100 m-1 p-2 rounded">${message.number}</div>
+                            <div id="review-${message.number}" class="${colorClass} m-1 p-2 rounded">${message.answer}</div>
+                          </div>`;          
           }
           setReviewResult(resultText)
 
