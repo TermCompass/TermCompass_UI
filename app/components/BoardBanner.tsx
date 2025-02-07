@@ -17,7 +17,7 @@ export default function HeaderBanner({
                                          breadcrumb = [],
                                      }: HeaderBannerProps) {
     return (
-        <div className="relative w-full h-[200px] overflow-hidden">
+        <div className="relative w-full h-[250px] overflow-hidden">
             {/* 🔹 배경 이미지 */}
             <div
                 className="absolute inset-0 w-full h-full bg-cover bg-center filter blur-md"
@@ -33,10 +33,18 @@ export default function HeaderBanner({
                     {/* 🔹 네비게이션 경로 */}
                     <div className="flex flex-row items-center space-x-4 px-4 py-2 rounded-lg">
                         {/* 홈 버튼 */}
-                        <a href="/" className="hover:opacity-80 transition-opacity">
-                            <img src="/ic_sub_nav_home.png" alt="Home" className="w-6 h-6"/>
-                        </a>
-                        <span className="text-gray-500 text-lg">&gt;</span>
+                        {/* 🔹 breadcrumb가 있을 때만 네비게이션 표시 */}
+                        {breadcrumb.length > 0 && (
+                            <>
+                                {/* 홈 버튼 */}
+                                <a href="/" className="hover:opacity-80 transition-opacity">
+                                    <img src="/ic_sub_nav_home.png" alt="Home" className="w-6 h-6"/>
+                                </a>
+                                {/* ">" 기호 */}
+                                <span className="text-gray-500 text-lg">&gt;</span>
+                            </>
+                        )}
+
                         {/* 네비게이션 경로 동적 생성 */}
                         {breadcrumb.map((crumb, index) => (
                             <div key={index} className="flex items-center space-x-2">
