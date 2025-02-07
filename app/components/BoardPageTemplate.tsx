@@ -4,6 +4,8 @@ import Link from 'next/link';
 import BoardBar from '@/app/components/BoardBar';
 import HeaderBanner from '@/app/components/BoardBanner';
 import { useRouter } from "next/navigation";
+import { useUser } from "@/app/contexts/UserContext";
+
 interface BoardPageTemplateProps {
     title: string;
     breadcrumb: { label: string; href: string }[];
@@ -27,6 +29,7 @@ export default function BoardPageTemplate({
         (currentPage - 1) * postsPerPage,
         currentPage * postsPerPage
     );
+    const user = useUser();
 
     const router = useRouter();
     return (
@@ -54,9 +57,11 @@ export default function BoardPageTemplate({
                         </tr>
                         </thead>
                         <tbody>
-                        {currentPosts.map((post) => (
+                        {currentPosts.map((post, index) => (
                             <tr key={post.id} className="hover:bg-gray-50">
-                                <td className="px-4 py-2 border-t border-b border-gray-300 text-center">{post.id}</td>
+                                <td className="px-4 py-2 border-t border-b border-gray-300 text-center">
+                                    {posts.length - ((currentPage - 1) * postsPerPage) - index}
+                                </td>
                                 <td className="px-4 py-2 border-t border-b text-left">
                                     <Link href={`/board/${post.id}`} className="text-blue-500 hover:text-blue-700">
                                         {post.title}
@@ -130,6 +135,7 @@ export default function BoardPageTemplate({
                         </div>
 
                         {/* 🔹 글쓰기 버튼을 오른쪽 정렬 */}
+                        {user && (
                         <div className="ml-auto mt-4 md:mt-0">
                             <button
                                 onClick={() => {
@@ -143,6 +149,7 @@ export default function BoardPageTemplate({
                                 글쓰기
                             </button>
                         </div>
+                        )}
                     </div>
                 </div>
 

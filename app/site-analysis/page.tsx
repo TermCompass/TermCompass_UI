@@ -29,7 +29,7 @@ const dummySiteRatings = [
     name: '쿠팡', 
     logo: '/site-logo/coupang_logo.png', 
     domain: 'coupang.com',
-    rating: 'B',
+    rating: 'E',
     benefits: ['반품 정책', '배송 서비스', '회원 혜택'],
     drawbacks: ['개인정보 활용 범위', '분쟁 해결 절차', '가격 정책 변경']
   },
@@ -117,7 +117,7 @@ const dummySiteRatings = [
     name: '야놀자', 
     logo: '/site-logo/yanolja_logo.png', 
     domain: 'yanolja.com',
-    rating: 'B',
+    rating: 'D',
     benefits: ['실시간 예약 시스템', '다양한 숙박 옵션', '포인트 적립 제도'],
     drawbacks: ['취소 및 환불 정책', '숙소 정보 책임 제한', '프로모션 적용 조건']
   },
@@ -131,7 +131,7 @@ const dummySiteRatings = [
   }
 ]
 
-type Grade = 'A' | 'B' | 'C' | 'ALL';
+type Grade = 'A' | 'B' | 'C' | 'D' | 'E' | 'ALL';
 
 export default function SiteRatings() {
   const [searchTerm, setSearchTerm] = useState('')
@@ -183,7 +183,7 @@ export default function SiteRatings() {
         <div className="bg-white p-6 rounded-lg shadow-md">
           <div className="flex flex-col md:flex-row justify-between items-center mb-4 space-y-4 md:space-y-0">
             <div className="flex flex-wrap justify-center md:justify-start gap-2">
-              {(['ALL', 'A', 'B', 'C'] as const).map((grade) => (
+              {(['ALL', 'A', 'B', 'C', 'D', 'E'] as const).map((grade) => (
                 <Button
                   key={grade}
                   variant={selectedGrade === grade ? "default" : "outline"}
