@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Layout from '@/app/components/Layout'
 import { Button } from "@/components/ui/button"
@@ -16,6 +16,10 @@ export default function ModifyTerms() {
   const fileInputRef = useRef<HTMLInputElement>(null)
   const { toast } = useToast()
   const router = useRouter()
+
+  useEffect(() => {
+    router.push("/")
+  }, [router])
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -133,4 +137,3 @@ export default function ModifyTerms() {
     </Layout>
   )
 }
-

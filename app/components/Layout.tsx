@@ -35,7 +35,7 @@ export default function Layout({ children, activeSection = 0 }: LayoutProps) {
     // 로그인한 사용자만 접근 가능한 페이지 목록
     const authenticatedPaths = [
         '/create-terms',
-        '/modify-terms',
+        // '/modify-terms',
         '/business-history',
         '/review-history',
         '/review-request',
@@ -73,7 +73,8 @@ export default function Layout({ children, activeSection = 0 }: LayoutProps) {
     }, [])
 
     useEffect(() => {
-        const businessOnlyPaths = ['/create-terms', '/modify-terms', '/business-history']
+        // const businessOnlyPaths = ['/create-terms', '/modify-terms', '/business-history']
+        const businessOnlyPaths = ['/create-terms', '/business-history']
         if (!isLoggingOut && businessOnlyPaths.includes(pathname) && (!user || user.userType !== 'COMPANY')) {
             toast({
                 title: "접근 제한",
@@ -109,7 +110,8 @@ export default function Layout({ children, activeSection = 0 }: LayoutProps) {
             ? user.userType === 'COMPANY'
                 ? [
                     { href: '/create-terms', label: '약관 생성' },
-                    { href: '/modify-terms', label: '약관 수정' },
+                    // { href: '/modify-terms', label: '약관 수정' },  // 임시로 비활성화
+                    // { href: '/business-history', label: '생성 내역' }, // 고려해 볼 사항
                 ]
                 : [
                 ]

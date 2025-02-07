@@ -13,7 +13,7 @@ const boards = [
   { name: 'AI 챗봇', link: '/ai-chatbot', userType: 'all' },
   { name: '사이트 등급', link: '/site-analysis', userType: 'all' },
   { name: '약관 생성', link: '/create-terms', userType: 'COMPANY' },
-  { name: '약관 수정', link: '/modify-terms', userType: 'COMPANY' },
+  // { name: '약관 수정', link: '/modify-terms', userType: 'COMPANY' },  // 임시로 비활성화
   { name: '이용 내역', link: '/business-history', userType: 'COMPANY' },
   { name: '검토 내역', link: '/review-history', userType: 'PERSONAL' },
 ]
