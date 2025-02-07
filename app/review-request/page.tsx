@@ -18,9 +18,12 @@ export default function ReviewRequest() {
   const [isReviewing, setIsReviewing] = useState(false)
   const [selectedReviewId, setSelectedReviewId] = useState<number | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const resetButtonRef = useRef<HTMLButtonElement>(null); // 초기화 버튼 참조
   const { toast } = useToast()
   const { user } = useUser()
   const [socket, setSocket] = useState<WebSocket | null>(null);
+  const [total, setTotal] = useState(100); // Total value for progress calculation
+  const [current, setCurrent] = useState(0); // Current progress value
 
   const [clauseDetails, setClauseDetails] = useState<{ [key: string]: string }>({
     "제7조 2항": "이 조항은 서비스 제공자의 책임을 과도하게 제한하고 있어 소비자의 권리를 침해할 수 있습니다. 관련 법규: 약관규제법 제6조",
@@ -54,6 +57,9 @@ export default function ReviewRequest() {
     setIsPdfUploaded(false);
     setReviewResult(null);
     setSelectedReviewId(null);
+    if (resetButtonRef.current) {
+      resetButtonRef.current.style.display = 'block'; // 초기화 버튼 다시 보이기
+    }
   };
 
   const handleSelectReview = (reviewId: number | null) => {
@@ -92,36 +98,87 @@ export default function ReviewRequest() {
       try {
         const data = JSON.parse(event.data);
 
+        // test
         if (data.type === 'test' && data.content) {
           // const outputElement = document.getElementById('output-test') as HTMLTextAreaElement;
           // outputElement.value += data.content + '\n';
 
-        } else if (data.type === 'total' && data.content) {
+        }
+        // total split된 약관 조항 list
+        else if (data.type === 'total' && data.content) {
           // const outputElement = document.getElementById('output-test') as HTMLTextAreaElement;
           // outputElement.value += data.content + '\n';
           let totalText = "";
-          for (let i = 0; i < data.length; i++) {
+          for (let i = 0; i < data.content.length; i++) {
             console.log(data.content[i])
             totalText += `<div id="content-${i}" class="bg-gray-200 m-1 p-2 rounded">${data.content[i]}</div>`;
           }
+
+          // 진행바 총 길이 설정
+          setTotal(data.length);
+          // PDF 입력부 설정
           setPdfContent(totalText)
 
-        } else if (data.type === 'review' && data.content) {
+        }
+        // review 검토된 약관 조항 1개
+        else if (data.type === 'review' && data.content) {
           setReviewResult(prevResult => {
             let newResult = prevResult || "";
 
             // 색깔 지정
             const gradeColorMap: { [key: string]: string } = {
-              "A": "green",
-              "B": "gray",
-              "C": "red"
+              "A": "bg-green-200",
+              "B": "bg-gray-200",
+              "C": "bg-red-200"
             };
-            const color = gradeColorMap[data.grade] || "gray";
+            const colorClass = gradeColorMap[data.grade] || "bg-gray-200";
 
-            newResult += `<div id="review-${data.number}" class="bg-${color}-200 m-1 p-2 rounded">${data.content}</div>`;
+            newResult += `<div id="review-${data.number}" class="${colorClass} m-1 p-2 rounded">${data.content}</div>`;
             return newResult;
           });
+          setCurrent(data.number);
         }
+        // resume 웹소켓 연결 수립시 이미 진행중인 검토가 있는경우
+        else if (data.type === 'resume' && data.request) {
+
+          // 파일 업로드부분 비활성화
+          setIsPdfUploaded(true);
+
+          // request 채우기
+          let totalText = "";
+          for (let i = 0; i < data.request.length; i++) {
+            console.log(data.request[i])
+            totalText += `<div id="content-${i}" class="bg-gray-200 m-1 p-2 rounded">${data.request[i]}</div>`;
+          }
+          setTotal(data.request.length)
+          setPdfContent(totalText)
+
+          // result 채우기
+          let resultText = "";
+          for (let i = 0; i < data.answer.length; i++) {
+            console.log(data.answer[i])
+            let message = JSON.parse(data.answer[i]);
+            // 색깔 지정
+            const gradeColorMap: { [key: string]: string } = {
+              "A": "bg-green-200",
+              "B": "bg-gray-200",
+              "C": "bg-red-200"
+            };
+            const colorClass = gradeColorMap[message.grade] || "bg-gray-200";
+
+            resultText += `<div id="review-${message.number}" class="${colorClass} m-1 p-2 rounded">${message.answer}</div>`;
+          }
+          setReviewResult(resultText)
+
+        }
+        // 검토 완료 메세지 받은경우 (end)
+        else if (data.type === 'end') {
+          // 검토 완료 메세지 받은경우 (end)
+          if (resetButtonRef.current) {
+            resetButtonRef.current.style.display = 'none'; // 초기화 버튼 숨기기
+          }
+        }
+
       } catch (error) {
         console.error('메시지 파싱 오류:', error);
       }
@@ -163,17 +220,15 @@ export default function ReviewRequest() {
 
         // 색깔 지정
         const gradeColorMap: { [key: string]: string } = {
-          "A": "green",
-          "B": "gray",
-          "C": "red"
+          "A": "bg-green-200",
+          "B": "bg-gray-200",
+          "C": "bg-red-200"
         };
-        const color = gradeColorMap[grade] || "gray";
+        const colorClass = gradeColorMap[grade] || "bg-gray-200";
 
-        newResult += `<div id="review-${number}" class="bg-${color}-200 m-1 p-2 rounded">${input}</div>`;
+        newResult += `<div id="review-${number}" class="${colorClass} m-1 p-2 rounded">${input}</div>`;
         return newResult;
       });
-
-
     }
 
     // 전역 범위에 함수 노출
@@ -265,13 +320,27 @@ export default function ReviewRequest() {
     return btoa(String.fromCharCode.apply(null, compressedData as unknown as number[]));
   }
 
+  function handleResetClick(event: React.MouseEvent<HTMLButtonElement>): void {
+    if (window.confirm('정말로 초기화하시겠습니까?\n 현재 진행중인 검토는 저장되지 않습니다.')) {
+      resetReviewState();
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+      if (socket && socket.readyState === WebSocket.OPEN) {
+        const jsonMessage = JSON.stringify({ type: 'stop' });
+        socket.send(jsonMessage);
+        console.log('작업 중지명령 발신.');
+      } else {
+        console.error('작업 중지명령 발신에 실패했습니다.');
+      }
+    }
+  }
+
+  // 진행바 표시용 변수
+  const progressPercentage = (current / total) * 100;
+
   return (
     <Layout>
-      <div className="hidden">
-        <div className="bg-green-200"></div>
-        <div className="bg-gray-200"></div>
-        <div className="bg-red-200"></div>
-      </div>
       <div className="flex h-[calc(100vh-8rem)] p-4">
         {user && (
           <div className="w-64 flex-shrink-0">
@@ -281,7 +350,7 @@ export default function ReviewRequest() {
         <div className="flex-grow flex flex-col overflow-hidden">
           <h1 className="text-3xl font-bold text-blue-800 px-8 pt-8">약관 검토 요청</h1>
           <div className="flex-grow flex overflow-hidden">
-            <div className="w-1/2 p-10 flex flex-col">
+            <div style={{ width: '50%', padding: '2.5rem', borderRight: '1px solid #e2e8f0', display: 'flex', flexDirection: 'column' }}>
               {selectedReviewId === null ? (
                 <>
                   {!isPdfUploaded && (
@@ -293,53 +362,104 @@ export default function ReviewRequest() {
                         onChange={handleFileUpload}
                         style={{ display: 'none' }}
                       />
-                      <Button onClick={() => fileInputRef.current?.click()}>
+                      <Button onClick={() => fileInputRef.current?.click()} className="bg-blue-600 text-white rounded-lg px-4 py-2 hover:bg-blue-700 transition">
                         PDF 업로드
                       </Button>
                     </div>
                   )}
                   {pdfContent && (
-                    <div className="flex-grow flex flex-col overflow-hidden">
-                      <h2 className="text-xl font-semibold mb-2">업로드된 약관 내용</h2>
-                      <ScrollArea className="flex-grow border p-4 rounded">
-                        <div dangerouslySetInnerHTML={{ __html: pdfContent }} />
-                      </ScrollArea>
-                      <Button
-                        className="mt-4"
-                        onClick={handleReviewRequest}
-                        disabled={isReviewing}
-                      >
-                        {isReviewing ? '검토 중...' : '약관 검토 요청'}
-                      </Button>
-                      {isPdfUploaded && (
+                    <div style={{ flexGrow: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+                      <div className="flex justify-between items-center mb-2">
+                        <h2 style={{ fontSize: '1.25rem', fontWeight: '600' }}>업로드된 약관 내용</h2>
                         <Button
-                          className="mt-4"
-                          onClick={() => {
-                            resetReviewState()
-                          }}
+                          id='reset_button'
+                          ref={resetButtonRef}
+                          onClick={handleResetClick}
+                          className="inline-flex items-center gap-2 bg-white text-gray-700 border border-gray-300 rounded-full px-4 py-1.5 text-sm font-medium hover:bg-gray-50 hover:border-gray-400 transition-all duration-200 ease-in-out shadow-sm active:scale-95"
                         >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="14"
+                            height="14"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            className="rotate-[-45deg]"
+                          >
+                            <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+                            <path d="M3 3v5h5" />
+                            <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16" />
+                            <path d="M16 21h5v-5" />
+                          </svg>
                           초기화
                         </Button>
-                      )}
+                      </div>
+                      <ScrollArea className="flex-grow border border-slate-200 p-4 rounded-md" style={{ height: 'calc(80vh - 10rem)' }}>
+                        <div dangerouslySetInnerHTML={{ __html: pdfContent }} />
+                      </ScrollArea>
                     </div>
                   )}
                 </>
               ) : (
                 <OriginalDocument reviewId={selectedReviewId} />
               )}
-              {/* <div className="mt-4 flex items-center">
+            </div>
+            {/* <div className="mt-4 flex items-center">
                 <input id="input-test" type="text" placeholder="입력 테스트" className="border p-2 rounded w-full" />
                 <Button className="ml-2" onClick={handleSendMessage}>보내기</Button>
               </div>
               <textarea id="output-test" placeholder="출력 테스트" className="border p-2 rounded w-full mt-2" rows={4}></textarea> */}
-            </div>
-            <div className="w-1/2 p-4">
+            <div style={{ width: '50%', padding: '2.5rem', display: 'flex', flexDirection: 'column' }}>
               {reviewResult && (
-                <div className="flex-grow flex flex-col overflow-hidden">
-                  <h2 className="text-xl font-semibold mb-2">검토 결과</h2>
-                  <ScrollArea className="flex-grow border p-4 rounded h-64">
-                    <div dangerouslySetInnerHTML={{ __html: reviewResult }} />
+                <div style={{ flexGrow: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+                  <h2 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '0.5rem' }}>검토 결과</h2>
+                  <ScrollArea
+                    className="flex-grow border border-slate-200 p-4 rounded-md"
+                    style={{ height: 'calc(80vh - 10rem)' }}
+                  >
+                    <div
+                      dangerouslySetInnerHTML={{ __html: reviewResult }}
+                      className="[&_.bg-green-200]:bg-green-200 [&_.bg-gray-200]:bg-gray-200 [&_.bg-red-200]:bg-red-200"
+                    />
                   </ScrollArea>
+                  {/* <progress value={progressPercentage} max="100" style={{ width: '100%', marginTop: '1rem', borderRadius: '8px' }} /> */}
+                  <div style={{ position: 'relative', width: '100%', marginTop: '1rem' }}>
+                    <progress
+                      value={progressPercentage}
+                      max="100"
+                      style={{
+                        width: '100%',
+                        height: '24px',
+                        borderRadius: '12px',
+                        backgroundColor: '#e0e0e0',
+                        appearance: 'none',
+                        WebkitAppearance: 'none',
+                        MozAppearance: 'none',
+                      }}
+                    />
+                    <style jsx>{`
+                  progress::-webkit-progress-bar {
+                    background-color: #e0e0e0;
+                    border-radius: 12px;
+                  }
+                  progress::-webkit-progress-value {
+                    background-color: ${progressPercentage === 100 ? '#4caf50' : '#1E40AF'};
+                    border-radius: 12px;
+                  }
+                  progress::-moz-progress-bar {
+                    background-color: ${progressPercentage === 100 ? '#4caf50' : '#1E40AF'};
+                    border-radius: 12px;
+                  }
+                `}</style>
+                    {progressPercentage === 100 && (
+                      <div style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translateY(-50%)', color: 'white' }}>
+                        ✔
+                      </div>
+                    )}
+                  </div>
                 </div>
               )}
               {/*<ReviewResult
