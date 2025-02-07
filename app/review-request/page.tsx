@@ -5,10 +5,9 @@ import Layout from '../components/Layout'
 import { Button } from "@/components/ui/button"
 import { useToast } from "@/hooks/use-toast"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import ReviewSidebar from '../components/ReviewSidebar'
+import ReviewSidebar, { ReviewHistory } from '../components/ReviewSidebar'
 import ReviewResult from '../components/ReviewResult'
 import { useUser } from '../contexts/UserContext'
-import OriginalDocument from '../components/OriginalDocument'
 import pako from 'pako'
 
 export default function ReviewRequest() {
@@ -16,14 +15,15 @@ export default function ReviewRequest() {
   const [isPdfUploaded, setIsPdfUploaded] = useState(false)
   const [reviewResult, setReviewResult] = useState<string | null>(null)
   const [isReviewing, setIsReviewing] = useState(false)
-  const [selectedReviewId, setSelectedReviewId] = useState<number | null>(null)
+  const [selectedReviewId, setSelectedReviewId] = useState<ReviewHistory | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
-  const resetButtonRef = useRef<HTMLButtonElement>(null); // 초기화 버튼 참조
+  const [resetButton ,setResetButton] = useState(true); // 초기화 버튼 참조
   const { toast } = useToast()
   const { user } = useUser()
   const [socket, setSocket] = useState<WebSocket | null>(null);
   const [total, setTotal] = useState(100); // Total value for progress calculation
   const [current, setCurrent] = useState(0); // Current progress value
+  const [reviewHistory, setReviewHistory] = useState<ReviewHistory[]>([]);
 
   const [clauseDetails, setClauseDetails] = useState<{ [key: string]: string }>({
     "제7조 2항": "이 조항은 서비스 제공자의 책임을 과도하게 제한하고 있어 소비자의 권리를 침해할 수 있습니다. 관련 법규: 약관규제법 제6조",
@@ -57,20 +57,61 @@ export default function ReviewRequest() {
     setIsPdfUploaded(false);
     setReviewResult(null);
     setSelectedReviewId(null);
-    if (resetButtonRef.current) {
-      resetButtonRef.current.style.display = 'block'; // 초기화 버튼 다시 보이기
-    }
+    setResetButton(true);
   };
 
-  const handleSelectReview = (reviewId: number | null) => {
-    if (reviewId === null) {
-      resetReviewState();
-    } else {
-      setSelectedReviewId(reviewId);
-      // Fetch the review data from the server
-      // For now, we'll use dummy data
-      setPdfContent("이것은 선택된 리뷰의 원본 약관 내용입니다.");
-      setReviewResult("이용약관 중 <span class='bg-yellow-200'>제7조 2항</span>과 <span class='bg-yellow-200'>제12조 1항</span>은 소비자에게 불리한 독소조항으로 의심됩니다. <span class='bg-yellow-200'>제15조 3항</span>은 법적 검토가 필요합니다.");
+  const handleSelectReview = (review: ReviewHistory | null) => {
+    setSelectedReviewId(review);
+    if (review) {
+      let requestsList = review.requests;
+      let request = requestsList[0].request
+      let answer = requestsList[0].answer
+
+      let requestList = JSON.parse(request)
+      let answerList = JSON.parse(answer)
+
+      // PdfContent 설정=================================
+      let totalText = "";
+      for (let i = 0; i < requestList.length; i++) {
+        totalText += `<div class="flex items-center">
+                          <div class="bg-gray-100 m-1 p-2 rounded">${i + 1}</div>
+                          <div id="content-${i}" class="bg-gray-200 m-1 p-2 rounded">${requestList[i]}</div>
+                        </div>`;
+      }
+      setPdfContent(totalText)
+
+      // 진행바 총 길이 설정
+      setTotal(requestList.length);
+
+      // ReviewResult 설정==============================
+      let newResult = "";
+      for (let i = 0; i < answerList.length; i++) {
+        const thisAnswer = JSON.parse(answerList[i])
+        console.log(thisAnswer)
+        // 색깔 지정
+        const gradeColorMap: { [key: string]: string } = {
+          "A": "bg-green-200",
+          "B": "bg-gray-200",
+          "C": "bg-red-200"
+        };
+        const colorClass = gradeColorMap[thisAnswer.grade] || "bg-gray-200";
+
+        newResult += `<div class="flex items-center">
+                        <div class="bg-gray-100 m-1 p-2 rounded">${thisAnswer.number}</div>
+                        <div id="review-${thisAnswer.number}" class="${colorClass} m-1 p-2 rounded">${thisAnswer.answer}</div>
+                      </div>`;
+      }
+      setReviewResult(newResult);
+
+      // 진행바 100% 설정
+      setCurrent(requestList.length);
+
+      // 초기화버튼 숨김
+      setResetButton(false);
+
+      // pdf버튼 숨김
+      setIsPdfUploaded(true);
+
     }
   };
 
@@ -178,7 +219,7 @@ export default function ReviewRequest() {
             resultText += `<div class="flex items-center">
                             <div class="bg-gray-100 m-1 p-2 rounded">${message.number}</div>
                             <div id="review-${message.number}" class="${colorClass} m-1 p-2 rounded">${message.answer}</div>
-                          </div>`;          
+                          </div>`;
           }
           setReviewResult(resultText)
 
@@ -186,9 +227,7 @@ export default function ReviewRequest() {
         // 검토 완료 메세지 받은경우 (end)
         else if (data.type === 'end') {
           // 검토 완료 메세지 받은경우 (end)
-          if (resetButtonRef.current) {
-            resetButtonRef.current.style.display = 'none'; // 초기화 버튼 숨기기
-          }
+          setResetButton(false);
         }
 
       } catch (error) {
@@ -356,68 +395,65 @@ export default function ReviewRequest() {
       <div className="flex h-[calc(100vh-8rem)] p-4">
         {user && (
           <div className="w-64 flex-shrink-0">
-            <ReviewSidebar onSelectReview={handleSelectReview} selectedReviewId={selectedReviewId} />
+            <ReviewSidebar onSelectReview={handleSelectReview} selectedReview={selectedReviewId} resetReviewState={resetReviewState} />
           </div>
         )}
         <div className="flex-grow flex flex-col overflow-hidden">
           <h1 className="text-3xl font-bold text-blue-800 px-8 pt-8">약관 검토 요청</h1>
           <div className="flex-grow flex overflow-hidden">
             <div style={{ width: '50%', padding: '2.5rem', borderRight: '1px solid #e2e8f0', display: 'flex', flexDirection: 'column' }}>
-              {selectedReviewId === null ? (
-                <>
-                  {!isPdfUploaded && (
-                    <div className="mb-4">
-                      <input
-                        type="file"
-                        accept=".pdf,.hwp,.hwpx"
-                        ref={fileInputRef}
-                        onChange={handleFileUpload}
-                        style={{ display: 'none' }}
-                      />
-                      <Button onClick={() => fileInputRef.current?.click()} className="bg-blue-600 text-white rounded-lg px-4 py-2 hover:bg-blue-700 transition">
-                        PDF 업로드
-                      </Button>
-                    </div>
-                  )}
-                  {pdfContent && (
-                    <div style={{ flexGrow: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-                      <div className="flex justify-between items-center mb-2">
-                        <h2 style={{ fontSize: '1.25rem', fontWeight: '600' }}>업로드된 약관 내용</h2>
-                        <Button
-                          id='reset_button'
-                          ref={resetButtonRef}
-                          onClick={handleResetClick}
-                          className="inline-flex items-center gap-2 bg-white text-gray-700 border border-gray-300 rounded-full px-4 py-1.5 text-sm font-medium hover:bg-gray-50 hover:border-gray-400 transition-all duration-200 ease-in-out shadow-sm active:scale-95"
+
+              <>
+                {!isPdfUploaded && (
+                  <div className="mb-4">
+                    <input
+                      type="file"
+                      accept=".pdf,.hwp,.hwpx"
+                      ref={fileInputRef}
+                      onChange={handleFileUpload}
+                      style={{ display: 'none' }}
+                    />
+                    <Button onClick={() => fileInputRef.current?.click()} className="bg-blue-600 text-white rounded-lg px-4 py-2 hover:bg-blue-700 transition">
+                      PDF 업로드
+                    </Button>
+                  </div>
+                )}
+                {pdfContent && (
+                  <div style={{ flexGrow: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+                    <div className="flex justify-between items-center mb-2">
+                      <h2 style={{ fontSize: '1.25rem', fontWeight: '600' }}>업로드된 약관 내용</h2>
+                      {resetButton && (<Button
+                        id='reset_button'
+                        onClick={handleResetClick}
+                        className="inline-flex items-center gap-2 bg-white text-gray-700 border border-gray-300 rounded-full px-4 py-1.5 text-sm font-medium hover:bg-gray-50 hover:border-gray-400 transition-all duration-200 ease-in-out shadow-sm active:scale-95"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="14"
+                          height="14"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          className="rotate-[-45deg]"
                         >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="14"
-                            height="14"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            className="rotate-[-45deg]"
-                          >
-                            <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
-                            <path d="M3 3v5h5" />
-                            <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16" />
-                            <path d="M16 21h5v-5" />
-                          </svg>
-                          초기화
-                        </Button>
-                      </div>
-                      <ScrollArea className="flex-grow border border-slate-200 p-4 rounded-md" style={{ height: 'calc(80vh - 10rem)' }}>
-                        <div dangerouslySetInnerHTML={{ __html: pdfContent }} />
-                      </ScrollArea>
+                          <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+                          <path d="M3 3v5h5" />
+                          <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16" />
+                          <path d="M16 21h5v-5" />
+                        </svg>
+                        초기화
+                      </Button>)}
                     </div>
-                  )}
-                </>
-              ) : (
-                <OriginalDocument reviewId={selectedReviewId} />
-              )}
+                    <ScrollArea className="flex-grow border border-slate-200 p-4 rounded-md" style={{ height: 'calc(80vh - 10rem)' }}>
+                      <div dangerouslySetInnerHTML={{ __html: pdfContent }} />
+                    </ScrollArea>
+                  </div>
+                )}
+              </>
+
             </div>
             {/* <div className="mt-4 flex items-center">
                 <input id="input-test" type="text" placeholder="입력 테스트" className="border p-2 rounded w-full" />
