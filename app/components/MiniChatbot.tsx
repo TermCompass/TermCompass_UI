@@ -8,24 +8,25 @@ import { useChatbot } from '../contexts/ChatbotContext';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '../contexts/AuthContext';
 
-interface Message {
-  type: 'bot' | 'user' | 'system';
-  content: string;
+interface Request {
+  request: string;
+  answer: string;
 }
 
 interface ChatHistory {
   id: string;
-  date: string;
-  summary: string;
-  messages: Message[];
+  recordType: string;
+  result: string;
+  requests: Request[];
 }
 
 const MiniChatbot: React.FC = () => {
-  const { isChatbotOpen, setIsChatbotOpen } = useChatbot();
+  const [isChatbotOpen, setIsChatbotOpen] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [input, setInput] = useState('');
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<Request[]>([]);
   const [history, setHistory] = useState<ChatHistory[]>([]);
+  const [currentRecordId, setCurrentRecordId] = useState<string | null>(null);
   const chatRef = useRef<HTMLDivElement>(null);
   const { user } = useUser();
   const { toast } = useToast();
@@ -37,8 +38,8 @@ const MiniChatbot: React.FC = () => {
 
   // 고정 질문과 응답
   const fixedOptions = [
-    { 
-      key: '약관 생성', 
+    {
+      key: '약관 생성',
       response: 'AI 기반 맞춤형 약관 생성 서비스를 이용해보세요.',
       path: '/create-terms',
       requiresAuth: true,
@@ -48,13 +49,12 @@ const MiniChatbot: React.FC = () => {
         // 챗봇을 닫지 않고 설명과 로그인 유도 메시지 출력
         setMessages((prev) => [
           ...prev,
-          { type: 'bot', content: '약관 생성 서비스는 기업회원 전용입니다. 로그인 하시겠습니까?' },
-          { type: 'system', content: '로그인 버튼을 클릭하여 로그인하세요.' },
+          { request: '', answer: '약관 생성 서비스는 기업회원 전용입니다. 로그인 하시겠습니까?' },
         ]);
       }
     },
-    { 
-      key: '약관 검토', 
+    {
+      key: '약관 검토',
       response: 'AI가 약관의 문제점을 검토하고 개선점을 제안합니다.',
       path: '/review-request',
       requiresAuth: false,
@@ -62,13 +62,12 @@ const MiniChatbot: React.FC = () => {
       action: () => {
         setMessages((prev) => [
           ...prev,
-          { type: 'bot', content: '약관 검토 서비스에 오신 것을 환영합니다.' },
-          { type: 'system', content: '서비스 이용하기 버튼을 클릭하여 검토를 시작하세요.' },
+          { request: '', answer: '약관 검토 서비스에 오신 것을 환영합니다.' },
         ]);
       }
     },
-    { 
-      key: '사이트 등급 확인', 
+    {
+      key: '사이트 등급 확인',
       response: '주요 웹사이트의 약관을 분석하여 등급을 제공합니다.',
       path: '/site-analysis',
       requiresAuth: false,
@@ -76,13 +75,12 @@ const MiniChatbot: React.FC = () => {
       action: () => {
         setMessages((prev) => [
           ...prev,
-          { type: 'bot', content: '사이트 등급 확인 서비스에 오신 것을 환영합니다.' },
-          { type: 'system', content: '서비스 이용하기 버튼을 클릭하여 등급 확인을 시작하세요.' },
+          { request: '', answer: '사이트 등급 확인 서비스에 오신 것을 환영합니다.' },
         ]);
       }
     },
-    { 
-      key: '회원가입 및 로그인', 
+    {
+      key: '회원가입 및 로그인',
       response: '회원가입은 홈페이지에서 가능합니다.',
       description: '회원가입하고 더 많은 서비스를 이용하세요.',
       path: '/signup',
@@ -100,14 +98,14 @@ const MiniChatbot: React.FC = () => {
   // 초기 시스템 메시지 설정
   useEffect(() => {
     // 메시지가 없거나 로그인 상태가 변경되었을 때 초기 메시지 설정
-    const systemMessage: Message = {
-      type: 'system',
-      content: user ? '궁금한 내용을 입력해 주세요.' : '다음 중 원하는 서비스를 선택하세요:',
+    const systemMessage: Request = {
+      request: '',
+      answer: user ? '궁금한 내용을 입력해 주세요.' : '다음 중 원하는 서비스를 선택하세요:',
     };
-    
+
     setMessages([systemMessage]);
     setSelectedOptionKey(null); // 선택된 옵션도 초기화
-    
+
   }, [user]); // user 상태 변화를 감지
 
   // 고정 선택지 클릭 시 응답 처리
@@ -115,7 +113,7 @@ const MiniChatbot: React.FC = () => {
     const selectedOption = fixedOptions.find(opt => opt.key === optionKey);
     if (selectedOption) {
       setSelectedOptionKey(optionKey);
-      
+
       // action이 있는 경우 실행
       if (selectedOption.action) {
         selectedOption.action();
@@ -124,9 +122,7 @@ const MiniChatbot: React.FC = () => {
 
       setMessages((prev) => [
         ...prev,
-        { type: 'user', content: optionKey },
-        { type: 'bot', content: selectedOption.response },
-        { type: 'system', content: '추가적으로 알고 싶은 것이 있나요? 다시 선택해 주세요:' },
+        { request: optionKey, answer: selectedOption.response },
       ]);
     }
   };
@@ -151,7 +147,7 @@ const MiniChatbot: React.FC = () => {
   const handleSend = async () => {
     if (!input.trim()) return;
 
-    setMessages((prev) => [...prev, { type: 'user', content: input }]);
+    setMessages((prev) => [...prev, { request: input, answer: '' }]);
 
     if (!user) {
       toast({
@@ -164,7 +160,7 @@ const MiniChatbot: React.FC = () => {
       if (fixedOptions.some(opt => input.includes(opt.key))) {
         handleOptionSelect(input);
       } else {
-        setMessages((prev) => [...prev, { type: 'system', content: '다음 중 원하는 서비스를 선택하세요:' }]);
+        setMessages((prev) => [...prev, { request: '', answer: '다음 중 원하는 서비스를 선택하세요:' }]);
       }
 
       setInput('');
@@ -172,17 +168,22 @@ const MiniChatbot: React.FC = () => {
     }
 
     try {
-      const response = await fetch('https://4d67-34-91-33-76.ngrok-free.app/chatbot', {
+      const response = await fetch('http://localhost:8080/create-chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ question: input, user_id: userId }),
+        body: JSON.stringify({ request: input, userId: userId, recordId: currentRecordId }),
       });
 
       const data = await response.json();
-      setMessages((prev) => [...prev, { type: 'bot', content: extractFinalResponse(data.response) }]);
+      setMessages((prev) => {
+        const newMessage = { request: input, answer: extractFinalResponse(data.response) };
+        return [...prev.slice(0, -1), newMessage]; // 마지막 메시지(answer: '')를 덮어씀
+      });
+
+      setCurrentRecordId(data.recordId);
     } catch (error) {
       console.error('API 요청 중 오류 발생:', error);
-      setMessages((prev) => [...prev, { type: 'bot', content: '오류가 발생했습니다. 다시 시도해 주세요.' }]);
+      setMessages((prev) => [...prev, { request: input, answer: '오류가 발생했습니다. 다시 시도해 주세요.' }]);
     }
 
     setInput('');
@@ -204,34 +205,37 @@ const MiniChatbot: React.FC = () => {
 
   // 히스토리 로드 함수
   const loadChatHistory = (history: ChatHistory) => {
-    setMessages(history.messages);
+    setMessages(history.requests);
   };
 
   // 히스토리 샘플 데이터 설정
   useEffect(() => {
-    if (user) {
-      setHistory([
-        {
-          id: '1',
-          date: '2024-03-15',
-          summary: '약관 생성 서비스 문의',
-          messages: [
-            { type: 'user', content: '약관 생성은 어떻게 하나요?' },
-            { type: 'bot', content: '약관 생성 서비스는 기업회원 전용입니다.' },
-          ],
-        },
-        {
-          id: '2',
-          date: '2024-03-16',
-          summary: '회원가입 방법 문의',
-          messages: [
-            { type: 'user', content: '회원가입 방법을 알려주세요.' },
-            { type: 'bot', content: '회원가입은 홈페이지에서 가능합니다.' },
-          ],
-        },
-      ]);
-    }
+    if (!user) return;
+
+    const fetchChatHistory = async () => {
+      try {
+        const response = await fetch(`http://localhost:8080/records/${user.id}`);
+        if (!response.ok) throw new Error('서버 오류');
+
+        const data = await response.json();
+
+        // recordType이 'CHAT'인 데이터만 필터링
+        const chatHistory = data.filter((record: ChatHistory) => record.recordType === "CHAT");
+
+        setHistory(chatHistory);
+      } catch (error) {
+        console.error('채팅 기록을 불러오는 중 오류 발생:', error);
+      }
+    };
+
+    fetchChatHistory();
   }, [user]);
+
+  useEffect(() => {
+    if (chatRef.current) {
+      chatRef.current.scrollTop = chatRef.current.scrollHeight;
+    }
+  }, [messages]);
 
   useEffect(() => {
     if (chatRef.current) {
@@ -270,8 +274,7 @@ const MiniChatbot: React.FC = () => {
                       onClick={() => loadChatHistory(historyItem)}
                       className="p-3 bg-white/80 rounded-lg cursor-pointer hover:bg-blue-50 transition-all"
                     >
-                      <div className="text-xs text-gray-500">{historyItem.date}</div>
-                      <div className="text-sm text-gray-700 line-clamp-2">{historyItem.summary}</div>
+                      <div className="text-sm text-gray-700 line-clamp-2">{historyItem.result}</div>
                     </div>
                   ))}
                 </div>
@@ -309,52 +312,62 @@ const MiniChatbot: React.FC = () => {
             {/* 메시지 영역 */}
             <div ref={chatRef} className="flex-1 overflow-y-auto p-4 space-y-4">
               {messages.map((message, index) => (
-                <div key={index} className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}>
-                  <div className={`max-w-[80%] p-3 rounded-lg ${
-                    message.type === 'user' 
-                      ? 'bg-blue-600 text-white rounded-br-none' 
-                      : 'bg-gray-100 text-gray-800 rounded-bl-none'
-                  }`}>
-                    {message.content}
+                  <div key={index} className="flex flex-col space-y-2">
+                    {/* 사용자 메시지 (오른쪽 정렬) */}
+                    {message.request && (
+                        <div className="flex justify-end">
+                          <div className="max-w-[80%] p-3 rounded-lg bg-blue-600 text-white">
+                            {message.request}
+                          </div>
+                        </div>
+                    )}
+
+                    {/* 챗봇 응답 (왼쪽 정렬) */}
+                    {message.answer && (
+                        <div className="flex justify-start">
+                          <div className="max-w-[80%] p-3 rounded-lg bg-gray-100 text-gray-800">
+                            {message.answer}
+                          </div>
+                        </div>
+                    )}
                   </div>
-                </div>
               ))}
-              {!user && messages[messages.length - 1]?.type === 'system' && (
+              {!user && (
                 <div className="flex flex-col space-y-2 mt-2 px-2">
                   {fixedOptions.map((option) => (
                     <div key={option.key} className="space-y-2">
                       <button
                         onClick={() => handleOptionSelect(option.key)}
-                        className="w-full p-2 bg-white hover:bg-gray-50 rounded-lg 
+                        className="w-full p-2 bg-white hover:bg-gray-50 rounded-lg
                                    transition-all text-left border border-gray-100
                                    hover:border-blue-200 hover:shadow-sm group"
                       >
                         <div className="flex items-center gap-2">
-                          <div className="p-1.5 bg-blue-50 text-blue-600 rounded-md 
+                          <div className="p-1.5 bg-blue-50 text-blue-600 rounded-md
                                          group-hover:bg-blue-100 transition-colors">
                             <option.icon size={16} />
                           </div>
                           <span className="font-medium text-gray-800 text-sm">{option.key}</span>
                         </div>
                       </button>
-                      
+
                       {selectedOptionKey === option.key && (
                         <div className="ml-3 space-y-2">
-                          <div className="p-2 bg-gradient-to-br from-blue-50 to-gray-50 
+                          <div className="p-2 bg-gradient-to-br from-blue-50 to-gray-50
                                         rounded-lg border border-blue-100">
                             <p className="text-sm text-gray-700">{option.response}</p>
                             <p className="text-xs text-gray-600 mt-1">
                               {option.description}
                             </p>
-                            
+
                             {/* 조건부 버튼 렌더링 */}
-                            {(!option.requiresAuth || user) && 
-                             (!option.requiresCompany || user?.userType === 'COMPANY') && (
+                            {(!option.requiresAuth || user) &&
+                             (!option.requiresCompany) && (
                               <div className="mt-2 flex justify-end">
                                 <button
                                   onClick={() => router.push(option.path)}
-                                  className="flex items-center gap-1 px-3 py-1.5 bg-blue-600 
-                                           text-white rounded-md text-xs hover:bg-blue-700 
+                                  className="flex items-center gap-1 px-3 py-1.5 bg-blue-600
+                                           text-white rounded-md text-xs hover:bg-blue-700
                                            transition-colors"
                                 >
                                   서비스 이용하기
@@ -362,19 +375,19 @@ const MiniChatbot: React.FC = () => {
                                 </button>
                               </div>
                             )}
-                            
+
                             {/* 기업회원 전용 서비스 안내 */}
-                            {option.requiresCompany && (!user || user.userType !== 'COMPANY') && (
-                              <div className="mt-2 flex items-center gap-1.5 text-xs text-amber-600 
+                            {option.requiresCompany && (
+                              <div className="mt-2 flex items-center gap-1.5 text-xs text-amber-600
                                             bg-amber-50 p-2 rounded-md border border-amber-100">
                                 <AlertCircle size={14} />
                                 <span>기업회원 전용 서비스입니다.</span>
                               </div>
                             )}
-                            
+
                             {/* 로그인 필요 안내 */}
                             {option.requiresAuth && !user && (
-                              <div className="mt-2 flex justify-between items-center bg-gray-50 
+                              <div className="mt-2 flex justify-between items-center bg-gray-50
                                             p-2 rounded-md border border-gray-200">
                                 <span className="text-xs text-gray-600">
                                   로그인이 필요합니다
@@ -387,7 +400,7 @@ const MiniChatbot: React.FC = () => {
                                       setIsAuthFormOpen(true);
                                     });
                                   }}
-                                  className="text-xs text-blue-600 hover:text-blue-700 
+                                  className="text-xs text-blue-600 hover:text-blue-700
                                            font-medium flex items-center gap-1"
                                 >
                                   로그인
