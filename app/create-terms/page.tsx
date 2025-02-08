@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Layout from '@/app/components/Layout'
 import { Button } from "@/components/ui/button"
@@ -10,7 +10,7 @@ import StandardTermsForm from '@/app/components/StandardTermsForm'
 import CustomClauseForm from '@/app/components/CustomClauseForm'
 import TermsReview from '@/app/components/TermsReview'
 
-export default function CreateTerms() {
+const CreateTermsContent = () => {
   const [step, setStep] = useState(1)
   const [selectedDomain, setSelectedDomain] = useState<string | null>(null)
   const [standardTerms, setStandardTerms] = useState<string>('')
@@ -18,8 +18,13 @@ export default function CreateTerms() {
   const { user } = useUser()
   const router = useRouter()
 
+  useEffect(() => {
+    if (!user || user.userType !== 'COMPANY') {
+      router.push('/')
+    }
+  }, [user, router])
+
   if (!user || user.userType !== 'COMPANY') {
-    router.push('/')
     return null
   }
 
@@ -82,5 +87,9 @@ export default function CreateTerms() {
       </div>
     </Layout>
   )
+}
+
+export default function CreateTerms() {
+  return <CreateTermsContent />
 }
 

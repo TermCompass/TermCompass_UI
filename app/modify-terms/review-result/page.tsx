@@ -1,7 +1,7 @@
 'use client'
 
 import { useSearchParams } from 'next/navigation'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import Layout from '../../components/Layout'
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -12,7 +12,7 @@ interface AIReviewResult {
   alternatives: string[]
 }
 
-export default function ReviewResult() {
+const ReviewResultContent = () => {
   const searchParams = useSearchParams()
   const [reviewResult, setReviewResult] = useState<AIReviewResult | null>(null)
 
@@ -72,3 +72,10 @@ export default function ReviewResult() {
   )
 }
 
+export default function ReviewResultPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ReviewResultContent />
+    </Suspense>
+  )
+}

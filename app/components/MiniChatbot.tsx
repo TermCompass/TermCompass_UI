@@ -168,7 +168,7 @@ const MiniChatbot: React.FC = () => {
     }
 
     try {
-      const response = await fetch('http://localhost:8080/create-chat', {
+      const response = await fetch('http://kyj9447.ddns.net:8080/create-chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ request: input, userId: userId, recordId: currentRecordId }),
@@ -214,7 +214,7 @@ const MiniChatbot: React.FC = () => {
 
     const fetchChatHistory = async () => {
       try {
-        const response = await fetch(`http://localhost:8080/records/${user.id}`);
+        const response = await fetch(`http://kyj9447.ddns.net:8080/records/${user.id}`);
         if (!response.ok) throw new Error('서버 오류');
 
         const data = await response.json();

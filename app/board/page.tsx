@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Layout from '../components/Layout';
 import Link from 'next/link';
@@ -17,11 +17,10 @@ interface Post {
 
 export default function BoardPage() {
     const postsPerPage = 10;
-    const searchParams = useSearchParams()
-    const router = useRouter()
+    const router = useRouter();
 
-    const currentPage = Number(searchParams.get('page')) || 1
-    const [posts, setPosts] = useState<Post[]>([])
+    const [currentPage, setCurrentPage] = useState(1);
+    const [posts, setPosts] = useState<Post[]>([]);
     const [totalPages, setTotalPages] = useState(1);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -31,7 +30,7 @@ export default function BoardPage() {
             setLoading(true);
             setError(null);
             try {
-                const response = await fetch(`http://localhost:8080/board/list?page=${currentPage - 1}`);
+                const response = await fetch(`http://kyj9447.ddns.net:8080/board/list?page=${currentPage - 1}`);
                 if (!response.ok) {
                     throw new Error("게시글을 불러오는 데 실패했습니다.");
                 }
@@ -43,31 +42,40 @@ export default function BoardPage() {
             } finally {
                 setLoading(false);
             }
-        }
+        };
 
         fetchPosts();
-    }, [currentPage])
+    }, [currentPage]);
 
     const handlePageChange = (page: number) => {
         router.push(`/board?page=${page}`);
-    }
+    };
 
     return (
         <Layout>
-        <BoardPageTemplate
-            title="공지사항"
-            breadcrumb={[
-                { label: '홈', href: '/' },
-                { label: '알림마당', href: '/board' },
-                { label: '게시판', href: '/board' },
-            ]}
-            posts={posts}
-            currentPage={currentPage}
-            totalPages={totalPages}
-            postsPerPage={postsPerPage}
-            onPageChange={handlePageChange}
-        />
+            <Suspense fallback={<div>Loading...</div>}>
+                <BoardPageTemplate
+                    title="공지사항"
+                    breadcrumb={[
+                        { label: '홈', href: '/' },
+                        { label: '알림마당', href: '/board' },
+                        { label: '게시판', href: '/board' },
+                    ]}
+                    posts={posts}
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    postsPerPage={postsPerPage}
+                    onPageChange={handlePageChange}
+                />
+            </Suspense>
         </Layout>
     );
+}
+
+function BoardPageWrapper() {
+    const searchParams = useSearchParams();
+    const currentPage = Number(searchParams.get('page')) || 1;
+
+    return <BoardPage key={currentPage} />;
 }
 
