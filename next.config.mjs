@@ -13,19 +13,19 @@ const nextConfig = {
     ],
   },
   assetPrefix: 'http://localhost:3000',
-  async headers() {
-    return [
-      {
-        source: '/_next/static/:path*',
-        headers: [
-          {
-            key: 'Access-Control-Allow-Origin',
-            value: '*',
-          },
-        ],
-      },
-    ];
-  },
+  // async headers() {
+  //   return [
+  //     {
+  //       source: '/_next/static/:path*',
+  //       headers: [
+  //         {
+  //           key: 'Access-Control-Allow-Origin',
+  //           value: '*',
+  //         },
+  //       ],
+  //     },
+  //   ];
+  // },
   reactStrictMode: true,
   // swcMinify: true,
   eslint: {
@@ -34,34 +34,35 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
-  async rewrites() {
-    return [
-      {
-        source: "/:path*",
-        destination: `/:path*`,
-      },
-      {
-        source: "/admin/:path*",
-        destination: `/admin/:path*`,
-      },
-    ]
-  },
-  async redirects() {
-    return [
-      {
-        source: '/admin/:path*',
-        has: [
-          {
-            type: 'host',
-            value: 'admin.localhost:3000',
-          },
-        ],
-        destination: 'http://admin.localhost:3000/:path*',
-        permanent: false,
-      }
-    ];
-  },
+  // async rewrites() {
+  //   return [
+  //     {
+  //       source: "/:path*",
+  //       destination: `/:path*`,
+  //     },
+  //     {
+  //       source: "/admin/:path*",
+  //       destination: `/admin/:path*`,
+  //     },
+  //   ]
+  // },
+  // async redirects() {
+  //   return [
+  //     {
+  //       source: '/admin/:path*',
+  //       has: [
+  //         {
+  //           type: 'host',
+  //           value: 'admin.localhost:3000',
+  //         },
+  //       ],
+  //       destination: 'http://admin.localhost:3000/:path*',
+  //       permanent: false,
+  //     }
+  //   ];
+  // },
   basePath: '',
+  // output: 'export',
 };
 
 export default nextConfig;
