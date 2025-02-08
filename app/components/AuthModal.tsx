@@ -13,8 +13,8 @@ export default function AuthModal() {
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
       <AuthForm
-        onSubmit={(name, email, password, userType, businessNumber, isLogin) => {
-          login(email, 'PERSONAL')
+        onSubmit={(id, name, email, userType, created_at, businessNumber, isLogin) => {
+          login(id, name, email, 'PERSONAL', created_at)
           setIsAuthFormOpen(false)
         }}
         onCancel={() => setIsAuthFormOpen(false)}
