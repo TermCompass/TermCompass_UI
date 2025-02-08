@@ -135,7 +135,7 @@ export default function BoardPageTemplate({
                         </div>
 
                         {/* 🔹 글쓰기 버튼을 오른쪽 정렬 */}
-                        {user && (
+                        {user.user && (
                         <div className="ml-auto mt-4 md:mt-0">
                             <button
                                 onClick={() => {
