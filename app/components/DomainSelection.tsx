@@ -1,24 +1,40 @@
-import { Button } from "@/components/ui/button"
-import { ScrollArea } from "@/components/ui/scroll-area"
-
-const domains = [
-  '전자상거래',
-  '소프트웨어 서비스',
-  '온라인 교육',
-  '여행 서비스',
-  '금융 서비스',
-  '헬스케어',
-  '소셜 미디어',
-  '콘텐츠 스트리밍',
-  '온라인 마켓플레이스',
-  '배달 서비스',
-]
+import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface DomainSelectionProps {
-  onSelect: (domain: string) => void
+  onSelect: (domain: Domain) => void
+}
+
+export interface Domain {
+  id: number;
+  filename: string;
 }
 
 export default function DomainSelection({ onSelect }: DomainSelectionProps) {
+  const [domains, setDomains] = useState<Domain[]>([]);
+
+  useEffect(() => {
+    async function fetchDomains() {
+      try {
+        const response = await fetch('http://kyj9447.ddns.net:8080/standard', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        const data = await response.json();
+        console.log('data ', data);
+
+        setDomains(data);
+      } catch (error) {
+        console.error('Error fetching domains:', error);
+      }
+    }
+
+    fetchDomains();
+  }, []);
+
   return (
     <div>
       <h2 className="text-2xl font-semibold mb-4">도메인 선택</h2>
@@ -26,16 +42,16 @@ export default function DomainSelection({ onSelect }: DomainSelectionProps) {
       <ScrollArea className="h-[300px] border p-4 rounded">
         {domains.map((domain) => (
           <Button
-            key={domain}
+            key={domain.id}
             onClick={() => onSelect(domain)}
             variant="outline"
             className="w-full mb-2"
           >
-            {domain}
+            {domain.filename}
           </Button>
         ))}
       </ScrollArea>
     </div>
-  )
+  );
 }
 
