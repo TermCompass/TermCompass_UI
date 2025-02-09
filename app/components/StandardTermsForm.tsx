@@ -10,51 +10,160 @@ interface StandardTermsFormProps {
 
 export default function StandardTermsForm({ domain, onSubmit, onBack }: StandardTermsFormProps) {
   const [terms, setTerms] = useState<string>('')
+  const [htagscount, setHtagscount] = useState<number>(0)
 
+  // useEffect domain
   useEffect(() => {
     async function fetchTerms() {
       const fetchedTerms = await getStandardTerms(domain)
       setTerms(fetchedTerms)
+      labelHtag(fetchedTerms)
     }
     fetchTerms()
   }, [domain])
 
+  // useEffect terms
   useEffect(() => {
-    const editableContent = document.getElementById('editableContent')
-    if (editableContent) {
-      const h4Tags = editableContent.getElementsByTagName('h4')
-      for (let i = 0; i < h4Tags.length; i++) {
-        h4Tags[i].id = `h4-${i + 1}`
-      }
-    }
+    observeDomChanges()
+    addEventListeners()
   }, [terms])
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
+  // 하단 추가버튼 눌렀을때
+  const handleAddLastSection = () => {
+
     const editableContent = document.getElementById('editableContent')
     if (editableContent) {
-      onSubmit(editableContent.innerHTML)
+
+      // button
+      const addButton = document.createElement('button')
+      addButton.id = `button-${htagscount + 1}`
+      addButton.className = 'addButton'
+      addButton.textContent = '+조항 추가'
+      addButton.contentEditable = 'false'
+
+      // h4
+      const newH4 = document.createElement('h4')
+      newH4.id = `h4-${htagscount + 1}`
+      newH4.textContent = '새 조항'
+      setHtagscount(htagscount + 1)
+
+      // p
+      const newP = document.createElement('p')
+      newP.textContent = '새 조항 상세 (사용하지 않으려면 내용을 지우세요.)'
+
+      // ol
+      const newOl = document.createElement('ol')
+      newOl.innerHTML = '<li>새 항목 (사용하지 않으려면 내용을 지우세요.)</li>'
+
+      // 새 섹션 추가
+      editableContent.appendChild(addButton)
+      editableContent.appendChild(newH4)
+      editableContent.appendChild(newP)
+      editableContent.appendChild(newOl)
+      setTerms(editableContent.innerHTML)
     }
   }
 
-  const handleAddSection = () => {
+  // 중간 추가버튼 눌렀을때
+  const handleAddTargetSection = function(thisButton: HTMLButtonElement) {
+    console.log("handleAddTargetSection"+thisButton.id);
+
+    // 해당 버튼의 부모 선택
+    const parent = thisButton.parentElement;
+    const editableContent = document.getElementById('editableContent')
+
+    if (parent && editableContent) {
+
+      // button
+      const addButton = document.createElement('button')
+      addButton.id = `button-${htagscount + 1}`
+      addButton.className = 'addButton'
+      addButton.textContent = '+조항 추가'
+      addButton.contentEditable = 'false'
+
+      // h4
+      const newH4 = document.createElement('h4')
+      newH4.id = `h4-${htagscount + 1}`
+      newH4.textContent = '새 조항'
+      setHtagscount(htagscount + 1)
+
+      // p
+      const newP = document.createElement('p')
+      newP.textContent = '새 조항 상세 (사용하지 않으려면 내용을 지우세요.)'
+
+      // ol
+      const newOl = document.createElement('ol')
+      newOl.innerHTML = '<li>새 항목 (사용하지 않으려면 내용을 지우세요.)</li>'
+
+      // 새 섹션 추가
+      editableContent.insertBefore(thisButton,addButton.nextSibling)
+      editableContent.insertBefore(thisButton,newH4.nextSibling)
+      editableContent.insertBefore(thisButton,newP.nextSibling)
+      editableContent.insertBefore(thisButton,newOl.nextSibling)
+      setTerms(editableContent.innerHTML)
+    }
+  }
+
+  // h4 태그 id 전부 라벨링하는 함수
+  const labelHtag = (terms: string) => {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(terms, 'text/html');
+    const h4Tags = doc.getElementsByTagName('h4');
+    for (let i = 0; i < h4Tags.length; i++) {
+      // button
+      const addButton = document.createElement('button')
+      addButton.id = `button-${i + 1}`
+      addButton.className = 'addButton'
+      addButton.textContent = '+조항 추가'
+      addButton.contentEditable = 'false'
+
+      // h4 태그 이전에 버튼 추가
+      h4Tags[i].parentNode?.insertBefore(addButton, h4Tags[i]);
+
+      h4Tags[i].id = `h4-${i + 1}`;
+    }
+    setHtagscount(h4Tags.length);
+    setTerms(doc.body.innerHTML);
+  }
+
+  // 이벤트 리스너 할당기
+  const addEventListeners = () => {
+    const buttons = document.getElementsByClassName('addButton')
+    for (let i = 0; i < buttons.length; i++) {
+      const button = buttons[i] as HTMLButtonElement
+      button.addEventListener('click', function() {
+        handleAddTargetSection(this);  // 클릭 시 실행할 함수
+      })
+    }
+  }
+
+  // h4 태그 삭제 감지기
+  const observeDomChanges = () => {
     const editableContent = document.getElementById('editableContent')
     if (editableContent) {
-      const newH4 = document.createElement('h4')
-      const newOl = document.createElement('ol')
-      newH4.textContent = 'New Section'
-      newOl.innerHTML = '<li>New Item</li>'
-      editableContent.appendChild(newH4)
-      editableContent.appendChild(newOl)
-      const h4Tags = editableContent.getElementsByTagName('h4')
-      for (let i = 0; i < h4Tags.length; i++) {
-        h4Tags[i].id = `h4-${i + 1}`
-      }
+      const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+          if (mutation.type === 'childList') {
+            mutation.removedNodes.forEach((node) => {
+              if (node.nodeName === 'H4') {
+                const h4Id = (node as HTMLElement).id
+                const buttonId = `button-${h4Id.split('-')[1]}`
+                const button = document.getElementById(buttonId)
+                if (button) {
+                  button.remove()
+                }
+              }
+            })
+          }
+        })
+      })
+
+      observer.observe(editableContent, { childList: true, subtree: true })
     }
   }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <div>
       <h2 className="text-2xl font-semibold mb-4">{domain.filename} </h2>
       <style jsx global>{`
         #editableContent * {
@@ -111,11 +220,8 @@ export default function StandardTermsForm({ domain, onSubmit, onBack }: Standard
         #editableContent > ol > li:nth-child(15)::before { content: '⑮ '; }
       `}</style>
       <div id="editableContent" className="mb-4 border p-2" contentEditable="true" dangerouslySetInnerHTML={{ __html: terms }}></div>
-      <div className="flex justify-between">
-        <Button className="bg-black text-white hover:bg-blue-600 hover:text-white" variant="outline" onClick={onBack}>이전</Button>
-        <Button type="submit" className="bg-black text-white hover:bg-blue-600">다음</Button>
-      </div>
-    </form>
+      <Button className="bg-black text-white hover:bg-blue-600 mt-4" onClick={handleAddLastSection}>마지막에 새 섹션 추가</Button>
+    </div>
   )
 }
 

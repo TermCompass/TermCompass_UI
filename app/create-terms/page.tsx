@@ -34,16 +34,16 @@ const CreateTermsContent = () => {
   }
 
   const handleStandardTermsSubmit = (terms: string) => {
-    setStandardTerms(terms)
-    setStep(3)
+    // setStandardTerms(terms)
+    // setStep(3)
   }
 
   const handleCustomClauseAdd = (clause: string) => {
-    setCustomClauses([...customClauses, clause])
+    // setCustomClauses([...customClauses, clause])
   }
 
   const handleCustomClauseFinish = () => {
-    setStep(4)
+    // setStep(4)
   }
 
   // const handleReviewRequest = () => {
@@ -66,22 +66,6 @@ const CreateTermsContent = () => {
             domain={selectedDomain!} 
             onSubmit={handleStandardTermsSubmit} 
             onBack={handleback}
-          />
-        )}
-        {step === 3 && (
-          <CustomClauseForm 
-            onAdd={handleCustomClauseAdd} 
-            onFinish={handleCustomClauseFinish}
-            onBack={() => setStep(2)}
-            clauses={customClauses}
-          />
-        )}
-        {step === 4 && (
-          <TermsReview 
-            standardTerms={standardTerms} 
-            customClauses={customClauses} 
-            onBack={() => setStep(3)}
-            onReviewRequest={handleReviewRequest}
           />
         )}
       </div>

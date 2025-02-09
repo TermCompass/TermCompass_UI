@@ -16,7 +16,7 @@ const nextConfig = {
     ],
   },
   assetPrefix: 'http://kyj9447.ddns.net:3000',
-  reactStrictMode: true,
+  reactStrictMode: false,
   eslint: {
     ignoreDuringBuilds: true,  // 빌드 시 ESLint 무시
   },
