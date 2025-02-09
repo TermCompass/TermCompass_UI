@@ -13,7 +13,7 @@ import TermsReview from '@/app/components/TermsReview'
 const CreateTermsContent = () => {
   const [step, setStep] = useState(1)
   const [selectedDomain, setSelectedDomain] = useState<Domain | null>(null)
-  const [standardTerms, setStandardTerms] = useState<string>('')
+  const [terms, setTerms] = useState<string>('');
   const [customClauses, setCustomClauses] = useState<string[]>([])
   const { user } = useUser()
   const router = useRouter()
@@ -28,10 +28,12 @@ const CreateTermsContent = () => {
     return null
   }
 
-  const handleDomainSelect = (domain: Domain) => {
-    setSelectedDomain(domain)
+  const handleDomainSelect = async (domain: Domain) => {
+    const fetchedTerms = await getStandardTerms(domain);
+    setTerms(fetchedTerms);
+    setSelectedDomain(domain);
     setStep(2)
-  }
+  };
 
   const handleStandardTermsSubmit = (terms: string) => {
     // setStandardTerms(terms)
@@ -56,6 +58,22 @@ const CreateTermsContent = () => {
     setSelectedDomain(null)
   }
   
+  async function getStandardTerms(domain: Domain): Promise<string> {
+    try {
+      const response = await fetch(`http://kyj9447.ddns.net:8080/standard/${domain.id}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      const data = await response.json();
+      console.log('data.refined_text ', data.refined_text);
+      return data.refined_text;
+    } catch (error) {
+      console.error('Error fetching standard terms:', error);
+      return '해당 표준약관 로드중 에러가 발생했습니다.';
+    }
+  }
   return (
     <Layout>
       <div className="max-w-4xl mx-auto p-8 min-h-[calc(100vh-13rem)]">
@@ -63,7 +81,8 @@ const CreateTermsContent = () => {
         {step === 1 && <DomainSelection onSelect={handleDomainSelect} />}
         {step === 2 && (
           <StandardTermsForm 
-            domain={selectedDomain!} 
+            domain={selectedDomain!}
+            terms={terms}
             onSubmit={handleStandardTermsSubmit} 
             onBack={handleback}
           />

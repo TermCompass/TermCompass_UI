@@ -35,6 +35,10 @@ export default function DomainSelection({ onSelect }: DomainSelectionProps) {
     fetchDomains();
   }, []);
 
+  const handleSelect = async (domain: Domain) => {
+    onSelect(domain);
+  };
+
   return (
     <div>
       <h2 className="text-2xl font-semibold mb-4">도메인 선택</h2>
@@ -43,7 +47,7 @@ export default function DomainSelection({ onSelect }: DomainSelectionProps) {
         {domains.map((domain) => (
           <Button
             key={domain.id}
-            onClick={() => onSelect(domain)}
+            onClick={() => handleSelect(domain)}
             variant="outline"
             className="w-full mb-2"
           >

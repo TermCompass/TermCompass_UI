@@ -3,43 +3,48 @@ import { Button } from "@/components/ui/button"
 import DomainSelection, { Domain } from '@/app/components/DomainSelection'
 
 interface StandardTermsFormProps {
-  domain: Domain
+  domain: Domain;
+  terms: string;
   onSubmit: (terms: string) => void
   onBack: () => void
 }
 
-export default function StandardTermsForm({ domain, onSubmit, onBack }: StandardTermsFormProps) {
-  const [terms, setTerms] = useState<string>('')
+export default function StandardTermsForm({ domain, terms, onSubmit, onBack }: StandardTermsFormProps) {
+  const [localTerms, setLocalTerms] = useState<string>(terms);
   const [htagscount, setHtagscount] = useState<number>(0)
 
-  // useEffect domain
+
+  // useEffect all
   useEffect(() => {
-    async function fetchTerms() {
-      const fetchedTerms = await getStandardTerms(domain)
-      setTerms(fetchedTerms)
-      labelHtag(fetchedTerms)
-    }
-    fetchTerms()
-  }, [domain])
+    console.log("useEffect all");
+    setLocalTerms(labelHtag(localTerms))
+    addEventListeners();
+    observeDomChanges();
+  }, [])
 
   // useEffect terms
   useEffect(() => {
-    observeDomChanges()
-    addEventListeners()
-  }, [terms])
+    console.log("useEffect terms");
+    addEventListeners();
+    observeDomChanges();
+  }, [localTerms])
 
   // 하단 추가버튼 눌렀을때
   const handleAddLastSection = () => {
+    console.log('handleAddLastSection');
 
-    const editableContent = document.getElementById('editableContent')
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(localTerms, 'text/html'); // getElement가 아닌 상태를 가져옴
+    const editableContent = doc.body;
+
     if (editableContent) {
 
       // button
-      const addButton = document.createElement('button')
-      addButton.id = `button-${htagscount + 1}`
-      addButton.className = 'addButton'
-      addButton.textContent = '+조항 추가'
-      addButton.contentEditable = 'false'
+      const aButton = document.createElement('button')
+      aButton.id = `button-${htagscount + 1}`
+      aButton.className = 'addButton'
+      aButton.textContent = '+조항 추가'
+      aButton.contentEditable = 'false'
 
       // h4
       const newH4 = document.createElement('h4')
@@ -56,23 +61,24 @@ export default function StandardTermsForm({ domain, onSubmit, onBack }: Standard
       newOl.innerHTML = '<li>새 항목 (사용하지 않으려면 내용을 지우세요.)</li>'
 
       // 새 섹션 추가
-      editableContent.appendChild(addButton)
+      editableContent.appendChild(aButton)
       editableContent.appendChild(newH4)
       editableContent.appendChild(newP)
       editableContent.appendChild(newOl)
-      setTerms(editableContent.innerHTML)
+      setLocalTerms(editableContent.innerHTML)
     }
   }
 
   // 중간 추가버튼 눌렀을때
-  const handleAddTargetSection = function(thisButton: HTMLButtonElement) {
-    console.log("handleAddTargetSection"+thisButton.id);
+  const handleAddTargetSection = function (thisButton: HTMLButtonElement) {
+    console.log("handleAddTargetSection" + thisButton.id);
 
-    // 해당 버튼의 부모 선택
-    const parent = thisButton.parentElement;
-    const editableContent = document.getElementById('editableContent')
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(localTerms, 'text/html');
+    const editableContent = doc.body;
+    const targetButton = editableContent.querySelector(`#${thisButton.id}`);
 
-    if (parent && editableContent) {
+    if (targetButton && editableContent) {
 
       // button
       const addButton = document.createElement('button')
@@ -96,16 +102,16 @@ export default function StandardTermsForm({ domain, onSubmit, onBack }: Standard
       newOl.innerHTML = '<li>새 항목 (사용하지 않으려면 내용을 지우세요.)</li>'
 
       // 새 섹션 추가
-      editableContent.insertBefore(thisButton,addButton.nextSibling)
-      editableContent.insertBefore(thisButton,newH4.nextSibling)
-      editableContent.insertBefore(thisButton,newP.nextSibling)
-      editableContent.insertBefore(thisButton,newOl.nextSibling)
-      setTerms(editableContent.innerHTML)
+      editableContent.insertBefore(addButton, targetButton.nextSibling);
+      editableContent.insertBefore(newOl, targetButton.nextSibling);
+      editableContent.insertBefore(newP, targetButton.nextSibling);
+      editableContent.insertBefore(newH4, targetButton.nextSibling);
+      setLocalTerms(editableContent.innerHTML)
     }
   }
 
   // h4 태그 id 전부 라벨링하는 함수
-  const labelHtag = (terms: string) => {
+  const labelHtag = (terms: string): string => {
     const parser = new DOMParser();
     const doc = parser.parseFromString(terms, 'text/html');
     const h4Tags = doc.getElementsByTagName('h4');
@@ -123,15 +129,17 @@ export default function StandardTermsForm({ domain, onSubmit, onBack }: Standard
       h4Tags[i].id = `h4-${i + 1}`;
     }
     setHtagscount(h4Tags.length);
-    setTerms(doc.body.innerHTML);
+    return doc.body.innerHTML;
   }
 
   // 이벤트 리스너 할당기
   const addEventListeners = () => {
+    console.log("addEventListeners");
+
     const buttons = document.getElementsByClassName('addButton')
     for (let i = 0; i < buttons.length; i++) {
       const button = buttons[i] as HTMLButtonElement
-      button.addEventListener('click', function() {
+      button.addEventListener('click', function () {
         handleAddTargetSection(this);  // 클릭 시 실행할 함수
       })
     }
@@ -139,7 +147,10 @@ export default function StandardTermsForm({ domain, onSubmit, onBack }: Standard
 
   // h4 태그 삭제 감지기
   const observeDomChanges = () => {
-    const editableContent = document.getElementById('editableContent')
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(localTerms, 'text/html');
+    const editableContent = doc.body;
+
     if (editableContent) {
       const observer = new MutationObserver((mutations) => {
         mutations.forEach((mutation) => {
@@ -148,7 +159,7 @@ export default function StandardTermsForm({ domain, onSubmit, onBack }: Standard
               if (node.nodeName === 'H4') {
                 const h4Id = (node as HTMLElement).id
                 const buttonId = `button-${h4Id.split('-')[1]}`
-                const button = document.getElementById(buttonId)
+                const button = editableContent.querySelector(`#${buttonId}`);
                 if (button) {
                   button.remove()
                 }
@@ -219,25 +230,10 @@ export default function StandardTermsForm({ domain, onSubmit, onBack }: Standard
         #editableContent > ol > li:nth-child(14)::before { content: '⑭ '; }
         #editableContent > ol > li:nth-child(15)::before { content: '⑮ '; }
       `}</style>
-      <div id="editableContent" className="mb-4 border p-2" contentEditable="true" dangerouslySetInnerHTML={{ __html: terms }}></div>
+      <div id="editableContent" className="mb-4 border p-2" contentEditable="true" dangerouslySetInnerHTML={{ __html: localTerms }}></div>
       <Button className="bg-black text-white hover:bg-blue-600 mt-4" onClick={handleAddLastSection}>마지막에 새 섹션 추가</Button>
+      {/* <Button className="bg-black text-white hover:bg-blue-600 mt-4" onClick={() => onSubmit(localTerms)}>저장</Button>
+      <Button className="bg-black text-white hover:bg-blue-600 mt-4" onClick={onBack}>뒤로</Button> */}
     </div>
   )
-}
-
-async function getStandardTerms(domain: Domain): Promise<string> {
-  try {
-    const response = await fetch(`http://kyj9447.ddns.net:8080/standard/${domain.id}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-    const data = await response.json();
-    console.log('data.refined_text ', data.refined_text);
-    return data.refined_text;
-  } catch (error) {
-    console.error('Error fetching standard terms:', error);
-    return '해당 표준약관 로드중 에러가 발생했습니다.';
-  }
 }
