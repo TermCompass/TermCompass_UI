@@ -147,6 +147,8 @@ export default function StandardTermsForm({ domain, terms, onSubmit, onBack }: S
 
   // h4 태그 삭제 감지기
   const observeDomChanges = () => {
+    console.log("observeDomChanges");
+    
     const parser = new DOMParser();
     const doc = parser.parseFromString(localTerms, 'text/html');
     const editableContent = doc.body;
@@ -165,6 +167,7 @@ export default function StandardTermsForm({ domain, terms, onSubmit, onBack }: S
                 }
               }
             })
+            // setLocalTerms(editableContent.innerHTML);
           }
         })
       })
