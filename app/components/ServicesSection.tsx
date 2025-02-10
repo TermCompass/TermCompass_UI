@@ -203,15 +203,15 @@ export default function ServicesSection() {
                           <CardTitle className="text-lg lg:text-xl text-center mb-3 flex-shrink-0 w-full truncate">
                             {service.title}
                           </CardTitle>
-                          <CardDescription className="text-sm lg:text-base text-center w-full overflow-hidden">
-                            <div className="truncate lg:whitespace-normal">
+                          <CardDescription className="text-sm  lg:text-base text-center w-full overflow-hidden">
+                            <div className="truncate text-black lg:whitespace-normal">
                               {service.description}
                             </div>
                           </CardDescription>
                         </Card>
                         <Card className="flip-card-back h-full flex flex-col justify-center items-center p-6">
                           <CardDescription className="text-sm lg:text-base text-center w-full overflow-hidden">
-                            <div className="truncate lg:whitespace-normal">
+                            <div className="truncate text-black lg:whitespace-normal">
                               {service.description}
                             </div>
                           </CardDescription>
