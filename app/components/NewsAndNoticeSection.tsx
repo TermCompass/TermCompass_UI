@@ -11,24 +11,12 @@ const notices = {
     { title: '개인정보보호법 개정안 발표', date: '2023-06-15' },
     { title: '전자상거래법 시행령 개정', date: '2023-06-10' },
     { title: '인공지능 윤리기준 가이드라인 발표', date: '2023-06-05' },
-  ],
-  agency: [
-    { title: '2023년 약관 평가 결과 발표', date: '2023-06-20' },
-    { title: '소비자 권익 보호 세미나 개최 안내', date: '2023-06-18' },
-    { title: '온라인 플랫폼 공정화법 설명회', date: '2023-06-12' },
-  ],
-  site: [
-    { title: 'LexGen 서비스 개선 안내', date: '2023-06-25' },
-    { title: '이용약관 개정 예정 안내', date: '2023-06-22' },
-    { title: '시스템 점검으로 인한 서비스 일시 중단 안내', date: '2023-06-17' },
-  ],
+  ]
 }
 //DB에서 사진데이터 가져와서 전시해야함
 const newsItems = [
-  { title: '인공지능 기반 약관 분석 서비스 출시', image: '/herobackground.jpg' },
-  { title: '소비자 권익 보호를 위한 새로운 법안 발의', image: '/herobackground.jpg' },
-  { title: '온라인 플랫폼 기업들의 약관 개선 노력', image: '/herobackground.jpg' },
-  { title: '데이터 3법 시행 1년, 그 영향과 전망', image: '/herobackground.jpg' },
+  { title: '공정거래 센터', image: '/공고1.jpg', link: 'https://edu.kofair.or.kr/' },
+  { title: '공고2', image: '/공고2.png',link: 'https://kofair.or.kr/home/board/brdDetail.do?menu_cd=000114&num=1860'}
 ]
 
 export default function NewsAndNoticeSection() {
@@ -76,17 +64,17 @@ export default function NewsAndNoticeSection() {
               <h2 className="text-3xl font-bold mb-6 text-center">포토 뉴스</h2>
               <Card className="flex flex-col items-center justify-center h-auto mx-auto p-4 shadow-lg rounded-lg">
                 <CardHeader className="w-full flex items-center justify-center">
-                  <Image
-                    src={newsItems[currentIndex].image || "/placeholder.svg"}
-                    alt={newsItems[currentIndex].title}
-                    width={400}
-                    height={200}
-                    className="rounded-t-lg"
-                  />
+                  <a href={newsItems[currentIndex].link}>
+                    <Image
+                        src={newsItems[currentIndex].image || "/placeholder.svg"}
+                        alt={newsItems[currentIndex].title}
+
+                        width={400}
+                        height={200}
+                        className="rounded-t-lg"
+                    />
+                  </a>
                 </CardHeader>
-                <CardContent>
-                  <CardTitle>{newsItems[currentIndex].title}</CardTitle>
-                </CardContent>
               </Card>
               <Button
                 variant="outline"
@@ -106,7 +94,6 @@ export default function NewsAndNoticeSection() {
           </div>
         </div>
       </section>
-
     </div>
   )
 }
