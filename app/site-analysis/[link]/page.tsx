@@ -24,23 +24,21 @@ export default function SiteEvaluation() {
   useEffect(() => {
       const fetchSiteData = async () => {
         try {
-          const response = await fetch(`http://localhost:8080/sites/${link}`)
+          const response = await fetch(`http://localhost:8080/site/${link}`)
           if (!response.ok) {
             throw new Error('Failed to fetch site data')
           }
           const data = await response.json()
           setSite({
             name: data.name,
-            logo: data.logo,
+            logo: `/site-logo/${data.logo}`,
             rank: data.rank,
             benefits: data.benefits,
             drawbacks: data.drawbacks,
             link: data.link
           })
         } catch (err) {
-          setError('데이터를 불러오는 중 오류가 발생했습니다.')
-        } finally {
-          setLoading(false)
+            console.error(err)
         }
       }
 
@@ -83,18 +81,18 @@ export default function SiteEvaluation() {
         </div>
 
         <div className="grid grid-rows-1 md:grid-rows-3 gap-6 mb-6">
-          <div className="bg-red-100 p-4 rounded-lg">
-            <h3 className="font-semibold text-red-800 mb-2">소비자에게 불리한 조항</h3>
-            <ul className="list-disc list-inside">
-              {site.drawbacks.map((clause: string, index: number) => (
-                <li key={index}>{clause}</li>
-              ))}
-            </ul>
-          </div>
           <div className="bg-green-100 p-4 rounded-lg">
             <h3 className="font-semibold text-green-800 mb-2">소비자에게 유리한 조항</h3>
             <ul className="list-disc list-inside">
               {site.benefits.map((clause: string, index: number) => (
+                  <li key={index}>{clause}</li>
+              ))}
+            </ul>
+          </div>
+          <div className="bg-red-100 p-4 rounded-lg">
+            <h3 className="font-semibold text-red-800 mb-2">소비자에게 불리한 조항</h3>
+            <ul className="list-disc list-inside">
+              {site.drawbacks.map((clause: string, index: number) => (
                 <li key={index}>{clause}</li>
               ))}
             </ul>
