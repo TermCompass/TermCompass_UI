@@ -145,7 +145,7 @@ export default function StandardTermsForm({ domain, terms, onSubmit, onBack }: S
       const token = localStorage.getItem('jwtToken'); // JWT 토큰을 로컬 스토리지에서 가져옴
 
       // POST 요청 보내기
-      fetch('http://kyj9447.ddns.net:8080/save-generated', {
+      fetch('/save-generated', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

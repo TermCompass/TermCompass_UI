@@ -11,6 +11,7 @@ interface BoardPageTemplateProps {
     posts: { id: number; title: string; author: string; created_at: string;}[];
     currentPage: number;
     totalPages: number;
+    totalElements: number;
     postsPerPage: number;
     onPageChange: (page: number) => void;
 }
@@ -20,6 +21,7 @@ export default function BoardPageTemplate({
                                               posts,
                                               currentPage,
                                               totalPages,
+                                              totalElements,
                                               postsPerPage,
                                               onPageChange,
                                           }: BoardPageTemplateProps) {
@@ -54,7 +56,7 @@ export default function BoardPageTemplate({
                         {currentPosts.map((post, index) => (
                             <tr key={post.id} className="hover:bg-gray-50">
                                 <td className="px-4 py-2 border-t border-b border-gray-300 text-center">
-                                    {posts.length - ((currentPage - 1) * postsPerPage) - index}
+                                    {totalElements - ((currentPage - 1) * postsPerPage) - index}
                                 </td>
                                 <td className="px-4 py-2 border-t border-b text-left">
                                     <Link href={`/board/${post.id}`} className="text-blue-500 hover:text-blue-700">

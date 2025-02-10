@@ -52,7 +52,7 @@ export default function BusinessHistory() {
 
   useEffect(() => {
     if (!user) return;
-    fetch(`http://kyj9447.ddns.net:8080/records/${user.id}?recordsOnly=false`, {
+    fetch(`/records/${user.id}?recordsOnly=false`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

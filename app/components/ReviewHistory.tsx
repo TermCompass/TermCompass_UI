@@ -24,7 +24,7 @@ export default function ReviewHistory() {
   useEffect(() => {
     if (!user) return;
     // GET 요청 보내기
-    fetch(`http://kyj9447.ddns.net:8080/records/${user.id}?recordsOnly=true`, {
+    fetch(`/records/${user.id}?recordsOnly=true`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',

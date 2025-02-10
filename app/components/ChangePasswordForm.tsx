@@ -25,7 +25,7 @@ export default function ChangePasswordForm({ onCancel }: ChangePasswordFormProps
             return
         }
         try {
-            const response = await fetch('http://kyj9447.ddns.net:8080/change-password', {
+            const response = await fetch('/change-password', {
                 method: "POST",
                 headers: {"Content-Type": "application/json"},
                 body: JSON.stringify({

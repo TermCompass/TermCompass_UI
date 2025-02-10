@@ -2,13 +2,13 @@
 
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
-import { useAdminAuth } from "../contexts/AdminAuthContext"
+import {AdminAuthProvider, useAdminAuth} from "../contexts/AdminAuthContext"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
-export default function UpdateCaselawPage() {
+function UpdateCaselawPage() {
   const { admin } = useAdminAuth()
   const router = useRouter()
   const [caselaw, setCaselaw] = useState("")
@@ -60,3 +60,6 @@ export default function UpdateCaselawPage() {
   )
 }
 
+export default function AdminWrapper() {
+  return <AdminAuthProvider><UpdateCaselawPage /></AdminAuthProvider>
+}
