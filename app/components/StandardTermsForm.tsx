@@ -135,6 +135,7 @@ export default function StandardTermsForm({ domain, terms, onSubmit, onBack }: S
     console.log("handleSave");
     const parser = new DOMParser();
     const doc = parser.parseFromString(localTerms, 'text/html');
+    const hostname = process.env.NEXT_PUBLIC_HOSTNAME;
     
     // 모든 button 요소 제거
     doc.querySelectorAll('button').forEach(button => button.remove());
@@ -145,7 +146,7 @@ export default function StandardTermsForm({ domain, terms, onSubmit, onBack }: S
       const token = localStorage.getItem('jwtToken'); // JWT 토큰을 로컬 스토리지에서 가져옴
 
       // POST 요청 보내기
-      fetch('http://kyj9447.ddns.net:8080/save-generated', {
+      fetch(`http://${hostname}:8080/save-generated`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

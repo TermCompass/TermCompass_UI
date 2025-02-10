@@ -145,6 +145,7 @@ const MiniChatbot: React.FC = () => {
 
   // 메시지 전송 함수
   const handleSend = async () => {
+    const hostname = process.env.NEXT_PUBLIC_HOSTNAME;
     if (!input.trim()) return;
 
     setMessages((prev) => [...prev, { request: input, answer: '' }]);
@@ -168,7 +169,7 @@ const MiniChatbot: React.FC = () => {
     }
 
     try {
-      const response = await fetch('http://kyj9447.ddns.net:8080/create-chat', {
+      const response = await fetch(`http://${hostname}:8080/create-chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ request: input, userId: userId, recordId: currentRecordId }),
@@ -210,11 +211,12 @@ const MiniChatbot: React.FC = () => {
 
   // 히스토리 샘플 데이터 설정
   useEffect(() => {
+    const hostname = process.env.NEXT_PUBLIC_HOSTNAME;
     if (!user) return;
 
     const fetchChatHistory = async () => {
       try {
-        const response = await fetch(`http://kyj9447.ddns.net:8080/records/${user.id}`);
+        const response = await fetch(`http://${hostname}:8080/records/${user.id}`);
         if (!response.ok) throw new Error('서버 오류');
 
         const data = await response.json();

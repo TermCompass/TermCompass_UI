@@ -27,6 +27,7 @@ export default function AuthForm({ onSubmit, onCancel }: AuthFormProps) {
   const [hasStartedConfirmation, setHasStartedConfirmation] = useState(false)
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    const hostname = process.env.NEXT_PUBLIC_HOSTNAME;
     event.preventDefault()
     if (!isLogin && password !== passwordConfirm) {
       setPasswordMatch(false)
@@ -35,8 +36,8 @@ export default function AuthForm({ onSubmit, onCancel }: AuthFormProps) {
 
     // API 호출
     const apiUrl = isLogin
-        ? 'http://kyj9447.ddns.net:8080/login'
-        : 'http://kyj9447.ddns.net:8080/signup'
+        ? `http://${hostname}:8080/login`
+        : `http://${hostname}:8080/signup`
 
     const payload = isLogin
         ? { email : email, password : password }

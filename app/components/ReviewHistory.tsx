@@ -22,9 +22,11 @@ export default function ReviewHistory() {
   const { user } = useUser();
 
   useEffect(() => {
+    const hostname = process.env.NEXT_PUBLIC_HOSTNAME;
+
     if (!user) return;
     // GET 요청 보내기
-    fetch(`http://kyj9447.ddns.net:8080/records/${user.id}?recordsOnly=true`, {
+    fetch(`http://${hostname}:8080/records/${user.id}?recordsOnly=true`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',

@@ -19,13 +19,14 @@ export default function ChangePasswordForm({ onCancel }: ChangePasswordFormProps
     const { toast } = useToast()
 
     const handleSubmit = async (e: React.FormEvent) => {
+        const hostname = process.env.NEXT_PUBLIC_HOSTNAME;
         e.preventDefault()
         if (newPassword !== confirmPassword) {
             alert("새 비밀번호가 일치하지 않습니다.")
             return
         }
         try {
-            const response = await fetch('http://kyj9447.ddns.net:8080/change-password', {
+            const response = await fetch(`http://${hostname}:8080/change-password`, {
                 method: "POST",
                 headers: {"Content-Type": "application/json"},
                 body: JSON.stringify({

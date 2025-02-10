@@ -30,8 +30,10 @@ export function AdminAuthProvider({ children }: { children: React.ReactNode }) {
   }, [])
 
   const login = async (email: string, password: string) => {
+    const hostname = process.env.NEXT_PUBLIC_HOSTNAME;
+
     try {
-      const response = await fetch("http://kyj9447.ddns.net:8080/admin/login", {
+      const response = await fetch(`http://${hostname}:8080/admin/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

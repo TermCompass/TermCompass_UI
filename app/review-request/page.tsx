@@ -89,8 +89,10 @@ function ReviewRequest() {
   };
 
   useEffect(() => {
+    const hostname = process.env.NEXT_PUBLIC_HOSTNAME;
+
     // 웹소켓 연결 생성
-    const newSocket = new WebSocket('ws://kyj9447.ddns.net:8080/ws');
+    const newSocket = new WebSocket(`ws://${hostname}:8080/ws`);
     setSocket(newSocket);
 
     // open

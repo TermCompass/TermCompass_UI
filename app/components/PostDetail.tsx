@@ -30,10 +30,12 @@ export default function PostDetail({ post }: PostDetailProps) {
     const [newComment, setNewComment] = useState<string>('');
 
     const handleCommentSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        const hostname = process.env.NEXT_PUBLIC_HOSTNAME;
+
         e.preventDefault();
         if (newComment.trim()) {
             try {
-                const response = await fetch(`http://kyj9447.ddns.net:8080/answer/create/${postId}`, {
+                const response = await fetch(`http://${hostname}:8080/answer/create/${postId}`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

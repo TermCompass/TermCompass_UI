@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import https from 'https';
-
+const hostname = process.env.NEXT_PUBLIC_HOSTNAME || 'default-host.com';
 const nextConfig = {
   images: {
     remotePatterns: [
@@ -15,7 +15,7 @@ const nextConfig = {
       },
     ],
   },
-  assetPrefix: 'http://kyj9447.ddns.net:3000',
+  assetPrefix: `http://${hostname}:3000`,
   reactStrictMode: false,
   eslint: {
     ignoreDuringBuilds: true,  // 빌드 시 ESLint 무시

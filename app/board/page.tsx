@@ -26,11 +26,12 @@ export default function BoardPage() {
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
+        const hostname = process.env.NEXT_PUBLIC_HOSTNAME;
         const fetchPosts = async () => {
             setLoading(true);
             setError(null);
             try {
-                const response = await fetch(`http://kyj9447.ddns.net:8080/board/list?page=${currentPage - 1}`);
+                const response = await fetch(`http://${hostname}:8080/board/list?page=${currentPage - 1}`);
                 if (!response.ok) {
                     throw new Error("게시글을 불러오는 데 실패했습니다.");
                 }

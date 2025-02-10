@@ -24,11 +24,13 @@ export default function ReviewSidebar({ onSelectReview, selectedReview, resetRev
   const [reviewHistory, setReviewHistory] = useState<ReviewHistory[]>([]);
 
   useEffect(() => {
+    const hostname = process.env.NEXT_PUBLIC_HOSTNAME;
+
     if (!user) return;
 
     const fetchReviewHistory = async () => {
       try {
-        const response = await fetch(`http://kyj9447.ddns.net:8080/records/${user.id}`);
+        const response = await fetch(`http://${hostname}:8080/records/${user.id}`);
         if (!response.ok) throw new Error('서버 오류');
 
         const data = await response.json();
