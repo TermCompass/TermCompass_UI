@@ -22,6 +22,7 @@ export default function MyPage() {
         <div className="max-w-4xl mx-auto mt-8">
           <Card>
             <CardContent>
+              <br />
               <p>로그인이 필요합니다.</p>
             </CardContent>
           </Card>

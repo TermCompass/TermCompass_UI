@@ -15,9 +15,9 @@ export default function HeaderBanner({
                                          title,
                                          backgroundImage = "/board_img.jpg",
                                          breadcrumb = [],
-                                     }: HeaderBannerProps) {
+                                     }: HeaderBannerProps)  {
     return (
-        <div className="relative w-full h-[250px] overflow-hidden">
+        <div className="relative w-full h-[200px] overflow-hidden">
             {/* 🔹 배경 이미지 */}
             <div
                 className="absolute inset-0 w-full h-full bg-cover bg-center filter blur-md"

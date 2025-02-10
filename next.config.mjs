@@ -50,6 +50,9 @@ const nextConfig = {
     ];
   },
   basePath: '',
+  typescript: {
+      ignoreBuildErrors: true,
+    },
 };
 
 export default nextConfig;

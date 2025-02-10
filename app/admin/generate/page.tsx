@@ -13,7 +13,7 @@ export default function GeneratePage() {
   const { admin } = useAdminAuth()
   const router = useRouter()
   const [industry, setIndustry] = useState("")
-  const [generatedTerms, setGeneratedTerms] = useState("")
+  const [termsContent, setTermsContent] = useState("") // 표준약관 내용 관리
 
   useEffect(() => {
     if (!admin) {
@@ -27,10 +27,8 @@ export default function GeneratePage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    // Here you would typically send a request to your AI model
-    setGeneratedTerms(
-      `이것은 ${industry}를 위한 임시 생성된 표준약관입니다. 실제 구현에서는 AI 모델이 생성한 약관이 여기에 표시됩니다.`,
-    )
+    // 표준약관 내용 저장 (예: 서버로 전송하거나 다른 로직을 처리)
+    console.log("작성된 표준약관 내용: ", termsContent)
   }
 
   return (
@@ -52,19 +50,24 @@ export default function GeneratePage() {
             />
           </CardContent>
         </Card>
-        <Button type="submit">표준약관 생성</Button>
-      </form>
-      {generatedTerms && (
-        <Card className="mt-4">
+        <Card className="mb-4">
           <CardHeader>
-            <CardTitle>생성된 표준약관</CardTitle>
+            <CardTitle>표준약관 내용 입력</CardTitle>
           </CardHeader>
           <CardContent>
-            <Textarea value={generatedTerms} readOnly className="mt-2" rows={10} />
+            <Label htmlFor="termsContent">표준약관 내용</Label>
+            <Textarea
+              id="termsContent"
+              value={termsContent}
+              onChange={(e) => setTermsContent(e.target.value)} // 입력값 관리
+              placeholder="표준약관을 여기에 입력하세요."
+              className="mt-2"
+              rows={10}
+            />
           </CardContent>
         </Card>
-      )}
+        <Button type="submit">표준약관 저장</Button>
+      </form>
     </div>
   )
 }
-

@@ -5,7 +5,6 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Layout from '../components/Layout';
 import Link from 'next/link';
 import BoardBar from "@/app/components/BoardBar";
-//db에서 데이터를 연동해야할곳
 import BoardPageTemplate from '@/app/components/BoardPageTemplate';
 
 interface Post {
@@ -36,7 +35,7 @@ export default function BoardPage() {
                     throw new Error("게시글을 불러오는 데 실패했습니다.");
                 }
                 const data = await response.json();
-                setPosts(data.content); // 백엔드에서 `Page<Question>` 형태라면 `.content` 사용
+                setPosts(data.content); //
                 setTotalPages(data.totalPages);
             } catch (err: any) {
                 setError(err.message);
@@ -55,12 +54,7 @@ export default function BoardPage() {
     return (
         <Layout>
         <BoardPageTemplate
-            title="공지사항"
-            breadcrumb={[
-                { label: '홈', href: '/' },
-                { label: '알림마당', href: '/board' },
-                { label: '게시판', href: '/board' },
-            ]}
+            title="게시판"
             posts={posts}
             currentPage={currentPage}
             totalPages={totalPages}

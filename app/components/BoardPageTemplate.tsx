@@ -64,7 +64,11 @@ export default function BoardPageTemplate({
                                         {post.title}
                                     </Link>
                                 </td>
-                                <td className="px-4 py-2 border-t border-b text-center">{post.author}</td>
+                                <td className="px-4 py-2 border-t border-b text-center">
+                                    {post.author && post.author.length > 2
+                                        ? `${post.author[0]}${"*".repeat(post.author.length - 2)}${post.author[post.author.length - 1]}`
+                                        : post.author}
+                                </td>
                                 <td className="px-4 py-2 border-t border-b text-center">
                                     {(() => {
                                         const date = new Date(post.created_at);
@@ -150,10 +154,6 @@ export default function BoardPageTemplate({
                     </div>
                 </div>
 
-                {/* 🔹 메뉴바 (게시판 옆으로 배치) */}
-                <div className=" hidden md:block flex-grow mx-auto py-4 ">
-                    <BoardBar/>
-                </div>
 
             </div>
 

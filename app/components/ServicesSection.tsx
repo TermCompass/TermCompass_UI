@@ -142,7 +142,6 @@ export default function ServicesSection() {
                                 ))}
                             </ul>
                         </div>
-
                         <div className="w-full">
                             <h4 className="text-sm font-semibold text-red-600 mb-1"
                                 style={{fontSize: "clamp(12px, 1.1vw, 16px)"}}>
