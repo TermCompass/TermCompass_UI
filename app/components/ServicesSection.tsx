@@ -22,19 +22,19 @@ interface Website {
 const services = [
   {
     title: '약관 검토',
-    description: 'AI 기반 약관 분석으로 숨겨진 독소조항을 찾아냅니다.',
+    description: (<>AI 기반 약관 분석으로 숨겨진 독소조항을 <br />찾아냅니다.</>),
     icon: Search,
     url: '/review-request'
   },
   {
     title: '사이트 등급',
-    description: '주요 웹사이트의 약관을 평가하고 등급을 매깁니다.',
+    description: (<>주요 웹사이트의 약관을 평가하고 <br />등급을 매깁니다.</>) ,
     icon: Shield,
     url: '/site-analysis'
   },
   {
     title: '약관 생성',
-    description: '기업을 위한 맞춤형 약관 생성 서비스를 제공합니다.',
+    description: (<>기업을 위한 맞춤형 약관 생성 서비스를  <br />제공합니다.</>),
     icon: FileText,
     url: '/create-terms'
   },
