@@ -54,7 +54,7 @@ export default function PostDetail() {
                 소통창구
             </div>
 
-            <div className='p-6 bg-white shadow-md rounded-md w-[85%] mx-auto mt-4'>
+            <div className='p-6 bg-white  rounded-md w-[85%] mx-auto mt-4'>
                 <h2 className='text-3xl font-bold mb-4 border-b-2 pb-1'>{post.title}</h2>
                 <div className='flex items-center justify-between pb-1 border-b-2'>
                     <span className='text-gray-800 font-semibold'>작성자: {post.author}</span>
@@ -86,7 +86,7 @@ export default function PostDetail() {
                 ) : (
                     <ul className='space-y-3'>
                         {comments.map((comment) => (
-                            <li key={comment.id} className='p-3 border rounded-md bg-white shadow-md'>
+                            <li key={comment.id} className='p-3 border rounded-md bg-white '>
                                 <div className='flex justify-between items-center'>
                                     <span className='font-semibold'>{comment.author}</span>
                                     <span className='text-sm text-gray-500'>{comment.date}</span>

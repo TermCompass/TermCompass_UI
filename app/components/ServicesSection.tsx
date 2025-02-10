@@ -129,7 +129,7 @@ export default function ServicesSection() {
                         <div className="w-full">
                             <h4 className="text-sm font-semibold text-green-600 mb-1" 
                                 style={{fontSize: "clamp(12px, 1.1vw, 16px)"}}>
-                                장점
+                                유리
                             </h4>
                             <ul className="list-disc list-inside">
                                 {website.benefits.slice(0, 2).map((benefit, i) => (
@@ -146,7 +146,7 @@ export default function ServicesSection() {
                         <div className="w-full">
                             <h4 className="text-sm font-semibold text-red-600 mb-1"
                                 style={{fontSize: "clamp(12px, 1.1vw, 16px)"}}>
-                                단점
+                                불리
                             </h4>
                             <ul className="list-disc list-inside">
                                 {website.drawbacks.slice(0, 2).map((drawback, i) => (
