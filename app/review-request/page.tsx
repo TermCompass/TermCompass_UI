@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, Suspense } from 'react'
 import Layout from '../components/Layout'
 import { Button } from "@/components/ui/button"
 import { useToast } from "@/hooks/use-toast"
@@ -10,7 +10,7 @@ import { useUser } from '../contexts/UserContext'
 import pako from 'pako'
 import { useSearchParams } from "next/navigation";
 
-export default function ReviewRequest() {
+function ReviewRequest() {
   const [pdfContent, setPdfContent] = useState<string | null>(null)
   const [isPdfUploaded, setIsPdfUploaded] = useState(false)
   const [reviewResult, setReviewResult] = useState<string | null>(null)
@@ -517,5 +517,14 @@ export default function ReviewRequest() {
     </Layout>
   );
 
+}
+
+// Wrap the component with Suspense
+export default function ReviewRequestPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ReviewRequest />
+    </Suspense>
+  );
 }
 
