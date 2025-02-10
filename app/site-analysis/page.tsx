@@ -8,6 +8,23 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { Badge } from "@/components/ui/badge"
 
+const getBackgroundColor = (rating: string) => {
+  switch (rating) {
+    case 'A':
+      return 'bg-green-500 hover:bg-green-600'; // 더 진한 초록색
+    case 'B':
+      return 'bg-blue-500 hover:bg-blue-600'; // 더 진한 파란색
+    case 'C':
+      return 'bg-yellow-400 hover:bg-yellow-500'; // 더 밝은 노란색
+    case 'D':
+      return 'bg-orange-400 hover:bg-orange-500'; // 더 밝은 주황색
+    case 'E':
+      return 'bg-red-500 hover:bg-red-600'; // 더 진한 빨간색
+    default:
+      return 'bg-gray-400 hover:bg-gray-500'; // 더 진한 회색
+  }
+};
+
 const dummySiteRatings = [
   { 
     name: '네이버', 
@@ -145,11 +162,11 @@ export default function SiteRatings() {
             <h2 className="text-xl font-semibold">{site.name}</h2>
             <p className="text-blue-600">{site.domain}</p>
           </div>
-          <Badge variant="outline" className="ml-auto text-lg font-bold">{site.rating}</Badge>
+          <Badge className={`ml-auto text-lg font-bold ${getBackgroundColor(site.rating)}`}>{site.rating}</Badge>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <h3 className="font-semibold text-green-600">주요 장점</h3>
+            <h3 className="font-semibold text-green-600">유리한 조항</h3>
             <ul className="list-disc list-inside">
               {site.benefits.map((benefit, index) => (
                 <li key={index}>{benefit}</li>
@@ -157,7 +174,7 @@ export default function SiteRatings() {
             </ul>
           </div>
           <div>
-            <h3 className="font-semibold text-red-600">주요 단점</h3>
+            <h3 className="font-semibold text-red-600">불리한 조항</h3>
             <ul className="list-disc list-inside">
               {site.drawbacks.map((drawback, index) => (
                 <li key={index}>{drawback}</li>
