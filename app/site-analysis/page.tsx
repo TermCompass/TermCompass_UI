@@ -31,7 +31,7 @@ const gradeDescriptions = {
 export default function SiteRatings() {
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedGrade, setSelectedGrade] = useState<Grade>('ALL')
-  const [websites, setWebsites] = useState<Website[]>()
+  const [websites, setWebsites] = useState<Website[]>([])
 
   useEffect(() => {
       const fetchWebsites = async () => {
@@ -43,8 +43,6 @@ export default function SiteRatings() {
             setWebsites(data)
           } catch (error) {
             console.error(error)
-          } finally {
-            setLoading(false)
           }
         }
         fetchWebsites()
@@ -60,7 +58,7 @@ export default function SiteRatings() {
     <Link href={`/site-analysis/${site.link}`} key={site.link} className="block">
       <div className="border p-4 rounded-lg hover:shadow-md transition-shadow">
         <div className="flex items-center mb-2">
-          <Image src={site.logo} alt={`${site.name} 로고`} width={50} height={50} className="mr-4" />
+          <Image src={`/site-logo/${site.logo}`}  alt={`${site.name} 로고`} width={50} height={50} className="mr-4" />
           <div>
             <h2 className="text-xl font-semibold">{site.name}</h2>
             <p className="text-blue-600">{site.link}</p>
@@ -71,16 +69,20 @@ export default function SiteRatings() {
           <div>
             <h3 className="font-semibold text-green-600">주요 장점</h3>
             <ul className="list-disc list-inside">
-              {site.benefits.map((benefit, index) => (
-                <li key={index}>{benefit}</li>
+              {site.benefits.slice(0, 3).map((benefit, index) => (
+                  <li key={index}>
+                    {benefit.length > 12 ? `${benefit.slice(0, 12)}...` : benefit}
+                  </li>
               ))}
             </ul>
           </div>
           <div>
             <h3 className="font-semibold text-red-600">주요 단점</h3>
             <ul className="list-disc list-inside">
-              {site.drawbacks.map((drawback, index) => (
-                <li key={index}>{drawback}</li>
+              {site.drawbacks.slice(0, 3).map((drawback, index) => (
+                  <li key={index}>
+                    {drawback.length > 12 ? `${drawback.slice(0, 12)}...` : drawback}
+                  </li>
               ))}
             </ul>
           </div>

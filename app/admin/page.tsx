@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation"
 import { useAdminAuth } from "../contexts/AdminAuthContext"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Users, FileText, Star, CheckCircle, Bot } from "lucide-react"
-import {LineChart, Line,CartesianGrid, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell,Legend } from "recharts";
+import { LineChart, Line,CartesianGrid, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell,Legend } from "recharts";
 
 export default function AdminDashboard() {
   const { admin } = useAdminAuth()
