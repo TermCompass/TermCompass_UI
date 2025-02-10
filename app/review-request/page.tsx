@@ -6,15 +6,14 @@ import { Button } from "@/components/ui/button"
 import { useToast } from "@/hooks/use-toast"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import ReviewSidebar, { ReviewHistory } from '../components/ReviewSidebar'
-import ReviewResult from '../components/ReviewResult'
 import { useUser } from '../contexts/UserContext'
 import pako from 'pako'
+import { useSearchParams } from "next/navigation";
 
 export default function ReviewRequest() {
   const [pdfContent, setPdfContent] = useState<string | null>(null)
   const [isPdfUploaded, setIsPdfUploaded] = useState(false)
   const [reviewResult, setReviewResult] = useState<string | null>(null)
-  const [isReviewing, setIsReviewing] = useState(false)
   const [selectedReviewId, setSelectedReviewId] = useState<ReviewHistory | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [resetButton, setResetButton] = useState(true); // 초기화 버튼 참조
@@ -23,35 +22,8 @@ export default function ReviewRequest() {
   const [socket, setSocket] = useState<WebSocket | null>(null);
   const [total, setTotal] = useState(100); // Total value for progress calculation
   const [current, setCurrent] = useState(0); // Current progress value
-  const [reviewHistory, setReviewHistory] = useState<ReviewHistory[]>([]);
-  const [showDescription, setShowDescription] = useState(true); // 설명 표시 여부 상태 추가
-
-  const [clauseDetails, setClauseDetails] = useState<{ [key: string]: string }>({
-    "제7조 2항": "이 조항은 서비스 제공자의 책임을 과도하게 제한하고 있어 소비자의 권리를 침해할 수 있습니다. 관련 법규: 약관규제법 제6조",
-    "제12조 1항": "개인정보의 제3자 제공 범위가 불명확하여 개인정보보호법에 위배될 소지가 있습니다. 관련 법규: 개인정보보호법 제17조",
-    "제15조 3항": "분쟁 해결 절차가 소비자에게 불리하게 설정되어 있어 검토가 필요합니다. 관련 법규: 소비자기본법 제16조"
-  })
-
-  const handleReviewRequest = () => {
-    if (!pdfContent) {
-      toast({
-        title: "검토 요청 실패",
-        description: "먼저 PDF 파일을 업로드해주세요.",
-        variant: "destructive"
-      })
-      return
-    }
-
-    setIsReviewing(true)
-    setTimeout(() => {
-      setReviewResult("이용약관 중 <span class='bg-yellow-200'>제7조 2항</span>과 <span class='bg-yellow-200'>제12조 1항</span>은 소비자에게 불리한 독소조항으로 의심됩니다. <span class='bg-yellow-200'>제15조 3항</span>은 법적 검토가 필요합니다. 자세한 내용은 해당 조항을 클릭하여 확인하세요.")
-      setIsReviewing(false)
-      toast({
-        title: "검토 완료",
-        description: "약관 검토가 완료되었습니다.",
-      })
-    }, 3000)
-  }
+  const searchParams = useSearchParams();
+  const id = searchParams.get("id");
 
   const resetReviewState = () => {
     setPdfContent(null);
@@ -293,18 +265,6 @@ export default function ReviewRequest() {
 
   }, []);
 
-  const handleSendMessage = () => {
-    const inputElement = document.getElementById('input-test') as HTMLInputElement;
-    const message = inputElement.value;
-    if (socket && socket.readyState === WebSocket.OPEN) {
-      const jsonMessage = JSON.stringify({ type: 'test', content: message });
-      socket.send(jsonMessage);
-      console.log('메시지를 전송했습니다:', jsonMessage);
-    } else {
-      console.error('웹소켓 연결이 열려 있지 않습니다.');
-    }
-  };
-
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -409,7 +369,7 @@ export default function ReviewRequest() {
       <div className="flex h-[calc(100vh-8rem)] p-4">
         {user && (
           <div className="w-64 flex-shrink-0">
-            <ReviewSidebar onSelectReview={handleSelectReview} selectedReview={selectedReviewId} resetReviewState={resetReviewState} />
+            <ReviewSidebar onSelectReview={handleSelectReview} selectedReview={selectedReviewId} resetReviewState={resetReviewState} initialReviewId={id} />
           </div>
         )}
         <div className="flex-grow flex flex-col overflow-hidden">
