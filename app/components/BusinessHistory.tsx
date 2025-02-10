@@ -94,7 +94,7 @@ export default function BusinessHistory() {
       return;
     }
     const doc = parser.parseFromString(selectedItem.result, 'text/html');
-    
+
     // 모든 button 요소 제거
     doc.querySelectorAll('button').forEach(button => button.remove());
 
@@ -265,16 +265,21 @@ export default function BusinessHistory() {
                         상세 보기
                       </Button>
                     </DialogTrigger>
-                    <DialogContent className="sm:max-w-[1188px] max-h-[80vh] overflow-y-auto">                      <DialogHeader>
-                        <DialogTitle>이용 내역 상세</DialogTitle>
-                        <DialogDescription>
-                          {selectedItem?.title}의 생성 내역입니다.
-                        </DialogDescription>
-                        <Button className="bg-black text-white hover:bg-blue-600" onClick={handlePrint}>프린트</Button>
 
-                      </DialogHeader>
-                      <div id="editableContent" className="mb-4 border p-2" contentEditable="false" dangerouslySetInnerHTML={{ __html: selectedItem?.result || '' }}></div>
+                    <DialogContent className="p-10 sm:max-w-[1188px] max-h-[80vh]">
+                      <div className="p-5 sm:max-w-[1188px] max-h-[75vh] overflow-y-auto">
+                        <DialogHeader>
+                          <DialogTitle>이용 내역 상세</DialogTitle>
+                          <DialogDescription>
+                            {selectedItem?.title}의 생성 내역입니다.
+                          </DialogDescription>
+                          <Button className="bg-black text-white hover:bg-blue-600" onClick={handlePrint}>프린트</Button>
+
+                        </DialogHeader>
+                        <div id="editableContent" className="mb-4 border p-2" contentEditable="false" dangerouslySetInnerHTML={{ __html: selectedItem?.result || '' }}></div>
+                      </div>
                     </DialogContent>
+
                   </Dialog>
                 ) : null}
               </TableCell>
