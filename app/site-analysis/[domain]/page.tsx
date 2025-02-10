@@ -393,7 +393,7 @@ export default function SiteEvaluation() {
           <div className="bg-red-100 p-4 rounded-lg">
             <h3 className="font-semibold text-red-800 mb-2">소비자에게 불리한 조항</h3>
             <ul className="list-disc list-inside">
-              {site.unfavorableClauses.map((clause, index) => (
+              {site.neutralClauses.map((clause: string, index: number) => (
                 <li key={index}>{clause}</li>
               ))}
             </ul>
@@ -401,19 +401,23 @@ export default function SiteEvaluation() {
           <div className="bg-green-100 p-4 rounded-lg">
             <h3 className="font-semibold text-green-800 mb-2">소비자에게 유리한 조항</h3>
             <ul className="list-disc list-inside">
-              {site.favorableClauses.map((clause, index) => (
+              {site.neutralClauses.map((clause: string, index: number) => (
                 <li key={index}>{clause}</li>
               ))}
             </ul>
           </div>
-          <div className="bg-gray-100 p-4 rounded-lg">
-            <h3 className="font-semibold text-gray-800 mb-2">중립적인 조항</h3>
-            <ul className="list-disc list-inside">
-              {site.neutralClauses.map((clause, index) => (
-                <li key={index}>{clause}</li>
-              ))}
-            </ul>
-          </div>
+
+          {false && (
+              <div className="bg-gray-100 p-4 rounded-lg">
+                <h3 className="font-semibold text-gray-800 mb-2">중립적인 조항</h3>
+                <ul className="list-disc list-inside">
+                  {site.neutralClauses.map((clause: string, index: number) => (
+                      <li key={index}>{clause}</li>
+                  ))}
+                </ul>
+              </div>
+          )}
+
         </div>
 
         <Button className="bg-black text-white hover:bg-blue-600" onClick={() => router.push(`/site-analysis/${domain}/history`)}>

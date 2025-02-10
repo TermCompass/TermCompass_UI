@@ -66,22 +66,6 @@ const dummySiteRatings = [
     drawbacks: ['가격 정책 변경 권한', '배달 지연에 대한 책임 제한', '분쟁 해결 절차']
   },
   { 
-    name: '티몬', 
-    logo: '/site-logo/tmon_logo.png', 
-    domain: 'tmon.co.kr',
-    rating: 'C',
-    benefits: ['쿠폰 및 할인 정책', '간편 결제 시스템', '고객 서비스 채널'],
-    drawbacks: ['상품 정보 책임 제한', '개인정보 제3자 제공', '적립금 소멸 정책']
-  },
-  { 
-    name: '위메프', 
-    logo: '/site-logo/wemakeprice_logo.png', 
-    domain: 'wemakeprice.com',
-    rating: 'C',
-    benefits: ['가격 비교 시스템', '무료 배송 정책', '정기 구독 서비스'],
-    drawbacks: ['계정 해지 절차', '환불 처리 기간', '분쟁 해결 비용 부담']
-  },
-  { 
     name: '당근마켓', 
     logo: '/site-logo/daangn_logo.png', 
     domain: 'daangn.com',
@@ -132,6 +116,15 @@ const dummySiteRatings = [
 ]
 
 type Grade = 'A' | 'B' | 'C' | 'D' | 'E' | 'ALL';
+
+const gradeDescriptions = {
+  'ALL': 'KOTS는 사용자에게 투명하고 공정한 정보 제공을 통해, 안전하고 신뢰할 수 있는 선택을 할 수 있도록 돕습니다.',
+  'A': '서비스 약관은 회원님을 공정하게 대우하고 회원님의 권리를 존중하며 회원님의 데이터를 남용하지 않습니다.',
+  'B': '서비스 약관은 사용자에게 공정하지만 개선할 수 있는 부분이 있습니다.',
+  'C': '서비스 약관은 대체로 괜찮지만 몇 가지 문제를 고려해야 합니다.',
+  'D': '서비스 약관이 전반적으로 사업자에게 유리하게 작성되어 있어 이용에 각별한 주의가 필요합니다.',
+  'E': '서비스 약관이 사용자의 권리를 심각하게 침해할 수 있는 내용을 포함하고 있습니다.',
+};
 
 export default function SiteRatings() {
   const [searchTerm, setSearchTerm] = useState('')
@@ -206,6 +199,43 @@ export default function SiteRatings() {
               className="w-full md:w-64"
             />
           </div>
+          
+          <div className="relative py-4 mb-4">
+            <div className={`
+              max-w-6xl mx-auto px-6 py-3 rounded-lg
+              ${selectedGrade === 'ALL' 
+                ? 'bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100'
+                : selectedGrade === 'A'
+                ? 'bg-gradient-to-r from-green-50 to-emerald-50 border border-green-100'
+                : selectedGrade === 'B'
+                ? 'bg-gradient-to-r from-blue-50 to-sky-50 border border-blue-100'
+                : selectedGrade === 'C'
+                ? 'bg-gradient-to-r from-yellow-50 to-amber-50 border border-yellow-100'
+                : selectedGrade === 'D'
+                ? 'bg-gradient-to-r from-orange-50 to-red-50 border border-orange-100'
+                : 'bg-gradient-to-r from-red-50 to-rose-50 border border-red-100'
+              }
+            `}>
+              <p className={`
+                text-center font-medium
+                ${selectedGrade === 'ALL' 
+                  ? 'text-blue-800'
+                  : selectedGrade === 'A'
+                  ? 'text-green-800'
+                  : selectedGrade === 'B'
+                  ? 'text-blue-800'
+                  : selectedGrade === 'C'
+                  ? 'text-yellow-800'
+                  : selectedGrade === 'D'
+                  ? 'text-orange-800'
+                  : 'text-red-800'
+                }
+              `}>
+                {gradeDescriptions[selectedGrade || 'ALL']}
+              </p>
+            </div>
+          </div>
+
           <div className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {filteredRatings.map(renderSiteCard)}
@@ -219,4 +249,3 @@ export default function SiteRatings() {
     </Layout>
   )
 }
-

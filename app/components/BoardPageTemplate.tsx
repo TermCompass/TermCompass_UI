@@ -36,11 +36,8 @@ export default function BoardPageTemplate({
         <div>
             {/* 배경 이미지 및 제목 */}
             <HeaderBanner
-                title="공지사항"
-                breadcrumb={[
-                    {label: "게시판", href: "/board"},
-                    {label: "공지사항", href: "/board"},
-                ]}
+                title={title}
+                breadcrumb={breadcrumb}
             />
 
             {/* 게시판 + 메뉴바 수평 배치 */}
