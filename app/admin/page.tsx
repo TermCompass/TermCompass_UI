@@ -27,7 +27,7 @@ export default function AdminDashboard() {
   useEffect(() => {
     const fetchUserCount = async () => {
       try {
-        const response = await fetch("http://localhost:8080/users") // API 호출
+        const response = await fetch("/users") // API 호출
         if (!response.ok) {
           throw new Error("Failed to fetch user count")
         }
@@ -43,7 +43,7 @@ export default function AdminDashboard() {
   useEffect(() => {
     const fetchRecordCounts = async () => {
       try {
-        const response = await fetch("http://localhost:8080/records")
+        const response = await fetch("/records")
         if (!response.ok) throw new Error("Failed to fetch record counts")
         const data = await response.json()
         setRecordCounts(data) // API 응답 저장
@@ -56,7 +56,7 @@ export default function AdminDashboard() {
   }, [])
 
   useEffect(() => {
-    fetch("http://localhost:8080/stats/logins")
+    fetch("/stats/logins")
         .then((res) => res.json())
         .then((data) => {
           const formattedData = data.map((item: { date: string; loginCount: number }) => ({
@@ -69,7 +69,7 @@ export default function AdminDashboard() {
   }, []);
 
   useEffect(() => {
-    fetch("http://localhost:8080/stats/records")
+    fetch("/stats/records")
         .then((res) => res.json())
         .then((data) => {
           const formattedData = data.map((item: { date: string; generateCount: number; reviewCount: number; chatCount: number }) => ({

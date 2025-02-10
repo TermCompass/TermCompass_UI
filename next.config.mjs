@@ -21,7 +21,8 @@ const nextConfig = {
   },
   assetPrefix: 'http://localhost:3000',
   // assetPrefix: 'http://kyj9447.ddns.net:3000',
-  reactStrictMode: false,
+  reactStrictMode: true,
+  output: "export",
   swcMinify: true,
   eslint: {
     ignoreDuringBuilds: true,  // 빌드 시 ESLint 무시

@@ -58,7 +58,7 @@ export default function ServicesSection() {
   useEffect(() => {
     const fetchWebsites = async () => {
       try {
-        const response = await fetch("http://localhost:8080/site")
+        const response = await fetch("/site")
         if (!response.ok) throw new Error("데이터를 불러오는데 실패했습니다.")
 
         const data: Website[] = await response.json()

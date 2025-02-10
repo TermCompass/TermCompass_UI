@@ -14,7 +14,7 @@ interface Post {
     created_at: string
 }
 
-export default function BoardPage() {
+function BoardPage() {
     const postsPerPage = 10;
     const searchParams = useSearchParams()
     const router = useRouter()
@@ -22,6 +22,7 @@ export default function BoardPage() {
     const currentPage = Number(searchParams.get('page')) || 1
     const [posts, setPosts] = useState<Post[]>([])
     const [totalPages, setTotalPages] = useState(1);
+    const [totalElements, setTotalElements] = useState(1);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -30,13 +31,14 @@ export default function BoardPage() {
             setLoading(true);
             setError(null);
             try {
-                const response = await fetch(`http://localhost:8080/board/list?page=${currentPage - 1}`);
+                const response = await fetch(`/board/list?page=${currentPage - 1}`);
                 if (!response.ok) {
                     throw new Error("게시글을 불러오는 데 실패했습니다.");
                 }
                 const data = await response.json();
                 setPosts(data.content);
                 setTotalPages(data.totalPages);
+                setTotalElements(data.totalElements);
             } catch (err: any) {
                 setError(err.message);
             } finally {
@@ -58,6 +60,7 @@ export default function BoardPage() {
             posts={posts}
             currentPage={currentPage}
             totalPages={totalPages}
+            totalElements={totalElements}
             postsPerPage={postsPerPage}
             onPageChange={handlePageChange}
         />
@@ -65,10 +68,11 @@ export default function BoardPage() {
     );
 }
 
-function BoardPageWrapper() {
-    const searchParams = useSearchParams();
-    const currentPage = Number(searchParams.get('page')) || 1;
-
-    return <BoardPage key={currentPage} />;
+export default function BoardPageWrapper() {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <BoardPage />
+        </Suspense>
+    )
 }
 

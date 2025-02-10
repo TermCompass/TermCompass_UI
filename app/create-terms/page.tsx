@@ -66,7 +66,7 @@ const CreateTermsContent = () => {
   
   async function getStandardTerms(domain: Domain): Promise<string> {
     try {
-      const response = await fetch(`http://kyj9447.ddns.net:8080/standard/${domain.id}`, {
+      const response = await fetch(`/standard/${domain.id}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

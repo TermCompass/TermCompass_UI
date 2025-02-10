@@ -17,7 +17,7 @@ export default function DomainSelection({ onSelect }: DomainSelectionProps) {
   useEffect(() => {
     async function fetchDomains() {
       try {
-        const response = await fetch('http://kyj9447.ddns.net:8080/standard', {
+        const response = await fetch('/standard', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, Suspense } from 'react'
 import Layout from '../components/Layout'
 import { Button } from "@/components/ui/button"
 import { useToast } from "@/hooks/use-toast"
@@ -10,7 +10,7 @@ import { useUser } from '../contexts/UserContext'
 import pako from 'pako'
 import { useSearchParams } from "next/navigation";
 
-export default function ReviewRequest() {
+function ReviewRequest() {
   const [pdfContent, setPdfContent] = useState<string | null>(null)
   const [isPdfUploaded, setIsPdfUploaded] = useState(false)
   const [reviewResult, setReviewResult] = useState<string | null>(null)
@@ -90,7 +90,7 @@ export default function ReviewRequest() {
 
   useEffect(() => {
     // 웹소켓 연결 생성
-    const newSocket = new WebSocket('ws://kyj9447.ddns.net:8080/ws');
+    const newSocket = new WebSocket('${window.location.protocol}//${window.location.host}/ws');
     setSocket(newSocket);
 
     // open
@@ -272,9 +272,9 @@ export default function ReviewRequest() {
       const allowedExtensions = ['.pdf', '.hwp', '.hwpx'];
       const fileExtension = file.name.slice(file.name.lastIndexOf('.')).toLowerCase();
       if (
-        file.type === 'application/pdf' ||
-        fileExtension === '.hwp' ||
-        fileExtension === '.hwpx'
+          file.type === 'application/pdf' ||
+          fileExtension === '.hwp' ||
+          fileExtension === '.hwpx'
       ) {
         setPdfContent("이것은 업로드된 파일의 내용입니다. 실제 구현에서는 PDF에서 추출한 텍스트가 여기에 표시됩니다.");
         setReviewResult(null);
@@ -339,7 +339,7 @@ export default function ReviewRequest() {
     // TextDecoder 사용
     const binaryStringCompressed = new Uint8Array(compressedData);
     const base64Result = btoa(
-      Array.from(binaryStringCompressed).map(byte => String.fromCharCode(byte)).join('')
+        Array.from(binaryStringCompressed).map(byte => String.fromCharCode(byte)).join('')
     );
 
     return base64Result;
@@ -365,124 +365,124 @@ export default function ReviewRequest() {
   const progressPercentage = (current / total) * 100;
 
   return (
-    <Layout>
-      <div className="flex h-[calc(100vh-8rem)] p-4">
-        {user && (
-          <div className="w-64 flex-shrink-0">
-            <ReviewSidebar onSelectReview={handleSelectReview} selectedReview={selectedReviewId} resetReviewState={resetReviewState} initialReviewId={id} />
-          </div>
-        )}
-        <div className="flex-grow flex flex-col overflow-hidden">
-          <h1 className="text-3xl font-bold text-blue-800 px-8 pt-8">약관 검토 요청</h1>
-          {!isPdfUploaded ? (
-            <div className="px-8 pt-4 pb-2">
-              <div className="bg-blue-50 p-4 rounded-lg border border-blue-100">
-                <div className="flex items-start space-x-3">
-                  <div className="flex-shrink-0">
-                    <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                    </svg>
-                  </div>
-                  <div>
-                    <h2 className="text-lg font-semibold text-blue-800 mb-1">약관 검토 시작하기</h2>
-                    <p className="text-gray-600">
-                      PDF 또는 HWP 형식의 약관 파일을 업로드하시면, AI가 약관을 분석하여 상세한 검토 결과를 제공해 드립니다.
-                      <span className="block mt-2 text-sm">
+      <Layout>
+        <div className="flex h-[calc(100vh-8rem)] p-4">
+          {user && (
+              <div className="w-64 flex-shrink-0">
+                <ReviewSidebar onSelectReview={handleSelectReview} selectedReview={selectedReviewId} resetReviewState={resetReviewState} initialReviewId={id} />
+              </div>
+          )}
+          <div className="flex-grow flex flex-col overflow-hidden">
+            <h1 className="text-3xl font-bold text-blue-800 px-8 pt-8">약관 검토 요청</h1>
+            {!isPdfUploaded ? (
+                <div className="px-8 pt-4 pb-2">
+                  <div className="bg-blue-50 p-4 rounded-lg border border-blue-100">
+                    <div className="flex items-start space-x-3">
+                      <div className="flex-shrink-0">
+                        <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                      </div>
+                      <div>
+                        <h2 className="text-lg font-semibold text-blue-800 mb-1">약관 검토 시작하기</h2>
+                        <p className="text-gray-600">
+                          PDF 또는 HWP 형식의 약관 파일을 업로드하시면, AI가 약관을 분석하여 상세한 검토 결과를 제공해 드립니다.
+                          <span className="block mt-2 text-sm">
                         • 지원 파일 형식: PDF, HWP, HWPX
                       </span>
-                    </p>
-                    <div className="mb-4 mt-8">
-                      <input
-                        type="file"
-                        accept=".pdf,.hwp,.hwpx"
-                        ref={fileInputRef}
-                        onChange={handleFileUpload}
-                        style={{ display: 'none' }}
-                      />
-                      <Button onClick={() => fileInputRef.current?.click()} className="bg-blue-600 text-white rounded-lg px-4 py-2 hover:bg-blue-700 transition">
-                        파일 업로드
-                      </Button>
+                        </p>
+                        <div className="mb-4 mt-8">
+                          <input
+                              type="file"
+                              accept=".pdf,.hwp,.hwpx"
+                              ref={fileInputRef}
+                              onChange={handleFileUpload}
+                              style={{ display: 'none' }}
+                          />
+                          <Button onClick={() => fileInputRef.current?.click()} className="bg-blue-600 text-white rounded-lg px-4 py-2 hover:bg-blue-700 transition">
+                            파일 업로드
+                          </Button>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            </div>
-          ) : (
-            <div>
-              <div className="flex-grow flex overflow-hidden">
-                <div id="실선" style={{ width: '50%', padding: '2.5rem', borderRight: '1px solid #e2e8f0', display: 'flex', flexDirection: 'column' }}>
-                  <>
-                    {pdfContent && (
-                      <div style={{ flexGrow: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-                        <div className="flex justify-between items-center mb-2">
-                          <h2 style={{ fontSize: '1.25rem', fontWeight: '600' }}>업로드된 약관 내용</h2>
-                          {resetButton && (<Button
-                            id='reset_button'
-                            onClick={handleResetClick}
-                            className="inline-flex items-center gap-2 bg-white text-gray-700 border border-gray-300 rounded-full px-4 py-1.5 text-sm font-medium hover:bg-gray-50 hover:border-gray-400 transition-all duration-200 ease-in-out shadow-sm active:scale-95"
-                          >
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              width="14"
-                              height="14"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeWidth="2"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              className="rotate-[-45deg]"
-                            >
-                              <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
-                              <path d="M3 3v5h5" />
-                              <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16" />
-                              <path d="M16 21h5v-5" />
-                            </svg>
-                            초기화
-                          </Button>)}
-                        </div>
-                        <ScrollArea className="flex-grow border border-slate-200 p-4 rounded-md" style={{ height: 'calc(80vh - 10rem)' }}>
-                          <div dangerouslySetInnerHTML={{ __html: pdfContent }} />
-                        </ScrollArea>
-                      </div>
-                    )}
-                  </>
+            ) : (
+                <div>
+                  <div className="flex-grow flex overflow-hidden">
+                    <div id="실선" style={{ width: '50%', padding: '2.5rem', borderRight: '1px solid #e2e8f0', display: 'flex', flexDirection: 'column' }}>
+                      <>
+                        {pdfContent && (
+                            <div style={{ flexGrow: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+                              <div className="flex justify-between items-center mb-2">
+                                <h2 style={{ fontSize: '1.25rem', fontWeight: '600' }}>업로드된 약관 내용</h2>
+                                {resetButton && (<Button
+                                    id='reset_button'
+                                    onClick={handleResetClick}
+                                    className="inline-flex items-center gap-2 bg-white text-gray-700 border border-gray-300 rounded-full px-4 py-1.5 text-sm font-medium hover:bg-gray-50 hover:border-gray-400 transition-all duration-200 ease-in-out shadow-sm active:scale-95"
+                                >
+                                  <svg
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      width="14"
+                                      height="14"
+                                      viewBox="0 0 24 24"
+                                      fill="none"
+                                      stroke="currentColor"
+                                      strokeWidth="2"
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      className="rotate-[-45deg]"
+                                  >
+                                    <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+                                    <path d="M3 3v5h5" />
+                                    <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16" />
+                                    <path d="M16 21h5v-5" />
+                                  </svg>
+                                  초기화
+                                </Button>)}
+                              </div>
+                              <ScrollArea className="flex-grow border border-slate-200 p-4 rounded-md" style={{ height: 'calc(80vh - 10rem)' }}>
+                                <div dangerouslySetInnerHTML={{ __html: pdfContent }} />
+                              </ScrollArea>
+                            </div>
+                        )}
+                      </>
 
-                </div>
-                {/* <div className="mt-4 flex items-center">
+                    </div>
+                    {/* <div className="mt-4 flex items-center">
                 <input id="input-test" type="text" placeholder="입력 테스트" className="border p-2 rounded w-full" />
                 <Button className="ml-2" onClick={handleSendMessage}>보내기</Button>
               </div>
               <textarea id="output-test" placeholder="출력 테스트" className="border p-2 rounded w-full mt-2" rows={4}></textarea> */}
-                <div style={{ width: '50%', padding: '2.5rem', display: 'flex', flexDirection: 'column' }}>
-                  {reviewResult && isPdfUploaded && (
-                    <div style={{ flexGrow: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-                      <h2 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '0.5rem' }}>검토 결과</h2>
-                      <ScrollArea
-                        className="flex-grow border border-slate-200 p-4 rounded-md"
-                        style={{ height: 'calc(80vh - 10rem)' }}
-                      >
-                        <div
-                          dangerouslySetInnerHTML={{ __html: reviewResult }}
-                          className="[&_.bg-green-200]:bg-green-200 [&_.bg-gray-200]:bg-gray-200 [&_.bg-red-200]:bg-red-200"
-                        />
-                      </ScrollArea>
-                      {/* <progress value={progressPercentage} max="100" style={{ width: '100%', marginTop: '1rem', borderRadius: '8px' }} /> */}
-                      <div style={{ position: 'relative', width: '100%', marginTop: '1rem' }}>
-                        <progress
-                          value={progressPercentage}
-                          max="100"
-                          style={{
-                            width: '100%',
-                            height: '24px',
-                            borderRadius: '12px',
-                            backgroundColor: '#e0e0e0',
-                            appearance: 'none',
-                            WebkitAppearance: 'none',
-                            MozAppearance: 'none',
-                          }}
-                        />
-                        <style jsx>{`
+                    <div style={{ width: '50%', padding: '2.5rem', display: 'flex', flexDirection: 'column' }}>
+                      {reviewResult && isPdfUploaded && (
+                          <div style={{ flexGrow: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+                            <h2 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '0.5rem' }}>검토 결과</h2>
+                            <ScrollArea
+                                className="flex-grow border border-slate-200 p-4 rounded-md"
+                                style={{ height: 'calc(80vh - 10rem)' }}
+                            >
+                              <div
+                                  dangerouslySetInnerHTML={{ __html: reviewResult }}
+                                  className="[&_.bg-green-200]:bg-green-200 [&_.bg-gray-200]:bg-gray-200 [&_.bg-red-200]:bg-red-200"
+                              />
+                            </ScrollArea>
+                            {/* <progress value={progressPercentage} max="100" style={{ width: '100%', marginTop: '1rem', borderRadius: '8px' }} /> */}
+                            <div style={{ position: 'relative', width: '100%', marginTop: '1rem' }}>
+                              <progress
+                                  value={progressPercentage}
+                                  max="100"
+                                  style={{
+                                    width: '100%',
+                                    height: '24px',
+                                    borderRadius: '12px',
+                                    backgroundColor: '#e0e0e0',
+                                    appearance: 'none',
+                                    WebkitAppearance: 'none',
+                                    MozAppearance: 'none',
+                                  }}
+                              />
+                              <style jsx>{`
                   progress::-webkit-progress-bar {
                     background-color: #e0e0e0;
                     border-radius: 12px;
@@ -496,26 +496,34 @@ export default function ReviewRequest() {
                     border-radius: 12px;
                   }
                 `}</style>
-                        {progressPercentage === 100 && (
-                          <div style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translateY(-50%)', color: 'white' }}>
-                            ✔
+                              {progressPercentage === 100 && (
+                                  <div style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translateY(-50%)', color: 'white' }}>
+                                    ✔
+                                  </div>
+                              )}
+                            </div>
                           </div>
-                        )}
-                      </div>
-                    </div>
-                  )}
-                  {/*<ReviewResult
+                      )}
+                      {/*<ReviewResult
                 result={reviewResult}
                 clauseDetails={clauseDetails}
                 isExistingReview={selectedReviewId !== null}
               />*/}
-                </div>
-              </div>
-            </div>)}
+                    </div>
+                  </div>
+                </div>)}
+          </div>
         </div>
-      </div>
-    </Layout>
+      </Layout>
   );
 
 }
 
+// Wrap the component with Suspense
+export default function ReviewRequestPage() {
+  return (
+      <Suspense fallback={<div>Loading...</div>}>
+        <ReviewRequest />
+      </Suspense>
+  );
+}

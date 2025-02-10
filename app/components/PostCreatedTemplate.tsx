@@ -17,14 +17,8 @@ export default function PostCreatePage({ boardTitle = "공지사항" }: PostCrea
     const [file, setFile] = useState<File | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    // ✅ 게시판별 API 주소 매핑
-    const apiEndpoints: { [key: string]: string } = {
-        "공지사항": "http://kyj9447.ddns.net:8080/board/create",
-        "포토뉴스": "/api/photenews",
-    };
-
     // ✅ 현재 게시판에 해당하는 API 주소 가져오기
-    const apiUrl = apiEndpoints[boardTitle] || "http://kyj9447.ddns.net:8080/board/create";
+    const apiUrl = "/board/create";
 
     // ✅ 게시물 등록 함수
     const handleSubmit = async (e: React.FormEvent) => {

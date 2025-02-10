@@ -36,7 +36,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     axios
-        .get("http://kyj9447.ddns.net:8080/user", { withCredentials: true })
+        .get("/user", { withCredentials: true })
         .then((response) => {
           let currentUser = response.data
           if (currentUser.account_type === "PERSONAL") {
