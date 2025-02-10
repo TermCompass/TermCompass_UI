@@ -363,7 +363,7 @@ export default function SiteEvaluation() {
         <div className="flex justify-between items-center mb-6">
             <h1 className="text-3xl font-bold mb-6 text-blue-800">{site.name} 약관 평가</h1>
             <Button
-                onClick={() => router.back()}
+                onClick={() => router.push('/site-analysis')}
                 variant="outline"
             >
                 돌아가기
