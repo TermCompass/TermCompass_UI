@@ -1,9 +1,11 @@
-/** @type {import('next').NextConfig} */
+import fs from 'fs';
+import path from 'path';
+import https from 'https';
+
 const nextConfig = {
   images: {
     domains: ['images.seeklogo.com', 'source.unsplash.com'],
   },
-  assetPrefix: 'http://localhost:3000',
   async headers() {
     return [
       {
@@ -17,10 +19,15 @@ const nextConfig = {
       },
     ];
   },
-  reactStrictMode: true,
+  assetPrefix: 'http://localhost:3000',
+  // assetPrefix: 'http://kyj9447.ddns.net:3000',
+  reactStrictMode: false,
   swcMinify: true,
   eslint: {
     ignoreDuringBuilds: true,  // 빌드 시 ESLint 무시
+  },
+  typescript: {
+    ignoreBuildErrors: true,
   },
   async rewrites() {
     return [
@@ -50,9 +57,7 @@ const nextConfig = {
     ];
   },
   basePath: '',
-  typescript: {
-      ignoreBuildErrors: true,
-    },
+  // output: 'export',
 };
 
 export default nextConfig;
