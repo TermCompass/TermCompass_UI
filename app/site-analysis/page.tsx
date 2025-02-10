@@ -17,6 +17,22 @@ interface Website {
   link: string;
 }
 
+const getBackgroundColor = (rank: string) => {
+  switch (rank) {
+    case 'A':
+      return 'bg-green-500 hover:bg-green-600'; // 더 진한 초록색
+    case 'B':
+      return 'bg-blue-500 hover:bg-blue-600'; // 더 진한 파란색
+    case 'C':
+      return 'bg-yellow-400 hover:bg-yellow-500'; // 더 밝은 노란색
+    case 'D':
+      return 'bg-orange-400 hover:bg-orange-500'; // 더 밝은 주황색
+    case 'E':
+      return 'bg-red-500 hover:bg-red-600'; // 더 진한 빨간색
+    default:
+      return 'bg-gray-400 hover:bg-gray-500'; // 더 진한 회색
+  }
+};
 type Grade = 'A' | 'B' | 'C' | 'D' | 'E' | 'ALL';
 
 const gradeDescriptions = {
@@ -63,11 +79,11 @@ export default function SiteRatings() {
             <h2 className="text-xl font-semibold">{site.name}</h2>
             <p className="text-blue-600">{site.link}</p>
           </div>
-          <Badge variant="outline" className="ml-auto text-lg font-bold">{site.rank}</Badge>
+          <Badge className={`ml-auto text-lg font-bold ${getBackgroundColor(site.rank)}`}>{site.rank}</Badge>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <h3 className="font-semibold text-green-600">주요 장점</h3>
+            <h3 className="font-semibold text-green-600">유리한 조항</h3>
             <ul className="list-disc list-inside">
               {site.benefits.slice(0, 3).map((benefit, index) => (
                   <li key={index}>
@@ -77,7 +93,7 @@ export default function SiteRatings() {
             </ul>
           </div>
           <div>
-            <h3 className="font-semibold text-red-600">주요 단점</h3>
+            <h3 className="font-semibold text-red-600">불리한 조항</h3>
             <ul className="list-disc list-inside">
               {site.drawbacks.slice(0, 3).map((drawback, index) => (
                   <li key={index}>
@@ -121,11 +137,11 @@ export default function SiteRatings() {
               className="w-full md:w-64"
             />
           </div>
-
+          
           <div className="relative py-4 mb-4">
             <div className={`
               max-w-6xl mx-auto px-6 py-3 rounded-lg
-              ${selectedGrade === 'ALL'
+              ${selectedGrade === 'ALL' 
                 ? 'bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100'
                 : selectedGrade === 'A'
                 ? 'bg-gradient-to-r from-green-50 to-emerald-50 border border-green-100'
@@ -140,7 +156,7 @@ export default function SiteRatings() {
             `}>
               <p className={`
                 text-center font-medium
-                ${selectedGrade === 'ALL'
+                ${selectedGrade === 'ALL' 
                   ? 'text-blue-800'
                   : selectedGrade === 'A'
                   ? 'text-green-800'
