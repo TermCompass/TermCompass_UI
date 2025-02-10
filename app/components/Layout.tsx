@@ -270,7 +270,8 @@ export default function Layout({ children, activeSection = 0 }: LayoutProps) {
 
                 {isBoardOpen && (
                     <div
-                        className="absolute bg-white shadow-lg border-t border-gray-200 w-full h-[150px] z-40"
+                        className="absolute bg-white shadow-lg border-t border-gray-200 w-full h-[150px] z-40 "
+                        style={{ top: "calc(100% - 1px)" }}
                         onMouseEnter={() => setIsBoardOpen(true)}  // ✅ 내부에서 마우스를 올리면 유지
                         onMouseLeave={() => setIsBoardOpen(false)} // ✅ 외부에서 벗어나면 닫힘
                     >
