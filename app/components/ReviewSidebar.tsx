@@ -21,6 +21,7 @@ export interface ReviewHistory {
   id: number;
   recordType: string;
   result: string;
+  title: string;
   requests: { request: string, answer: string, id: number }[];
 }
 
@@ -42,7 +43,7 @@ export default function ReviewSidebar({ onSelectReview, selectedReview, resetRev
 
         // recordType이 'REVIEW'인 데이터만 필터링
         reviewHistory = data.filter((record: ReviewHistory) => record.recordType === "REVIEW");
-        // console.log(reviewHistory);
+        console.log(reviewHistory);
 
         setReviewHistory(reviewHistory);
 
@@ -65,7 +66,7 @@ export default function ReviewSidebar({ onSelectReview, selectedReview, resetRev
               }`}
             onClick={() => onSelectReview(review)}
           >
-            <div className="font-semibold">{review.result}</div>
+            <div className="font-semibold">{review.title}</div>
             {/* <div className="text-sm text-gray-500">{review.date}</div> */}
           </div>
         ))}

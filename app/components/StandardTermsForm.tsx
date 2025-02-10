@@ -149,9 +149,11 @@ export default function StandardTermsForm({ domain, terms, onSubmit, onBack }: S
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify({ result:editableContent }),
+        body: JSON.stringify({ 
+          title:domain.filename, 
+          result:editableContent, 
+        }),
         credentials: "include",
       })
         .then(response => response.json())
