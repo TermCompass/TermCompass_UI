@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Layout from '../components/Layout'
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
