@@ -143,7 +143,6 @@ export default function SiteRatings() {
           <Image src={site.logo} alt={`${site.name} 로고`} width={50} height={50} className="mr-4" />
           <div>
             <h2 className="text-xl font-semibold">{site.name}</h2>
-            <p className="text-blue-600">{site.domain}</p>
           </div>
           <Badge variant="outline" className="ml-auto text-lg font-bold">{site.rating}</Badge>
         </div>
