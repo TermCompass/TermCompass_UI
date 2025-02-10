@@ -331,7 +331,9 @@ export default function ReviewRequest() {
             if (typeof fileContent === 'string') {
               const base64Content = fileContent.split(',')[1]; // Base64 부분만 추출
               const compressedContent = compressData(base64Content); // content 압축
-
+              console.log("fileName : "+file.name);
+              console.log("fileType : "+file.type);
+              
               // 보낼 JSON 생성
               const jsonMessage = JSON.stringify({
                 type: 'review',
@@ -363,12 +365,23 @@ export default function ReviewRequest() {
     }
   };
 
-  function compressData(base64Content: string) {
+  function compressData(base64Content: string): string {
     const binaryString = atob(base64Content);
-    const charData = binaryString.split('').map(char => char.charCodeAt(0));
-    const binData = new Uint8Array(charData);
-    const compressedData = pako.deflate(binData);
-    return btoa(String.fromCharCode.apply(null, compressedData as unknown as number[]));
+    const charData = new Uint8Array(binaryString.length);
+  
+    for (let i = 0; i < binaryString.length; i++) {
+      charData[i] = binaryString.charCodeAt(i);
+    }
+  
+    const compressedData = pako.deflate(charData, { raw: false });
+
+    // TextDecoder 사용
+    const binaryStringCompressed = new Uint8Array(compressedData);
+    const base64Result = btoa(
+      Array.from(binaryStringCompressed).map(byte => String.fromCharCode(byte)).join('')
+    );
+  
+    return base64Result;
   }
 
   function handleResetClick(event: React.MouseEvent<HTMLButtonElement>): void {
