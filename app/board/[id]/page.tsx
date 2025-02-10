@@ -22,7 +22,7 @@ export default function BoardPage() {
         const fetchPostDetails = async () => {
             setLoading(true);
             try {
-                const response = await fetch(`http://localhost:8080/board/detail/${postId}`)
+                const response = await fetch(`http://kyj9447.ddns.net:8080/board/detail/${postId}`)
                 if (!response.ok) {
                     throw new Error("Failed to fetch post details");
                 }

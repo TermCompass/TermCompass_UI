@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Layout from '../components/Layout';
 import Link from 'next/link';
@@ -35,7 +35,7 @@ export default function BoardPage() {
                     throw new Error("게시글을 불러오는 데 실패했습니다.");
                 }
                 const data = await response.json();
-                setPosts(data.content); //
+                setPosts(data.content);
                 setTotalPages(data.totalPages);
             } catch (err: any) {
                 setError(err.message);
@@ -63,5 +63,12 @@ export default function BoardPage() {
         />
         </Layout>
     );
+}
+
+function BoardPageWrapper() {
+    const searchParams = useSearchParams();
+    const currentPage = Number(searchParams.get('page')) || 1;
+
+    return <BoardPage key={currentPage} />;
 }
 

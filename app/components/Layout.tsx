@@ -148,7 +148,7 @@ export default function Layout({ children, activeSection = 0 }: LayoutProps) {
         setIsLoggingOut(true);
 
         try {
-            const response = await fetch('http://localhost:8080/logout', {
+            const response = await fetch('http://kyj9447.ddns.net:8080/logout', {
                 method: 'POST',
                 credentials: 'include', // 쿠키를 포함한 요청
             });
@@ -158,7 +158,7 @@ export default function Layout({ children, activeSection = 0 }: LayoutProps) {
             }
 
             // 쿠키 삭제
-            document.cookie = "jwt=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=localhost;";
+            document.cookie = "jwt=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=kyj9447.ddns.net;";
 
             // 로그아웃 성공 후 처리
             logout()
