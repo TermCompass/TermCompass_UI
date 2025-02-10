@@ -382,7 +382,6 @@ export default function SiteEvaluation() {
             </div>
             <div>
               <h2 className="text-2xl font-semibold">{site.name}</h2>
-              <p className="text-blue-600">{site.domain}</p>
               <p className="text-xl font-bold mt-2">등급: {site.rating}</p>
             </div>
           </div>
