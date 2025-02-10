@@ -159,10 +159,12 @@ export default function StandardTermsForm({ domain, terms, onSubmit, onBack }: S
       })
         .then(response => response.json())
         .then(data => {
-          console.log('저장 성공:', data);
+          console.log('저장 성공 : ', data);
+          alert("저장되었습니다.")
         })
         .catch(error => {
-          console.error('저장 실패:', error);
+          console.error('저장 실패 : ', error);
+          alert('저장 실패 : ' + error)
         });
     }
   };
