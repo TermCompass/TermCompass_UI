@@ -8,7 +8,6 @@ import { useUser } from "@/app/contexts/UserContext";
 
 interface BoardPageTemplateProps {
     title: string;
-    breadcrumb: { label: string; href: string }[];
     posts: { id: number; title: string; author: string; created_at: string;}[];
     currentPage: number;
     totalPages: number;
@@ -18,7 +17,6 @@ interface BoardPageTemplateProps {
 
 export default function BoardPageTemplate({
                                               title,
-                                              breadcrumb,
                                               posts,
                                               currentPage,
                                               totalPages,
@@ -37,7 +35,6 @@ export default function BoardPageTemplate({
             {/* 배경 이미지 및 제목 */}
             <HeaderBanner
                 title={title}
-                breadcrumb={breadcrumb}
             />
 
             {/* 게시판 + 메뉴바 수평 배치 */}
@@ -140,10 +137,7 @@ export default function BoardPageTemplate({
                         <div className="ml-auto mt-4 md:mt-0">
                             <button
                                 onClick={() => {
-                                    if (breadcrumb.length > 0) {
-                                        const lastBreadcrumb = breadcrumb[breadcrumb.length - 1].href; // ✅ 마지막 페이지 가져오기
-                                        router.push(`${lastBreadcrumb}/write`); // ✅ 해당 페이지의 /write로 이동
-                                    }
+                                    router.push(`/write`); // ✅ 해당 페이지의 /write로 이동
                                 }}
                                 className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
                             >
