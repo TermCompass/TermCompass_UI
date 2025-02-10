@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Layout from '@/app/components/Layout'
 import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
 import { useUser } from '@/app/contexts/UserContext'
 import DomainSelection from '@/app/components/DomainSelection'
 import StandardTermsForm from '@/app/components/StandardTermsForm'
@@ -19,8 +20,18 @@ export default function CreateTerms() {
   const router = useRouter()
 
   if (!user || user.userType !== 'COMPANY') {
-    router.push('/')
-    return null
+    return (
+      <Layout>
+        <div className="max-w-4xl mx-auto mt-8">
+          <Card>
+            <CardContent>
+              <br />
+              <p>로그인이 필요합니다.</p>
+            </CardContent>
+          </Card>
+        </div>
+      </Layout>
+    )
   }
 
   const handleDomainSelect = (domain: string) => {

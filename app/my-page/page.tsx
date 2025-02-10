@@ -22,6 +22,7 @@ export default function MyPage() {
         <div className="max-w-4xl mx-auto mt-8">
           <Card>
             <CardContent>
+              <br />
               <p>로그인이 필요합니다.</p>
             </CardContent>
           </Card>
@@ -42,7 +43,7 @@ export default function MyPage() {
           </CardHeader>
           <CardContent>
             <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as "info" | "history")}>
-              <TabsList>
+              <TabsList className={"mb-5"}>
                 <TabsTrigger value="info">개인 정보</TabsTrigger>
                 <TabsTrigger value="history">{user.userType === "PERSONAL" ? "검토 내역" : "이용 내역"}</TabsTrigger>
               </TabsList>

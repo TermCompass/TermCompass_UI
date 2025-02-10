@@ -4,11 +4,12 @@ import Link from 'next/link';
 import BoardBar from '@/app/components/BoardBar';
 import HeaderBanner from '@/app/components/BoardBanner';
 import { useRouter } from "next/navigation";
-import {useUser} from '@/app/contexts/UserContext';
+import { useUser } from "@/app/contexts/UserContext";
+
 interface BoardPageTemplateProps {
     title: string;
     breadcrumb: { label: string; href: string }[];
-    posts: { id: number; title: string; author: string; date: string; link: string }[];
+    posts: { id: number; title: string; author: string; created_at: string;}[];
     currentPage: number;
     totalPages: number;
     postsPerPage: number;
@@ -28,7 +29,8 @@ export default function BoardPageTemplate({
         (currentPage - 1) * postsPerPage,
         currentPage * postsPerPage
     );
-    const { user } = useUser();
+    const user = useUser();
+
     const router = useRouter();
     return (
         <div>
@@ -52,16 +54,30 @@ export default function BoardPageTemplate({
                         </tr>
                         </thead>
                         <tbody>
-                        {currentPosts.map((post) => (
+                        {currentPosts.map((post, index) => (
                             <tr key={post.id} className="hover:bg-gray-50">
-                                <td className="px-4 py-2 border-t border-b border-gray-300 text-center">{post.id}</td>
+                                <td className="px-4 py-2 border-t border-b border-gray-300 text-center">
+                                    {posts.length - ((currentPage - 1) * postsPerPage) - index}
+                                </td>
                                 <td className="px-4 py-2 border-t border-b text-left">
-                                    <Link href={post.link} className="hover:underline">
+                                    <Link href={`/board/${post.id}`} className="text-blue-500 hover:text-blue-700">
                                         {post.title}
                                     </Link>
                                 </td>
-                                <td className="px-4 py-2 border-t border-b text-center">{post.author}</td>
-                                <td className="px-4 py-2 border-t border-b text-center">{post.date}</td>
+                                <td className="px-4 py-2 border-t border-b text-center">
+                                    {post.author && post.author.length > 2
+                                        ? `${post.author[0]}${"*".repeat(post.author.length - 2)}${post.author[post.author.length - 1]}`
+                                        : post.author}
+                                </td>
+                                <td className="px-4 py-2 border-t border-b text-center">
+                                    {(() => {
+                                        const date = new Date(post.created_at);
+                                        date.setHours(date.getHours() + 9); // 9시간 추가
+
+                                        // ISO 문자열로 변환 후 원하는 형식으로 출력
+                                        return date.toISOString().split('T')[0] + ' ' + date.toISOString().split('T')[1].split('.')[0];
+                                    })()}
+                                </td>
                             </tr>
                         ))}
                         </tbody>
@@ -120,30 +136,24 @@ export default function BoardPageTemplate({
                         </div>
 
                         {/* 🔹 글쓰기 버튼을 오른쪽 정렬 */}
+                        {user.user && (
                         <div className="ml-auto mt-4 md:mt-0">
-                            {user && ( // ✅ 로그인한 경우에만 버튼 표시
-                                <div className="ml-auto mt-4 md:mt-0">
-                                    <button
-                                        onClick={() => {
-                                            if (breadcrumb.length > 0) {
-                                                const lastBreadcrumb = breadcrumb[breadcrumb.length - 1].href;
-                                                router.push(`${lastBreadcrumb}/write`);
-                                            }
-                                        }}
-                                        className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
-                                    >
-                                        글쓰기
-                                    </button>
-                                </div>
-                            )}
+                            <button
+                                onClick={() => {
+                                    if (breadcrumb.length > 0) {
+                                        const lastBreadcrumb = breadcrumb[breadcrumb.length - 1].href; // ✅ 마지막 페이지 가져오기
+                                        router.push(`${lastBreadcrumb}/write`); // ✅ 해당 페이지의 /write로 이동
+                                    }
+                                }}
+                                className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+                            >
+                                글쓰기
+                            </button>
                         </div>
+                        )}
                     </div>
                 </div>
 
-                {/* 🔹 메뉴바 (게시판 옆으로 배치) */}
-                <div className=" hidden md:block flex-grow mx-auto py-4 ">
-                    <BoardBar/>
-                </div>
 
             </div>
 

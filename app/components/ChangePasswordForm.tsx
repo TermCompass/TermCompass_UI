@@ -5,7 +5,7 @@ import { useUser } from "../contexts/UserContext"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { useToast } from "@/components/ui/use-toast"
+import { useToast } from "@/hooks/use-toast"
 
 interface ChangePasswordFormProps {
     onCancel: () => void
@@ -18,23 +18,34 @@ export default function ChangePasswordForm({ onCancel }: ChangePasswordFormProps
     const { updateUser } = useUser()
     const { toast } = useToast()
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
         if (newPassword !== confirmPassword) {
-            toast({
-                title: "비밀번호 불일치",
-                description: "새 비밀번호가 일치하지 않습니다.",
-                variant: "destructive",
-            })
+            alert("새 비밀번호가 일치하지 않습니다.")
             return
         }
-        // Here you would typically send a request to your backend to change the password
-        // For this example, we'll just show a success message
-        toast({
-            title: "비밀번호 변경 완료",
-            description: "비밀번호가 성공적으로 변경되었습니다.",
-        })
-        onCancel()
+        try {
+            const response = await fetch('http://localhost:8080/change-password', {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({
+                    oldPassword: currentPassword,
+                    newPassword: newPassword,
+                    confirmPassword: confirmPassword
+                }),
+                credentials: 'include'
+            })
+
+            if (!response.ok) {
+                const errorData = await response.json(); // 서버에서 반환된 에러 메시지를 읽음
+                console.log(errorData)
+            }
+
+            alert("비밀번호가 변경되었습니다.")
+            onCancel()
+        } catch (error: any) {
+            alert("기존 비밀번호가 일치하지 않습니다.")
+        }
     }
 
     return (

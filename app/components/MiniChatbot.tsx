@@ -21,7 +21,7 @@ interface ChatHistory {
 }
 
 const MiniChatbot: React.FC = () => {
-  const { isChatbotOpen, setIsChatbotOpen } = useChatbot();
+  const [isChatbotOpen, setIsChatbotOpen] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState<Request[]>([]);

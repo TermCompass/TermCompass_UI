@@ -76,14 +76,14 @@ export default function Layout({ children, activeSection = 0 }: LayoutProps) {
 
     useEffect(() => {
         // const businessOnlyPaths = ['/create-terms', '/modify-terms', '/business-history']
-        const businessOnlyPaths = ['/create-terms', '/business-history']
+        const businessOnlyPaths = ['/create-terms']
         if (!isLoggingOut && businessOnlyPaths.includes(pathname) && (!user || user.userType !== 'COMPANY')) {
             toast({
                 title: "접근 제한",
                 description: "이 기능은 기업 사용자 전용입니다.",
                 variant: "destructive",
             })
-            router.push('/')
+            // router.push('/')
         }
     }, [pathname, user, router, isLoggingOut])
 
@@ -132,23 +132,44 @@ export default function Layout({ children, activeSection = 0 }: LayoutProps) {
         }
     }, [isBoardOpen]); // 드롭다운이 열릴 때마다 위치 갱신
     const handleAuthSubmit = (
+        id: number,
         name: string,
         email: string,
-        password: string,
         userType: 'PERSONAL' | 'COMPANY',
         created_at: string,
         businessNumber: string,
         isLogin: boolean
     ) => {
-        login( email, userType )
+        login( id, name, email, userType, created_at, businessNumber )
         setShowAuthForm(false)
     }
 
-    const handleLogout = () => {
-        setIsLoggingOut(true)
-        logout()
-        router.push('/')
-    }
+    const handleLogout = async () => {
+        setIsLoggingOut(true);
+
+        try {
+            const response = await fetch('http://localhost:8080/logout', {
+                method: 'POST',
+                credentials: 'include', // 쿠키를 포함한 요청
+            });
+
+            if (!response.ok) {
+                throw new Error('로그아웃 실패');
+            }
+
+            // 쿠키 삭제
+            document.cookie = "jwt=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=localhost;";
+
+            // 로그아웃 성공 후 처리
+            logout()
+            router.push('/'); // 홈으로 리다이렉트
+        } catch (error) {
+            // @ts-ignore
+            alert(error.message);
+        } finally {
+            setIsLoggingOut(false);
+        }
+    };
 
     const handleSectionClick = (sectionId: string) => {
         const element = document.getElementById(sectionId);
@@ -245,37 +266,6 @@ export default function Layout({ children, activeSection = 0 }: LayoutProps) {
                         </>
                     )}
                 </div>
-                {/* 확장바 */}
-
-                {isBoardOpen && (
-                    <div
-                        className="absolute bg-white shadow-lg border-t border-gray-200 w-full h-[150px] z-40 "
-                        style={{ top: "calc(100% - 1px)" }}
-                        onMouseEnter={() => setIsBoardOpen(true)}  // ✅ 내부에서 마우스를 올리면 유지
-                        onMouseLeave={() => setIsBoardOpen(false)} // ✅ 외부에서 벗어나면 닫힘
-                    >
-                        <div className="container mx-auto px-4 py-4">
-                            {/* ✅ 내부 요소 정렬 (탭 위치 기반) */}
-                            <ul
-                                className="flex flex-col items-start space-y-2"
-                                style={{
-                                    position: "absolute",
-                                    left: `${dropdownPos.left}px`, // "게시판" 탭 위치에 맞게 정렬
-                                    transform: "translateX(-50%)", // 중앙 정렬
-                                }}
-                            >
-                                <li className="p-2 hover:bg-gray-100">
-                                    <Link href="/board">📌 공지사항</Link>
-                                </li>
-                                <li className="p-2 hover:bg-gray-100">
-                                    <Link href="/photonews">📷 포토뉴스</Link>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                )}
-
-
             </header>
             <main className={`flex-grow ${pathname === '/' ? '' : 'pt-20 pb-32'}`}>
                 {children}

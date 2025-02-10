@@ -1,7 +1,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Shield, Search, FileText, Bot } from 'lucide-react';
 import { topWebsites } from "@/app/components/TopWebsites";
-import { useState } from "react";
+import {useEffect, useState} from "react";
 import { Button } from "@/components/ui/button";
 import Link from 'next/link';
 import { useUser } from '@/app/contexts/UserContext';
@@ -10,6 +10,14 @@ import { useRouter } from "next/navigation";
 import { useSwipeable } from "react-swipeable";
 import { useChatbot } from '@/app/contexts/ChatbotContext';
 import Image from "next/image";
+
+interface Website {
+  name: string;
+  logo: string;
+  benefits: string[];
+  drawbacks: string[];
+  link: string;
+}
 
 const services = [
   {
@@ -45,18 +53,35 @@ export default function ServicesSection() {
   const { toast } = useToast();
   const [isDragging, setIsDragging] = useState(false);
   const { setIsChatbotOpen } = useChatbot();
+  const [websites, setWebsites] = useState<Website[]>([])
+
+  useEffect(() => {
+    const fetchWebsites = async () => {
+      try {
+        const response = await fetch("http://localhost:8080/site")
+        if (!response.ok) throw new Error("데이터를 불러오는데 실패했습니다.")
+
+        const data: Website[] = await response.json()
+        setWebsites(data)
+      } catch (error) {
+        console.error(error)
+      }
+    }
+
+    fetchWebsites()
+  }, [])
 
   const nextSlide = () => {
     setCurrentIndex((prevIndex) => {
       const newIndex = prevIndex + slidesToShow;
-      return newIndex < topWebsites.length * 3 - 4 ? newIndex : 0;
+      return newIndex < websites.length * 3 - 4 ? newIndex : 0;
     });
   };
 
   const prevSlide = () => {
     setCurrentIndex((prevIndex) => {
       const newIndex = prevIndex - slidesToShow;
-      return newIndex >= 0 ? newIndex : topWebsites.length * 3 - 4 - slidesToShow;
+      return newIndex >= 0 ? newIndex : websites.length * 3 - 4 - slidesToShow;
     });
   };
 
@@ -98,10 +123,10 @@ export default function ServicesSection() {
             <div
                 className="flex transition-transform duration-500 h-full"
                 style={{
-                  transform: `translateX(-${(currentIndex / topWebsites.length) * 100}%)`,
+                  transform: `translateX(-${(currentIndex / websites.length) * 100}%)`,
                 }}
             >
-              {topWebsites.map((website, index) => (
+              {websites.map((website, index) => (
                   <Link
                       key={index}
                       href={isDragging ? "#" : website.link ?? "#"}
@@ -113,7 +138,7 @@ export default function ServicesSection() {
                   >
                     <div className="flex items-center gap-2 mb-2">
                         <Image
-                            src={website.logo}
+                            src={`/site-logo/${website.logo}`}
                             alt={`${website.name} 로고`}
                             width={32}
                             height={32}
@@ -125,7 +150,7 @@ export default function ServicesSection() {
                         </h3>
                     </div>
 
-                    <div className="flex flex-col gap-1 mt-1">
+                    <div className="flex flex-col gap-1 mt-2">
                         <div className="w-full">
                             <h4 className="text-sm font-semibold text-green-600 mb-1" 
                                 style={{fontSize: "clamp(12px, 1.1vw, 16px)"}}>
@@ -137,13 +162,12 @@ export default function ServicesSection() {
                                         className="truncate text-xs text-gray-700" 
                                         style={{fontSize: "clamp(10px, 1vw, 14px)"}}
                                         title={benefit}>
-                                        {benefit}
+                                        {benefit.length > 20 ? `${benefit.slice(0, 20)}...` : benefit}
                                     </li>
                                 ))}
                             </ul>
                         </div>
-
-                        <div className="w-full">
+                        <div className="w-full mt-2">
                             <h4 className="text-sm font-semibold text-red-600 mb-1"
                                 style={{fontSize: "clamp(12px, 1.1vw, 16px)"}}>
                                 불리
@@ -154,7 +178,7 @@ export default function ServicesSection() {
                                         className="truncate text-xs text-gray-700"
                                         style={{fontSize: "clamp(10px, 1vw, 14px)"}}
                                         title={drawback}>
-                                        {drawback}
+                                        {drawback.length > 20 ? `${drawback.slice(0, 20)}...` : drawback}
                                     </li>
                                 ))}
                             </ul>
