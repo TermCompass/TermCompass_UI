@@ -183,7 +183,7 @@ export default function StandardTermsForm({ domain, terms, onSubmit, onBack }: S
       const aButton = document.createElement('button')
       aButton.id = `button-${htagscount + 1}`
       aButton.className = 'addButton'
-      aButton.textContent = '+조항 추가'
+      aButton.textContent = '+ 조항 추가'
       aButton.contentEditable = 'false'
 
       // h4
@@ -325,6 +325,13 @@ export default function StandardTermsForm({ domain, terms, onSubmit, onBack }: S
           margin: 5px;
           padding: 5px;
           border-radius: 5px;
+        }        
+        
+        #editableContent > .addButton {
+          font-size: 0.8em;
+          font-weight: bold;
+          color: white;
+          background-color: rgb(47, 114, 240);
         }
 
         #editableContent > h1 {

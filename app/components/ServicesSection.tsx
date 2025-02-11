@@ -1,7 +1,6 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Shield, Search, FileText, Bot } from 'lucide-react';
-import { topWebsites } from "@/app/components/TopWebsites";
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import Link from 'next/link';
 import { useUser } from '@/app/contexts/UserContext';
@@ -28,7 +27,7 @@ const services = [
   },
   {
     title: '사이트 등급',
-    description: (<>주요 웹사이트의 약관을 평가하고 <br />등급을 매깁니다.</>) ,
+    description: (<>주요 웹사이트의 약관을 평가하고 <br />등급을 매깁니다.</>),
     icon: Shield,
     url: '/site-analysis'
   },
@@ -105,148 +104,148 @@ export default function ServicesSection() {
     preventScrollOnSwipe: true,
   });
   return (
-      <section className="h-screen py-12 bg-gray-100 flex flex-col overflow-hidden">
-        <div className="container mx-auto px-4 flex flex-col h-full">
-          <h3
-              className="text-xl md:text-2xl lg:text-3xl font-bold text-center mb-6"
-              style={{
-                paddingTop: 'calc(3vh)',
-                marginTop: 'calc(4vh)',
-                marginBottom: 'calc(6vh)',
-                fontSize: 'calc(1rem + 1vw)',
-              }}
+    <section className="h-screen py-12 bg-gray-100 flex flex-col overflow-hidden">
+      <div className="container mx-auto px-4 flex flex-col h-full">
+        <h3
+          className="text-xl md:text-2xl lg:text-3xl font-bold text-center mb-6"
+          style={{
+            paddingTop: 'calc(3vh)',
+            marginTop: 'calc(4vh)',
+            marginBottom: 'calc(6vh)',
+            fontSize: 'calc(1rem + 1vw)',
+          }}
+        >
+          사이트들의 약관의 평가를 한눈에!
+        </h3>
+
+        <div className="relative h-[35%] mb-6" {...handlers}>
+          <div
+            className="flex transition-transform duration-500 h-full"
+            style={{
+              transform: `translateX(-${(currentIndex / websites.length) * 100}%)`,
+            }}
           >
-            사이트들의 약관의 평가를 한눈에!
-          </h3>
-
-          <div className="relative h-[35%] mb-6" {...handlers}>
-            <div
-                className="flex transition-transform duration-500 h-full"
+            {websites.map((website, index) => (
+              <Link
+                key={index}
+                href={isDragging ? "#" : website.link ?? "#"}
+                draggable="false"
+                className="w-1/3 flex-shrink-0 p-4 border rounded-lg shadow-md bg-white mx-2 overflow-hidden flex flex-col transition-transform duration-200 hover:shadow-lg hover:bg-gray-200"
                 style={{
-                  transform: `translateX(-${(currentIndex / websites.length) * 100}%)`,
+                  height: 'calc(30vh)',
                 }}
-            >
-              {websites.map((website, index) => (
-                  <Link
-                      key={index}
-                      href={isDragging ? "#" : website.link ?? "#"}
-                      draggable="false"
-                      className="w-1/3 flex-shrink-0 p-4 border rounded-lg shadow-md bg-white mx-2 overflow-hidden flex flex-col transition-transform duration-200 hover:shadow-lg hover:bg-gray-200"
-                      style={{
-                          height: 'calc(30vh)',
-                      }}
-                  >
-                    <div className="flex items-center gap-2 mb-2">
-                        <Image
-                            src={`/site-logo/${website.logo}`}
-                            alt={`${website.name} 로고`}
-                            width={32}
-                            height={32}
-                            className="object-contain"
-                        />
-                        <h3 className="text-sm font-bold truncate" 
-                            style={{fontSize: "clamp(14px, 1.2vw, 18px)"}}>
-                            {website.name}
-                        </h3>
-                    </div>
+              >
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="w-[48px] h-[48px]">
+                    <img
+                      src={`/site-logo/${website.logo}`}
+                      alt={`${website.name} 로고`}
+                      className="object-contain w-full h-full"
+                    />
+                  </div>
+                  <h3 className="text-2xl font-bold truncate m-2"
+                    style={{ fontSize: "clamp(18px, 1.2vw, 24px)" }}>
+                    {website.name}
+                  </h3>
+                </div>
 
-                    <div className="flex flex-col gap-1 mt-2">
-                        <div className="w-full">
-                            <h4 className="text-sm font-semibold text-green-600 mb-1" 
-                                style={{fontSize: "clamp(12px, 1.1vw, 16px)"}}>
-                                유리
-                            </h4>
-                            <ul className="list-disc list-inside">
-                                {website.benefits.slice(0, 2).map((benefit, i) => (
-                                    <li key={i} 
-                                        className="truncate text-xs text-gray-700" 
-                                        style={{fontSize: "clamp(10px, 1vw, 14px)"}}
-                                        title={benefit}>
-                                        {benefit.length > 20 ? `${benefit.slice(0, 20)}...` : benefit}
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-                        <div className="w-full mt-2">
-                            <h4 className="text-sm font-semibold text-red-600 mb-1"
-                                style={{fontSize: "clamp(12px, 1.1vw, 16px)"}}>
-                                불리
-                            </h4>
-                            <ul className="list-disc list-inside">
-                                {website.drawbacks.slice(0, 2).map((drawback, i) => (
-                                    <li key={i} 
-                                        className="truncate text-xs text-gray-700"
-                                        style={{fontSize: "clamp(10px, 1vw, 14px)"}}
-                                        title={drawback}>
-                                        {drawback.length > 20 ? `${drawback.slice(0, 20)}...` : drawback}
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-                    </div>
-                  </Link>
-              ))}
-            </div>
-
-            <Button
-                onClick={prevSlide}
-                className="absolute top-1/2 left-2 transform -translate-y-1/2 bg-white/80 hover:bg-white"
-                variant="outline"
-                size="icon"
-            >
-              &lt;
-            </Button>
-            <Button
-                onClick={nextSlide}
-                className="absolute top-1/2 right-2 transform -translate-y-1/2 bg-white/80 hover:bg-white"
-                variant="outline"
-                size="icon"
-            >
-              &gt;
-            </Button>
-          </div>
-
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4"
-               style={{
-                 marginBottom: `calc(3vh)`,
-                 height: 'calc(35vh)',
-               }}>
-            {services.map((service, index) => (
-                <Link href={service.url} key={index} legacyBehavior>
-                  <a
-                      onClick={(e) => handleCardClick(e, service.url)}
-                      className="h-full"
-                      draggable="false"
-                  >
-                    <div className="flip-card h-full">
-                      <div className="flip-card-inner">
-                        <Card className="flip-card-front h-full flex flex-col items-center justify-center p-6">
-                          <div className="w-16 h-16 mb-4 text-blue-600 flex-shrink-0">
-                            <service.icon className="w-full h-full"/>
-                          </div>
-                          <CardTitle className="text-lg lg:text-xl text-center mb-3 flex-shrink-0 w-full truncate">
-                            {service.title}
-                          </CardTitle>
-                          <CardDescription className="text-sm  lg:text-base text-center w-full overflow-hidden">
-                            <div className="truncate text-black lg:whitespace-normal">
-                              {service.description}
-                            </div>
-                          </CardDescription>
-                        </Card>
-                        <Card className="flip-card-back h-full flex flex-col justify-center items-center p-6">
-                          <CardDescription className="text-sm lg:text-base text-center w-full overflow-hidden">
-                            <div className="truncate text-black lg:whitespace-normal">
-                              {service.description}
-                            </div>
-                          </CardDescription>
-                        </Card>
-                      </div>
-                    </div>
-                  </a>
-                </Link>
+                <div className="flex flex-col gap-1 mt-2">
+                  <div className="w-full">
+                    <h4 className="text-lg font-semibold text-green-600 mb-1"
+                      style={{ fontSize: "clamp(12px, 1.1vw, 18px)" }}>
+                      유리
+                    </h4>
+                    <ul className="list-disc list-inside">
+                      {website.benefits.slice(0, 2).map((benefit, i) => (
+                        <li key={i}
+                          className="truncate text-base text-gray-700"
+                          style={{ fontSize: "clamp(12px, 1vw, 16px)" }}
+                          title={benefit}>
+                          {benefit.length > 20 ? `${benefit.slice(0, 20)}...` : benefit}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div className="w-full mt-2">
+                    <h4 className="text-lg font-semibold text-red-600 mb-1"
+                      style={{ fontSize: "clamp(12px, 1.1vw, 18px)" }}>
+                      불리
+                    </h4>
+                    <ul className="list-disc list-inside">
+                      {website.drawbacks.slice(0, 2).map((drawback, i) => (
+                        <li key={i}
+                          className="truncate text-base text-gray-700"
+                          style={{ fontSize: "clamp(12px, 1vw, 16px)" }}
+                          title={drawback}>
+                          {drawback.length > 20 ? `${drawback.slice(0, 20)}...` : drawback}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              </Link>
             ))}
           </div>
+
+          <Button
+            onClick={prevSlide}
+            className="absolute top-1/2 left-2 transform -translate-y-1/2 bg-white/80 hover:bg-white"
+            variant="outline"
+            size="icon"
+          >
+            &lt;
+          </Button>
+          <Button
+            onClick={nextSlide}
+            className="absolute top-1/2 right-2 transform -translate-y-1/2 bg-white/80 hover:bg-white"
+            variant="outline"
+            size="icon"
+          >
+            &gt;
+          </Button>
         </div>
-      </section>
+
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4"
+          style={{
+            marginBottom: `calc(3vh)`,
+            height: 'calc(35vh)',
+          }}>
+          {services.map((service, index) => (
+            <Link href={service.url} key={index} legacyBehavior>
+              <a
+                onClick={(e) => handleCardClick(e, service.url)}
+                className="h-full"
+                draggable="false"
+              >
+                <div className="flip-card h-full">
+                  <div className="flip-card-inner">
+                    <Card className="flip-card-front h-full flex flex-col items-center justify-center p-6">
+                      <div className="w-16 h-16 mb-4 text-blue-600 flex-shrink-0">
+                        <service.icon className="w-full h-full" />
+                      </div>
+                      <CardTitle className="text-lg lg:text-xl text-center mb-3 flex-shrink-0 w-full truncate">
+                        {service.title}
+                      </CardTitle>
+                      <CardDescription className="text-sm  lg:text-base text-center w-full overflow-hidden">
+                        <div className="truncate text-black lg:whitespace-normal">
+                          {service.description}
+                        </div>
+                      </CardDescription>
+                    </Card>
+                    <Card className="flip-card-back h-full flex flex-col justify-center items-center p-6">
+                      <CardDescription className="text-sm lg:text-base text-center w-full overflow-hidden">
+                        <div className="truncate text-black lg:whitespace-normal">
+                          {service.description}
+                        </div>
+                      </CardDescription>
+                    </Card>
+                  </div>
+                </div>
+              </a>
+            </Link>
+          ))}
+        </div>
+      </div>
+    </section>
   );
 }

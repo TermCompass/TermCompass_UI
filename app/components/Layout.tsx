@@ -14,6 +14,7 @@ import MobileNav from './MobileNav'
 import FooterSection from './FooterSection'
 import FixedFooter from './FixedFooter'
 import MiniChatbot from './MiniChatbot'
+// import logo from 'public/logo.png'
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -190,7 +191,7 @@ export default function Layout({ children, activeSection = 0 }: LayoutProps) {
             >
                 <div className="container mx-auto px-4 py-4 flex justify-between items-center">
                     <div className="cursor-pointer" onClick={handleHomeClick}>
-                        <Image
+                        <img
                             src="/logo.png"
                             alt="KOTS Logo"
                             width={50}

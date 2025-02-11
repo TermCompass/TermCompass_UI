@@ -3,8 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
 import { ChevronLeft, ChevronRight } from 'lucide-react'
-import Image from 'next/image'
-import FooterSection from './FooterSection'
+
 // 실제 DB에서 가져와야함
 const notices = {
   government: [
@@ -15,8 +14,8 @@ const notices = {
 }
 //DB에서 사진데이터 가져와서 전시해야함
 const newsItems = [
-  { title: '공정거래 센터', image: '/공고1.jpg', link: 'https://edu.kofair.or.kr/' },
-  { title: '공고2', image: '/공고2.png',link: 'https://kofair.or.kr/home/board/brdDetail.do?menu_cd=000114&num=1860'}
+  { title: '공정거래 센터', image: '/공고1.jpg' , link: 'https://edu.kofair.or.kr/' },
+  { title: '공고2', image: '/공고2.png' ,link: 'https://kofair.or.kr/home/board/brdDetail.do?menu_cd=000114&num=1860'}
 ]
 
 export default function NewsAndNoticeSection() {
@@ -65,7 +64,7 @@ export default function NewsAndNoticeSection() {
               <Card className="flex flex-col items-center justify-center h-auto mx-auto p-4 shadow-lg rounded-lg">
                 <CardHeader className="w-full flex items-center justify-center">
                   <a href={newsItems[currentIndex].link}>
-                    <Image
+                    <img
                         src={newsItems[currentIndex].image || "/placeholder.svg"}
                         alt={newsItems[currentIndex].title}
 

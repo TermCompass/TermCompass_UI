@@ -1,10 +1,9 @@
-import fs from 'fs';
-import path from 'path';
-import https from 'https';
-const hostname = process.env.NEXT_PUBLIC_HOSTNAME || 'default-host.com';
+// next.config.mjs
+const hostname = process.env.NEXT_PUBLIC_HOSTNAME;
 const nextConfig = {
   images: {
-    domains: ['images.seeklogo.com', 'source.unsplash.com'],
+    domains: [`http://${hostname}:8080`],
+    path: `http://${hostname}:8080`,
   },
   output: "export",
   eslint: {
@@ -13,6 +12,25 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  // next.config.mjs
+
+  webpack(config, { dev, isServer }) {
+    if (!dev && !isServer) {
+      // `minimizer`가 정의되지 않으면 빈 배열로 초기화
+      if (!config.optimization.minimizer) {
+        config.optimization.minimizer = [];
+      }
+      // 첫 번째 minimizer가 있다면, 기존의 terserOptions 수정
+      const terserOptions = config.optimization.minimizer[0].options || {};
+      terserOptions.compress = {
+        ...terserOptions.compress,
+        keep_classnames: true,  // 클래스 이름 유지
+        keep_fnames: true,      // 함수 이름 유지
+      };
+      config.optimization.minimizer[0].options = terserOptions;
+    }
+    return config;
+  }
 };
 
 export default nextConfig;
