@@ -139,7 +139,7 @@ export default function BoardPageTemplate({
                         <div className="ml-auto mt-4 md:mt-0">
                             <button
                                 onClick={() => {
-                                    router.push(`/write`); // ✅ 해당 페이지의 /write로 이동
+                                    router.push(`/boardWrite`); // ✅ 해당 페이지의 /write로 이동
                                 }}
                                 className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
                             >
