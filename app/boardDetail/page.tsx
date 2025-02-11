@@ -1,20 +1,20 @@
 'use client';
 
-import { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { Suspense, useEffect, useState } from "react";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import Layout from '@/app/components/Layout';
 import Link from 'next/link';
 import PostDetail from '@/app/components/PostDetail';
 import BoardBar from "@/app/components/BoardBar";
 import HeaderBanner from "@/app/components/BoardBanner";
 
-export default function BoardPage() {
+function BoardDetail() {
     const [post, setPost] = useState<any>(null);  // 게시글 상태
     const [loading, setLoading] = useState(true);  // 로딩 상태
     const [error, setError] = useState<string | null>(null);  // 오류 상태
 
-    const router = useRouter();
-    const { id: postId } = useParams();
+    const searchParams = useSearchParams();
+    const postId = searchParams.get("id");
 
     useEffect(() => {
         const hostname = process.env.NEXT_PUBLIC_HOSTNAME;
@@ -38,18 +38,6 @@ export default function BoardPage() {
 
         fetchPostDetails();
     }, [postId]);
-
-    // if (loading) {
-    //     return <div>Loading...</div>;
-    // }
-    //
-    // if (error) {
-    //     return <div>{error}</div>;
-    // }
-    //
-    // if (!post) {
-    //     return <div>No post found</div>;
-    // }
 
     return (
         <Layout>
@@ -75,5 +63,15 @@ export default function BoardPage() {
                 </div>
             </div>
         </Layout>
+    );
+}
+
+
+// Wrap the component with Suspense
+export default function BoardDetailPage() {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <BoardDetail />
+        </Suspense>
     );
 }

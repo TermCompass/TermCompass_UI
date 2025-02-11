@@ -59,7 +59,7 @@ export default function BoardPageTemplate({
                                     {totalElements - ((currentPage - 1) * postsPerPage) - index}
                                 </td>
                                 <td className="px-4 py-2 border-t border-b text-left">
-                                    <Link href={`/boardDetail/${post.id}`} className="text-blue-500 hover:text-blue-700">
+                                    <Link href={`/boardDetail?id=${post.id}`} className="text-blue-500 hover:text-blue-700">
                                         {post.title}
                                     </Link>
                                 </td>
