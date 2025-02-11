@@ -28,11 +28,10 @@ function BoardDetail() {
     const [post, setPost] = useState<Post>();  // 게시글 상태
     const [loading, setLoading] = useState(true);  // 로딩 상태
     const [error, setError] = useState<string | null>(null);  // 오류 상태
-
     const searchParams = useSearchParams();
     const postId = searchParams.get("id");
 
-    useEffect(() => {
+    useEffect(() => {        
         const hostname = process.env.NEXT_PUBLIC_HOSTNAME;
         if (!postId) return;
 
