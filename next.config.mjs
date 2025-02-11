@@ -4,7 +4,9 @@ import https from 'https';
 
 const nextConfig = {
   images: {
-    domains: ['images.seeklogo.com', 'source.unsplash.com'],
+    loader: "imgix",  // or other supported loaders like "default"
+    path: "/",
+    disableStaticImages: true,   // 정적 이미지 처리 비활성화
   },
   async headers() {
     return [
@@ -19,7 +21,7 @@ const nextConfig = {
       },
     ];
   },
-  assetPrefix: 'http://localhost:3000',
+  // assetPrefix: 'http://localhost:3000',
   // assetPrefix: 'http://kyj9447.ddns.net:3000',
   reactStrictMode: false,
   swcMinify: true,
