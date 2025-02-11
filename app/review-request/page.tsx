@@ -278,7 +278,7 @@ function ReviewRequest() {
           fileExtension === '.hwp' ||
           fileExtension === '.hwpx'
       ) {
-        setPdfContent("이것은 업로드된 파일의 내용입니다. 실제 구현에서는 PDF에서 추출한 텍스트가 여기에 표시됩니다.");
+        setPdfContent("업로드한 파일을 분석중입니다...");
         setReviewResult(null);
         setIsPdfUploaded(true);
         toast({
@@ -524,7 +524,7 @@ function ReviewRequest() {
 // Wrap the component with Suspense
 export default function ReviewRequestPage() {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<div></div>}>
       <ReviewRequest />
     </Suspense>
   );
