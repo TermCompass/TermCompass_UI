@@ -92,7 +92,7 @@ function ReviewRequest() {
     const hostname = process.env.NEXT_PUBLIC_HOSTNAME;
 
     // 웹소켓 연결 생성
-    const newSocket = new WebSocket('${window.location.protocol}//${window.location.host}/ws');
+    const newSocket = new WebSocket('/ws');
     setSocket(newSocket);
 
     // open
