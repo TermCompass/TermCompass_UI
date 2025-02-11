@@ -34,7 +34,7 @@ const MiniChatbot: React.FC = () => {
   const router = useRouter();
   const { setIsAuthFormOpen, setAuthType } = useAuth();
 
-  const userId = user?.email || 'guest';
+  const userId = user?.id || 0;
 
   // 고정 질문과 응답
   const fixedOptions = [
