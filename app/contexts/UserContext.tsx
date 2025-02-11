@@ -38,7 +38,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
     const hostname = process.env.NEXT_PUBLIC_HOSTNAME;
 
     axios
-        .get(`http://${hostname}:8080/user`, { withCredentials: true })
+        .get("/user", { withCredentials: true })
         .then((response) => {
           let currentUser = response.data
           if (currentUser.account_type === "PERSONAL") {

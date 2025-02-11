@@ -53,7 +53,7 @@ export default function BusinessHistory() {
   useEffect(() => {
     const hostname = process.env.NEXT_PUBLIC_HOSTNAME;
     if (!user) return;
-    fetch(`http://${hostname}:8080/records/${user.id}?recordsOnly=false`, {
+    fetch(`/records/${user.id}?recordsOnly=false`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

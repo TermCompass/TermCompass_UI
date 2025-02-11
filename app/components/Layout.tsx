@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect ,useRef} from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
@@ -32,10 +32,12 @@ export default function Layout({ children, activeSection = 0 }: LayoutProps) {
     const [isTransparent, setIsTransparent] = useState(true)
     const [isHovered, setIsHovered] = useState(false)
     const [isBoardOpen, setIsBoardOpen] = useState(false);
+    const boardRef = useRef<HTMLLIElement | null>(null);
+    const [dropdownPos, setDropdownPos] = useState({ left: 0 });
     // 로그인한 사용자만 접근 가능한 페이지 목록
     const authenticatedPaths = [
         '/create-terms',
-        '/modify-terms',
+        // '/modify-terms',
         '/business-history',
         '/review-history',
         '/review-request',
@@ -64,7 +66,7 @@ export default function Layout({ children, activeSection = 0 }: LayoutProps) {
 
     useEffect(() => {
         const handleResize = () => {
-            setIsMobile(window.innerWidth < 768)
+            setIsMobile(window.innerWidth < 1068)
         }
 
         handleResize()
@@ -73,14 +75,14 @@ export default function Layout({ children, activeSection = 0 }: LayoutProps) {
     }, [])
 
     useEffect(() => {
-        const businessOnlyPaths = ['/create-terms', '/modify-terms', '/business-history']
+        const businessOnlyPaths = ['/create-terms']
         if (!isLoggingOut && businessOnlyPaths.includes(pathname) && (!user || user.userType !== 'COMPANY')) {
             toast({
                 title: "접근 제한",
                 description: "이 기능은 기업 사용자 전용입니다.",
                 variant: "destructive",
             })
-            router.push('/')
+            // router.push('/')
         }
     }, [pathname, user, router, isLoggingOut])
 
@@ -102,6 +104,7 @@ export default function Layout({ children, activeSection = 0 }: LayoutProps) {
         }
     }, [pathname, isHovered]);
 
+
     const navItems = [
         { href: '/site-analysis', label: '사이트 등급' },
         { href: '/review-request', label: '약관 검토' },
@@ -109,7 +112,8 @@ export default function Layout({ children, activeSection = 0 }: LayoutProps) {
             ? user.userType === 'COMPANY'
                 ? [
                     { href: '/create-terms', label: '약관 생성' },
-                    { href: '/modify-terms', label: '약관 수정' },
+                    // { href: '/modify-terms', label: '약관 수정' },  // 임시로 비활성화
+                    // { href: '/business-history', label: '생성 내역' }, // 고려해 볼 사항
                 ]
                 : [
                 ]
@@ -118,7 +122,14 @@ export default function Layout({ children, activeSection = 0 }: LayoutProps) {
         { href: '/board', label: '게시판' },
         ...(user ? [{ href: "/my-page", label: "마이페이지", icon: User }] : []),
     ]
-
+    const activeNavItems = navItems.filter(item => item.href);
+    // 네비바 탭 위치얻어서 밑에 확장창 얻는용도
+    useEffect(() => {
+        if (boardRef.current) {
+            const { left, width } = boardRef.current.getBoundingClientRect();
+            setDropdownPos({ left: left + width / 2 }); // 중앙 정렬
+        }
+    }, [isBoardOpen]); // 드롭다운이 열릴 때마다 위치 갱신
     const handleAuthSubmit = (
         id: number,
         name: string,
@@ -137,7 +148,7 @@ export default function Layout({ children, activeSection = 0 }: LayoutProps) {
         setIsLoggingOut(true);
 
         try {
-            const response = await fetch(`http://${hostname}:8080/logout`, {
+            const response = await fetch('/logout', {
                 method: 'POST',
                 credentials: 'include', // 쿠키를 포함한 요청
             });
@@ -147,7 +158,7 @@ export default function Layout({ children, activeSection = 0 }: LayoutProps) {
             }
 
             // 쿠키 삭제
-            document.cookie = `jwt=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${hostname};`;
+            document.cookie = "jwt=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 
             // 로그아웃 성공 후 처리
             logout()
@@ -168,7 +179,7 @@ export default function Layout({ children, activeSection = 0 }: LayoutProps) {
 
     return (
         <div className={`min-h-screen w-full flex flex-col bg-gray-50 ${pathname === '/' ? 'overflow-hidden' : ''}`}>
-            <header 
+            <header
                 className={`fixed w-full top-0 z-50 h-20 transition-all duration-300 ${
                     pathname === '/' && isTransparent
                         ? 'bg-transparent border-b border-white/20' 
@@ -202,9 +213,9 @@ export default function Layout({ children, activeSection = 0 }: LayoutProps) {
                     ) : (
                         <>
                             <nav>
-                                <ul className="flex space-x-6 ">
+                                <ul className="relative flex space-x-6 ">
                                     {navItems.map((item) => (
-                                        <li key={item.href}>
+                                        <li key={item.href} ref={item.label === "게시판" ? boardRef : null}>
                                             <Link
                                                 href={item.href}
                                                 className={`relative transition-colors duration-300 ${
@@ -212,39 +223,17 @@ export default function Layout({ children, activeSection = 0 }: LayoutProps) {
                                                         ? 'text-white font-bold'
                                                         : 'text-gray-900 font-bold'
                                                 } group`}
-                                                onMouseEnter={() => item.label === '게시판' && setIsBoardOpen(true)}
-                                            >
-                                            <span className="relative w-fit inline-block px-12">
-                                                {item.label}
-                                                {/* 🔹 밑줄을 별도 span 태그로 분리하여 width 영향을 받지 않도록 설정 */}
+                                                onMouseEnter={() => item.label === '게시판' && setIsBoardOpen(true)}>
+                                                <span className="relative w-auto inline-block px-4 sm:px-3 md:px-0 lg:px-6   ">
+                                                    {item.label}
+
                                                 <span
                                                     className={`absolute bottom-0 left-0 h-0.5 w-0 bg-blue-600 transition-all duration-300 group-hover:w-full ${
                                                         pathname === item.href ? 'w-full' : ''
-                                                    }`}
-                                                ></span>
+                                                    }`}>
+                                                </span>
                                             </span>
                                             </Link>
-
-                                            {item.label === "게시판" && isBoardOpen && (
-                                                <div
-                                                    className={`absolute top-full left-0 w-screen justify-center bg-white shadow-lg rounded-b overflow-hidden transition-all duration-300 ease-in-out ${
-                                                        isBoardOpen ? 'opacity-100 transform translate-y-0 h-auto max-h-60' : 'opacity-0 transform -translate-y-5 h-0 max-h-0'
-                                                    }`}
-                                                    onMouseEnter={() => setIsBoardOpen(true)}   // ✅ 드롭다운 내부에서 마우스를 올리면 유지
-                                                    onMouseLeave={() => setIsBoardOpen(false)}  // ✅ 드롭다운 외부로 벗어나면 닫힘
-                                                >
-                                                    <ul className="items-center justify-center flex flex-col pb-2 relative left-[40px]">
-                                                        <li className="p-2 rounded-md border-b-2">
-                                                            <Link href="/board">📌 공지사항</Link>
-                                                        </li>
-                                                        <li className="p-2 rounded-md border-b-2">
-                                                            <Link href="/photonews">📷 포토뉴스</Link>
-                                                        </li>
-                                                    </ul>
-
-                                                </div>
-
-                                            )}
                                         </li>
                                     ))}
                                 </ul>

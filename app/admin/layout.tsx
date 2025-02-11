@@ -8,9 +8,8 @@ import { cn } from "@/lib/utils"
 const navItems = [
   { href: "/admin", label: "대시보드" },
   { href: "/admin/update-caselaw", label: "판례 업데이트" },
-  { href: "/admin/update-terms", label: "표준약관 업데이트" },
+  { href: "/admin/update-legislation", label: "법령 업데이트" },
   { href: "/admin/generate", label: "표준약관 생성" },
-  //{ href: "/admin/report", label: "서비스 현황/리포트" },
 ]
 
 export default function AdminLayout({

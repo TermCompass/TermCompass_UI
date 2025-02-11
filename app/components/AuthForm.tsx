@@ -36,8 +36,8 @@ export default function AuthForm({ onSubmit, onCancel }: AuthFormProps) {
 
     // API 호출
     const apiUrl = isLogin
-        ? `http://${hostname}:8080/login`
-        : `http://${hostname}:8080/signup`
+        ? '/login'
+        : '/signup'
 
     const payload = isLogin
         ? { email : email, password : password }

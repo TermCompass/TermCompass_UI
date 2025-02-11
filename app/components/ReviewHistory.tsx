@@ -26,7 +26,7 @@ export default function ReviewHistory() {
 
     if (!user) return;
     // GET 요청 보내기
-    fetch(`http://${hostname}:8080/records/${user.id}?recordsOnly=true`, {
+    fetch(`/records/${user.id}?recordsOnly=true`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',

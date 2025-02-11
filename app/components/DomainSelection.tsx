@@ -18,7 +18,7 @@ export default function DomainSelection({ onSelect }: DomainSelectionProps) {
     const hostname = process.env.NEXT_PUBLIC_HOSTNAME;
     async function fetchDomains() {
       try {
-        const response = await fetch(`http://${hostname}:8080/standard`, {
+        const response = await fetch('/standard', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

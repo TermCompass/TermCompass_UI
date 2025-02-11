@@ -1,7 +1,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Shield, Search, FileText, Bot } from 'lucide-react';
 import { topWebsites } from "@/app/components/TopWebsites";
-import { useState } from "react";
+import {useEffect, useState} from "react";
 import { Button } from "@/components/ui/button";
 import Link from 'next/link';
 import { useUser } from '@/app/contexts/UserContext';
@@ -11,22 +11,30 @@ import { useSwipeable } from "react-swipeable";
 import { useChatbot } from '@/app/contexts/ChatbotContext';
 import Image from "next/image";
 
+interface Website {
+  name: string;
+  logo: string;
+  benefits: string[];
+  drawbacks: string[];
+  link: string;
+}
+
 const services = [
   {
     title: '약관 검토',
-    description: 'AI 기반 약관 분석으로 숨겨진 독소조항을 찾아냅니다.',
+    description: (<>AI 기반 약관 분석으로 숨겨진 독소조항을 <br />찾아냅니다.</>),
     icon: Search,
     url: '/review-request'
   },
   {
     title: '사이트 등급',
-    description: '주요 웹사이트의 약관을 평가하고 등급을 매깁니다.',
+    description: (<>주요 웹사이트의 약관을 평가하고 <br />등급을 매깁니다.</>) ,
     icon: Shield,
     url: '/site-analysis'
   },
   {
     title: '약관 생성',
-    description: '기업을 위한 맞춤형 약관 생성 서비스를 제공합니다.',
+    description: (<>기업을 위한 맞춤형 약관 생성 서비스를  <br />제공합니다.</>),
     icon: FileText,
     url: '/create-terms'
   },
@@ -45,18 +53,35 @@ export default function ServicesSection() {
   const { toast } = useToast();
   const [isDragging, setIsDragging] = useState(false);
   const { setIsChatbotOpen } = useChatbot();
+  const [websites, setWebsites] = useState<Website[]>([])
+
+  useEffect(() => {
+    const fetchWebsites = async () => {
+      try {
+        const response = await fetch("/site")
+        if (!response.ok) throw new Error("데이터를 불러오는데 실패했습니다.")
+
+        const data: Website[] = await response.json()
+        setWebsites(data)
+      } catch (error) {
+        console.error(error)
+      }
+    }
+
+    fetchWebsites()
+  }, [])
 
   const nextSlide = () => {
     setCurrentIndex((prevIndex) => {
       const newIndex = prevIndex + slidesToShow;
-      return newIndex < topWebsites.length * 3 - 4 ? newIndex : 0;
+      return newIndex < websites.length * 3 - 4 ? newIndex : 0;
     });
   };
 
   const prevSlide = () => {
     setCurrentIndex((prevIndex) => {
       const newIndex = prevIndex - slidesToShow;
-      return newIndex >= 0 ? newIndex : topWebsites.length * 3 - 4 - slidesToShow;
+      return newIndex >= 0 ? newIndex : websites.length * 3 - 4 - slidesToShow;
     });
   };
 
@@ -98,10 +123,10 @@ export default function ServicesSection() {
             <div
                 className="flex transition-transform duration-500 h-full"
                 style={{
-                  transform: `translateX(-${(currentIndex / topWebsites.length) * 100}%)`,
+                  transform: `translateX(-${(currentIndex / websites.length) * 100}%)`,
                 }}
             >
-              {topWebsites.map((website, index) => (
+              {websites.map((website, index) => (
                   <Link
                       key={index}
                       href={isDragging ? "#" : website.link ?? "#"}
@@ -113,7 +138,7 @@ export default function ServicesSection() {
                   >
                     <div className="flex items-center gap-2 mb-2">
                         <Image
-                            src={website.logo}
+                            src={`/site-logo/${website.logo}`}
                             alt={`${website.name} 로고`}
                             width={32}
                             height={32}
@@ -125,11 +150,11 @@ export default function ServicesSection() {
                         </h3>
                     </div>
 
-                    <div className="flex flex-col gap-1 mt-1">
+                    <div className="flex flex-col gap-1 mt-2">
                         <div className="w-full">
                             <h4 className="text-sm font-semibold text-green-600 mb-1" 
                                 style={{fontSize: "clamp(12px, 1.1vw, 16px)"}}>
-                                장점
+                                유리
                             </h4>
                             <ul className="list-disc list-inside">
                                 {website.benefits.slice(0, 2).map((benefit, i) => (
@@ -137,16 +162,15 @@ export default function ServicesSection() {
                                         className="truncate text-xs text-gray-700" 
                                         style={{fontSize: "clamp(10px, 1vw, 14px)"}}
                                         title={benefit}>
-                                        {benefit}
+                                        {benefit.length > 20 ? `${benefit.slice(0, 20)}...` : benefit}
                                     </li>
                                 ))}
                             </ul>
                         </div>
-
-                        <div className="w-full">
+                        <div className="w-full mt-2">
                             <h4 className="text-sm font-semibold text-red-600 mb-1"
                                 style={{fontSize: "clamp(12px, 1.1vw, 16px)"}}>
-                                단점
+                                불리
                             </h4>
                             <ul className="list-disc list-inside">
                                 {website.drawbacks.slice(0, 2).map((drawback, i) => (
@@ -154,7 +178,7 @@ export default function ServicesSection() {
                                         className="truncate text-xs text-gray-700"
                                         style={{fontSize: "clamp(10px, 1vw, 14px)"}}
                                         title={drawback}>
-                                        {drawback}
+                                        {drawback.length > 20 ? `${drawback.slice(0, 20)}...` : drawback}
                                     </li>
                                 ))}
                             </ul>
@@ -203,15 +227,15 @@ export default function ServicesSection() {
                           <CardTitle className="text-lg lg:text-xl text-center mb-3 flex-shrink-0 w-full truncate">
                             {service.title}
                           </CardTitle>
-                          <CardDescription className="text-sm lg:text-base text-center w-full overflow-hidden">
-                            <div className="truncate lg:whitespace-normal">
+                          <CardDescription className="text-sm  lg:text-base text-center w-full overflow-hidden">
+                            <div className="truncate text-black lg:whitespace-normal">
                               {service.description}
                             </div>
                           </CardDescription>
                         </Card>
                         <Card className="flip-card-back h-full flex flex-col justify-center items-center p-6">
                           <CardDescription className="text-sm lg:text-base text-center w-full overflow-hidden">
-                            <div className="truncate lg:whitespace-normal">
+                            <div className="truncate text-black lg:whitespace-normal">
                               {service.description}
                             </div>
                           </CardDescription>

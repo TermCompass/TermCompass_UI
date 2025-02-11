@@ -33,7 +33,7 @@ export function AdminAuthProvider({ children }: { children: React.ReactNode }) {
     const hostname = process.env.NEXT_PUBLIC_HOSTNAME;
 
     try {
-      const response = await fetch(`http://${hostname}:8080/admin/login`, {
+      const response = await fetch("/admin/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

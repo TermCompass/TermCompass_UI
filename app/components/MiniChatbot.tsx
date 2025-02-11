@@ -169,7 +169,7 @@ const MiniChatbot: React.FC = () => {
     }
 
     try {
-      const response = await fetch(`http://${hostname}:8080/create-chat`, {
+      const response = await fetch('/create-chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ request: input, userId: userId, recordId: currentRecordId }),
@@ -216,7 +216,7 @@ const MiniChatbot: React.FC = () => {
 
     const fetchChatHistory = async () => {
       try {
-        const response = await fetch(`http://${hostname}:8080/records/${user.id}`);
+        const response = await fetch(`/records/${user.id}`);
         if (!response.ok) throw new Error('서버 오류');
 
         const data = await response.json();
@@ -280,6 +280,17 @@ const MiniChatbot: React.FC = () => {
                     </div>
                   ))}
                 </div>
+              </div>
+              <div className="p-3 border-t bg-white">
+                <button
+                    onClick={() => {
+                      setMessages([])
+                      setCurrentRecordId(null);
+                    }}  // 기존 메시지 초기화
+                    className="w-full py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-all"
+                >
+                  새 채팅
+                </button>
               </div>
             </div>
           )}

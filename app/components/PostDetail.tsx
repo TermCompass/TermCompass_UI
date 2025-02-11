@@ -20,7 +20,7 @@ interface Post {
 }
 
 interface PostDetailProps {
-    post: any;  // Define the type of `post` as necessary
+    post: Post;  // Define the type of `post` as necessary
 }
 
 export default function PostDetail({ post }: PostDetailProps) {
@@ -35,7 +35,7 @@ export default function PostDetail({ post }: PostDetailProps) {
         e.preventDefault();
         if (newComment.trim()) {
             try {
-                const response = await fetch(`http://${hostname}:8080/answer/create/${postId}`, {
+                const response = await fetch(`/answer/create/${postId}`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -60,7 +60,7 @@ export default function PostDetail({ post }: PostDetailProps) {
         return <p className='text-gray-700'>게시글을 불러오는 중입니다...</p>;
     }
 
-
+    // @ts-ignore
     return (
         <div className='container mx-auto px-4 py-8 w-full'>
             <div className='flex font-goverment w-[85%] space-x-4 py-2 mx-auto rounded-lg mt-2 text-4xl border-b-2'>
