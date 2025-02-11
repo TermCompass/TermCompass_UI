@@ -112,7 +112,7 @@ function SiteEvaluation() {
 // Wrap the component with Suspense
 export default function SiteEvaluationPage() {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<div></div>}>
       <SiteEvaluation />
     </Suspense>
   );

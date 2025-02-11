@@ -85,7 +85,7 @@ function BoardDetail() {
 // Wrap the component with Suspense
 export default function BoardDetailPage() {
     return (
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<div></div>}>
             <BoardDetail />
         </Suspense>
     );

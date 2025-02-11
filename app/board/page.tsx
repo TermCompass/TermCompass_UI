@@ -71,7 +71,7 @@ function BoardPage() {
 
 export default function BoardPageWrapper() {
     return (
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<div></div>}>
             <BoardPage />
         </Suspense>
     )
