@@ -53,6 +53,7 @@ export default function ServicesSection() {
   const [isDragging, setIsDragging] = useState(false);
   const { setIsChatbotOpen } = useChatbot();
   const [websites, setWebsites] = useState<Website[]>([])
+  const router = useRouter();
 
   useEffect(() => {
     const fetchWebsites = async () => {
@@ -69,6 +70,10 @@ export default function ServicesSection() {
 
     fetchWebsites()
   }, [])
+
+  const handleSiteDetailRedirect = (link: String) => {
+    router.push(`/site-detail?link=${link}`);
+  };
 
   const nextSlide = () => {
     setCurrentIndex((prevIndex) => {
@@ -128,11 +133,15 @@ export default function ServicesSection() {
             {websites.map((website, index) => (
               <Link
                 key={index}
-                href={isDragging ? "#" : website.link ?? "#"}
+                href="#" // 링크는 실제로 이동하지 않도록 #로 설정
                 draggable="false"
                 className="w-1/3 flex-shrink-0 p-4 border rounded-lg shadow-md bg-white mx-2 overflow-hidden flex flex-col transition-transform duration-200 hover:shadow-lg hover:bg-gray-200"
                 style={{
                   height: 'calc(30vh)',
+                }}
+                onClick={(e) => {
+                  e.preventDefault(); // 기본 링크 동작을 방지
+                  handleSiteDetailRedirect(website.link); // 클릭 시 handleSiteDetailRedirect 호출
                 }}
               >
                 <div className="flex items-center gap-2 mb-2">

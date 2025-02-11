@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import Link from 'next/link'
 import Image from 'next/image'
 import { Badge } from "@/components/ui/badge"
+import { useRouter } from "next/navigation";
 
 interface Website {
   name: string;
@@ -48,33 +49,45 @@ export default function SiteRatings() {
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedGrade, setSelectedGrade] = useState<Grade>('ALL')
   const [websites, setWebsites] = useState<Website[]>([])
+  const router = useRouter();
 
   useEffect(() => {
-      const fetchWebsites = async () => {
-          try {
-            const response = await fetch("/site")
-            if (!response.ok) throw new Error("데이터를 불러오는데 실패했습니다.")
+    const fetchWebsites = async () => {
+      try {
+        const response = await fetch("/site")
+        if (!response.ok) throw new Error("데이터를 불러오는데 실패했습니다.")
 
-            const data: Website[] = await response.json()
-            setWebsites(data)
-          } catch (error) {
-            console.error(error)
-          }
-        }
-        fetchWebsites()
-   }, [])
+        const data: Website[] = await response.json()
+        setWebsites(data)
+      } catch (error) {
+        console.error(error)
+      }
+    }
+    fetchWebsites()
+  }, [])
 
- const filteredRatings = websites.filter(site =>
-     (selectedGrade === 'ALL' || site.grade === selectedGrade) &&
-     (site.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-       site.link.toLowerCase().includes(searchTerm.toLowerCase()))
-   )
+  const filteredRatings = websites.filter(site =>
+    (selectedGrade === 'ALL' || site.grade === selectedGrade) &&
+    (site.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      site.link.toLowerCase().includes(searchTerm.toLowerCase()))
+  )
+
+  const handleSiteDetailRedirect = (link: String) => {
+    router.push(`/site-detail?link=${link}`);
+  };
 
   const renderSiteCard = (site: websites) => (
-    <Link href={`/site-analysis/${site.link}`} key={site.link} className="block">
-      <div className="border p-4 rounded-lg hover:shadow-md transition-shadow">
+    <Link
+      href="#"
+      key={site.link}
+      className="block"
+      onClick={(e) => {
+        e.preventDefault(); // 기본 링크 동작 방지
+        handleSiteDetailRedirect(site.link); // handleSiteDetailRedirect 함수 호출
+      }}
+    >      <div className="border p-4 rounded-lg hover:shadow-md transition-shadow">
         <div className="flex items-center mb-2">
-          <Image src={`/site-logo/${site.logo}`}  alt={`${site.name} 로고`} width={50} height={50} className="mr-4" />
+          <img src={`/site-logo/${site.logo}`} alt={`${site.name} 로고`} width={50} height={50} className="mr-4" />
           <div>
             <h2 className="text-xl font-semibold">{site.name}</h2>
             <p className="text-blue-600">{site.link}</p>
@@ -86,9 +99,9 @@ export default function SiteRatings() {
             <h3 className="font-semibold text-green-600">유리한 조항</h3>
             <ul className="list-disc list-inside">
               {site.benefits.slice(0, 3).map((benefit, index) => (
-                  <li key={index}>
-                    {benefit.length > 12 ? `${benefit.slice(0, 12)}...` : benefit}
-                  </li>
+                <li key={index}>
+                  {benefit.length > 12 ? `${benefit.slice(0, 12)}...` : benefit}
+                </li>
               ))}
             </ul>
           </div>
@@ -96,9 +109,9 @@ export default function SiteRatings() {
             <h3 className="font-semibold text-red-600">불리한 조항</h3>
             <ul className="list-disc list-inside">
               {site.drawbacks.slice(0, 3).map((drawback, index) => (
-                  <li key={index}>
-                    {drawback.length > 12 ? `${drawback.slice(0, 12)}...` : drawback}
-                  </li>
+                <li key={index}>
+                  {drawback.length > 12 ? `${drawback.slice(0, 12)}...` : drawback}
+                </li>
               ))}
             </ul>
           </div>
@@ -119,11 +132,10 @@ export default function SiteRatings() {
                   key={grade}
                   variant={selectedGrade === grade ? "default" : "outline"}
                   onClick={() => setSelectedGrade(grade)}
-                  className={`px-4 py-2 rounded-full ${
-                    selectedGrade === grade
-                      ? 'bg-blue-500 text-white'
-                      : 'bg-white text-blue-500 border-blue-500'
-                  }`}
+                  className={`px-4 py-2 rounded-full ${selectedGrade === grade
+                    ? 'bg-blue-500 text-white'
+                    : 'bg-white text-blue-500 border-blue-500'
+                    }`}
                 >
                   {grade === 'ALL' ? '전체' : `${grade}등급`}
                 </Button>
@@ -137,36 +149,36 @@ export default function SiteRatings() {
               className="w-full md:w-64"
             />
           </div>
-          
+
           <div className="relative py-4 mb-4">
             <div className={`
               max-w-6xl mx-auto px-6 py-3 rounded-lg
-              ${selectedGrade === 'ALL' 
+              ${selectedGrade === 'ALL'
                 ? 'bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100'
                 : selectedGrade === 'A'
-                ? 'bg-gradient-to-r from-green-50 to-emerald-50 border border-green-100'
-                : selectedGrade === 'B'
-                ? 'bg-gradient-to-r from-blue-50 to-sky-50 border border-blue-100'
-                : selectedGrade === 'C'
-                ? 'bg-gradient-to-r from-yellow-50 to-amber-50 border border-yellow-100'
-                : selectedGrade === 'D'
-                ? 'bg-gradient-to-r from-orange-50 to-red-50 border border-orange-100'
-                : 'bg-gradient-to-r from-red-50 to-rose-50 border border-red-100'
+                  ? 'bg-gradient-to-r from-green-50 to-emerald-50 border border-green-100'
+                  : selectedGrade === 'B'
+                    ? 'bg-gradient-to-r from-blue-50 to-sky-50 border border-blue-100'
+                    : selectedGrade === 'C'
+                      ? 'bg-gradient-to-r from-yellow-50 to-amber-50 border border-yellow-100'
+                      : selectedGrade === 'D'
+                        ? 'bg-gradient-to-r from-orange-50 to-red-50 border border-orange-100'
+                        : 'bg-gradient-to-r from-red-50 to-rose-50 border border-red-100'
               }
             `}>
               <p className={`
                 text-center font-medium
-                ${selectedGrade === 'ALL' 
+                ${selectedGrade === 'ALL'
                   ? 'text-blue-800'
                   : selectedGrade === 'A'
-                  ? 'text-green-800'
-                  : selectedGrade === 'B'
-                  ? 'text-blue-800'
-                  : selectedGrade === 'C'
-                  ? 'text-yellow-800'
-                  : selectedGrade === 'D'
-                  ? 'text-orange-800'
-                  : 'text-red-800'
+                    ? 'text-green-800'
+                    : selectedGrade === 'B'
+                      ? 'text-blue-800'
+                      : selectedGrade === 'C'
+                        ? 'text-yellow-800'
+                        : selectedGrade === 'D'
+                          ? 'text-orange-800'
+                          : 'text-red-800'
                 }
               `}>
                 {gradeDescriptions[selectedGrade || 'ALL']}
