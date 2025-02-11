@@ -52,7 +52,7 @@ export default function ReviewSidebar({ onSelectReview, selectedReview, resetRev
     };
 
     fetchReviewHistory();
-  }, [user, initialReviewId, onSelectReview]);
+  }, [user, initialReviewId]);
 
   return (
     <div className="w-64 bg-gray-100 p-4 h-full">
