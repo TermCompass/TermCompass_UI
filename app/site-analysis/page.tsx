@@ -11,14 +11,14 @@ import { Badge } from "@/components/ui/badge"
 interface Website {
   name: string;
   logo: string;
-  rank: string;
+  grade: string;
   benefits: string[];
   drawbacks: string[];
   link: string;
 }
 
-const getBackgroundColor = (rank: string) => {
-  switch (rank) {
+const getBackgroundColor = (grade: string) => {
+  switch (grade) {
     case 'A':
       return 'bg-green-500 hover:bg-green-600'; // 더 진한 초록색
     case 'B':
@@ -65,7 +65,7 @@ export default function SiteRatings() {
    }, [])
 
  const filteredRatings = websites.filter(site =>
-     (selectedGrade === 'ALL' || site.rank === selectedGrade) &&
+     (selectedGrade === 'ALL' || site.grade === selectedGrade) &&
      (site.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
        site.link.toLowerCase().includes(searchTerm.toLowerCase()))
    )
@@ -79,7 +79,7 @@ export default function SiteRatings() {
             <h2 className="text-xl font-semibold">{site.name}</h2>
             <p className="text-blue-600">{site.link}</p>
           </div>
-          <Badge className={`ml-auto text-lg font-bold ${getBackgroundColor(site.rank)}`}>{site.rank}</Badge>
+          <Badge className={`ml-auto text-lg font-bold ${getBackgroundColor(site.grade)}`}>{site.grade}</Badge>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>

@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button"
 interface Site {
   name: string;
   logo: string;
-  rank: string;
+  grade: string;
   benefits: string[];
   drawbacks: string[];
   link: string;
@@ -32,7 +32,7 @@ export default function SiteEvaluation() {
           setSite({
             name: data.name,
             logo: `/site-logo/${data.logo}`,
-            rank: data.rank,
+            grade: data.grade,
             benefits: data.benefits,
             drawbacks: data.drawbacks,
             link: data.link
@@ -75,7 +75,7 @@ export default function SiteEvaluation() {
             <div>
               <h2 className="text-2xl font-semibold">{site.name}</h2>
               <p className="text-blue-600">{site.link}</p>
-              <p className="text-xl font-bold mt-2">등급: {site.rank}</p>
+              <p className="text-xl font-bold mt-2">등급: {site.grade}</p>
             </div>
           </div>
         </div>
