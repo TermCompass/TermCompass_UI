@@ -14,9 +14,9 @@ function UpdateLegislationPage() {
   const [legislation, setLegislation] = useState("")
 
   useEffect(() => {
-    if (!admin) {
-      router.push("/admin/login")
-    }
+    // if (!admin) {
+    //   router.push("/admin/login")
+    // }
   }, [admin, router])
 
   if (!admin) {

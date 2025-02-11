@@ -16,9 +16,9 @@ function GeneratePage() {
   const [termsContent, setTermsContent] = useState("") // 표준약관 내용 관리
 
   useEffect(() => {
-    if (!admin) {
-      router.push("/admin/login")
-    }
+    // if (!admin) {
+    //   router.push("/admin/login")
+    // }
   }, [admin, router])
 
   if (!admin) {
