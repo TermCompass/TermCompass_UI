@@ -69,6 +69,7 @@ export default function SiteEvaluation() {
                 alt={`${site.name} 로고`}
                 width={80}
                 height={80}
+                unoptimized
                 className="object-contain w-auto h-auto max-w-[70px] max-h-[70px]"
               />
             </div>
@@ -102,4 +103,3 @@ export default function SiteEvaluation() {
     </Layout>
   )
 }
-

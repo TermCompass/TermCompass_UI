@@ -72,6 +72,7 @@ export default function BoardSlider() {
                         alt={board.name}
                         layout="fill"
                         objectFit="cover"
+                        unoptimized
                       />
                     </div>
                     <CardContent className="h-1/4 flex items-center justify-center">
@@ -100,4 +101,3 @@ export default function BoardSlider() {
     </section>
   )
 }
-

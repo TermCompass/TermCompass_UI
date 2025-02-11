@@ -68,10 +68,10 @@ export default function NewsAndNoticeSection() {
                     <Image
                         src={newsItems[currentIndex].image || "/placeholder.svg"}
                         alt={newsItems[currentIndex].title}
-
                         width={400}
                         height={200}
                         className="rounded-t-lg"
+                        unoptimized
                     />
                   </a>
                 </CardHeader>

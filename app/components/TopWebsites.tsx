@@ -126,6 +126,7 @@ export default function TopWebsites() {
                       alt={`${site.name} 로고`}
                       width={40}
                       height={40}
+                      unoptimized
                       className="object-contain w-auto h-auto"
                     />
                   </div>
@@ -157,4 +158,3 @@ export default function TopWebsites() {
     </section>
   )
 }
-

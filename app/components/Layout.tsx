@@ -195,6 +195,7 @@ export default function Layout({ children, activeSection = 0 }: LayoutProps) {
                             alt="KOTS Logo"
                             width={50}
                             height={35}
+                            unoptimized
                         />
                         <span className={`text-center block mt-0 text-sm font-bold ${
                             pathname === '/' && isTransparent

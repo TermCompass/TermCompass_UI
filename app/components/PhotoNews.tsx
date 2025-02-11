@@ -43,6 +43,7 @@ export default function PhotoNews() {
                 width={300}
                 height={200}
                 className="rounded-t-lg"
+                unoptimized
               />
             </CardHeader>
             <CardContent>
@@ -58,4 +59,3 @@ export default function PhotoNews() {
     </section>
   )
 }
-

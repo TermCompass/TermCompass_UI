@@ -142,6 +142,7 @@ export default function ServicesSection() {
                             alt={`${website.name} 로고`}
                             width={32}
                             height={32}
+                            unoptimized
                             className="object-contain"
                         />
                         <h3 className="text-sm font-bold truncate" 

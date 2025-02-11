@@ -70,11 +70,11 @@ export default function SiteRatings() {
        site.link.toLowerCase().includes(searchTerm.toLowerCase()))
    )
 
-  const renderSiteCard = (site: websites) => (
+  const renderSiteCard = (site: Website) => (
     <Link href={`/site-analysis/${site.link}`} key={site.link} className="block">
       <div className="border p-4 rounded-lg hover:shadow-md transition-shadow">
         <div className="flex items-center mb-2">
-          <Image src={`/site-logo/${site.logo}`}  alt={`${site.name} 로고`} width={50} height={50} className="mr-4" />
+          <Image src={`/site-logo/${site.logo}`}  alt={`${site.name} 로고`} width={50} height={50} className="mr-4" unoptimized />
           <div>
             <h2 className="text-xl font-semibold">{site.name}</h2>
             <p className="text-blue-600">{site.link}</p>
