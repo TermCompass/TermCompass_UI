@@ -2,36 +2,21 @@
 
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
-
-interface Comment {
-    id: number;
-    content: string;
-    author: string;
-    created_at: string;
-}
-
-interface Post {
-    id: number;
-    title: string;
-    content: string;
-    author: string;
-    created_at: string;
-    answers: Comment[];
-}
+import {Post, Comment} from '@/app/boardDetail/page';
 
 interface PostDetailProps {
-    post: Post;  // Define the type of `post` as necessary
+    post: Post;
 }
 
-export default function PostDetail({ post }: PostDetailProps) {
+export default function PostDetail({ post }: PostDetailProps ) {
     const { id } = useParams();
-    const postId = id ? parseInt(Array.isArray(id) ? id[0] : id, 10) : NaN;
-    const [comments, setComments] = useState<any[]>();
+    const postId = post.id;
+    const [comments, setComments] = useState<Comment[]>(post.answers);
     const [newComment, setNewComment] = useState<string>('');
 
     const handleCommentSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        const hostname = process.env.NEXT_PUBLIC_HOSTNAME;
-
+        console.log("postId : ", postId);
+        
         e.preventDefault();
         if (newComment.trim()) {
             try {
@@ -60,7 +45,6 @@ export default function PostDetail({ post }: PostDetailProps) {
         return <p className='text-gray-700'>게시글을 불러오는 중입니다...</p>;
     }
 
-    // @ts-ignore
     return (
         <div className='container mx-auto px-4 py-8 w-full'>
             <div className='flex font-goverment w-[85%] space-x-4 py-2 mx-auto rounded-lg mt-2 text-4xl border-b-2'>
@@ -98,7 +82,7 @@ export default function PostDetail({ post }: PostDetailProps) {
                     <p className='text-gray-500'>등록된 댓글이 없습니다.</p>
                 ) : (
                     <ul className='space-y-3'>
-                        {post.answers?.map((comment) => (
+                        {comments.map((comment) => (
                             <li key={comment.id} className='p-3 border rounded-md bg-white shadow-md'>
                                 <div className='flex justify-between items-center'>
                                     <span className='font-semibold'>{comment.author}</span>

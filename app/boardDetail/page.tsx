@@ -8,8 +8,24 @@ import PostDetail from '@/app/components/PostDetail';
 import BoardBar from "@/app/components/BoardBar";
 import HeaderBanner from "@/app/components/BoardBanner";
 
+export interface Post {
+    id: number;
+    title: string;
+    content: string;
+    author: string;
+    created_at: string;
+    answers: Comment[];
+}
+
+export interface Comment {
+    id: number;
+    content: string;
+    author: string;
+    created_at: string;
+}
+
 function BoardDetail() {
-    const [post, setPost] = useState<any>(null);  // 게시글 상태
+    const [post, setPost] = useState<Post>();  // 게시글 상태
     const [loading, setLoading] = useState(true);  // 로딩 상태
     const [error, setError] = useState<string | null>(null);  // 오류 상태
 
@@ -28,6 +44,7 @@ function BoardDetail() {
                     throw new Error("Failed to fetch post details");
                 }
                 const data = await response.json();
+                console.log("fetched Post: ",data)
                 setPost(data);
             } catch (err: any) {
                 setError(err.message || "An error occurred");
@@ -54,7 +71,7 @@ function BoardDetail() {
             <div className="container w-full mx-auto px-4 py-8 flex flex-col md:flex-row">
                 {/* 게시글 상세 정보 */}
                 <div className="w-full md:w-3/4 lg:w-4/5">
-                    <PostDetail post={post}/>
+                    {post && <PostDetail post={post} />}
                 </div>
 
                 {/* 우측 메뉴 (반응형 적용) */}
@@ -65,7 +82,6 @@ function BoardDetail() {
         </Layout>
     );
 }
-
 
 // Wrap the component with Suspense
 export default function BoardDetailPage() {
