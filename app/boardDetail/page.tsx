@@ -72,11 +72,6 @@ function BoardDetail() {
                 <div className="w-full md:w-3/4 lg:w-4/5">
                     {post && <PostDetail post={post} />}
                 </div>
-
-                {/* 우측 메뉴 (반응형 적용) */}
-                <div className="hidden md:block w-full md:w-1/4 lg:w-1/5">
-                    <BoardBar />
-                </div>
             </div>
         </Layout>
     );
