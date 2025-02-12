@@ -17,7 +17,6 @@ const CreateTermsContent = () => {
   const [terms, setTerms] = useState<string>('');
   const [customClauses, setCustomClauses] = useState<string[]>([])
   const { user } = useUser()
-  const router = useRouter()
 
   if (!user || user.userType !== 'COMPANY') {
     return (
@@ -41,18 +40,12 @@ const CreateTermsContent = () => {
     setStep(2)
   }
 
-  const handleStandardTermsSubmit = (terms: string) => {
+  const handleStandardTermsSubmit = () => {
     // setStandardTerms(terms)
     // setStep(3)
   }
 
-  const handleCustomClauseAdd = (clause: string) => {
-    // setCustomClauses([...customClauses, clause])
-  }
 
-  const handleCustomClauseFinish = () => {
-    // setStep(4)
-  }
 
   // const handleReviewRequest = () => {
   //   // Redirect to the AI review result page
@@ -65,7 +58,6 @@ const CreateTermsContent = () => {
   }
   
   async function getStandardTerms(domain: Domain): Promise<string> {
-    const hostname = process.env.NEXT_PUBLIC_HOSTNAME;
 
     try {
       const response = await fetch(`/standard/${domain.id}`, {
