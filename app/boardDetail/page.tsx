@@ -67,7 +67,7 @@ function BoardDetail() {
             />
 
             {/* 게시글 상세 내용 */}
-            <div className="container w-full mx-auto px-4 py-8 flex flex-col md:flex-row">
+            <div className="container w-full mx-auto px-4 py-8 flex flex-col md:flex-row justify-center items-center">
                 {/* 게시글 상세 정보 */}
                 <div className="w-full md:w-3/4 lg:w-4/5">
                     {post && <PostDetail post={post} />}
