@@ -38,7 +38,7 @@ function BoardDetail() {
         const fetchPostDetails = async () => {
             setLoading(true);
             try {
-                const response = await fetch(`http://${hostname}:8080/board/detail/${postId}`)
+                const response = await fetch(`https://${hostname}/board/detail/${postId}`)
                 if (!response.ok) {
                     throw new Error("Failed to fetch post details");
                 }

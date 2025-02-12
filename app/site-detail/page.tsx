@@ -26,10 +26,10 @@ function SiteEvaluation() {
 
   useEffect(() => {
     const fetchSiteData = async () => {
-      // console.log(`fetch http://${hostname}:8080/site/${link} \n`);
+      // console.log(`fetch http://${hostname}/site/${link} \n`);
 
       try {
-        const response = await fetch(`http://${hostname}:8080/site/${link}`)
+        const response = await fetch(`https://${hostname}/site/${link}`)
         if (!response.ok) {
           throw new Error('Failed to fetch site data')
         }

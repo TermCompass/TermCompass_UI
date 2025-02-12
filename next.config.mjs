@@ -2,8 +2,8 @@
 const hostname = process.env.NEXT_PUBLIC_HOSTNAME;
 const nextConfig = {
   images: {
-    domains: [`http://${hostname}:8080`],
-    path: `http://${hostname}:8080`,
+    domains: [`https://${hostname}`],
+    path: `https://${hostname}`,
   },
   output: "export",
   eslint: {

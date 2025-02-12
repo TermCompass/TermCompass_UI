@@ -13,6 +13,7 @@ export default function StandardTermsForm({ domain, terms, onSubmit, onBack }: S
   const [localTerms, setLocalTerms] = useState<string>(terms);
   const [htagscount, setHtagscount] = useState<number>(0)
   const printRef = useRef<HTMLDivElement>(null);
+  const tempTermsRef = useRef<string>(terms);
 
   // useEffect all
   useEffect(() => {
@@ -39,11 +40,17 @@ export default function StandardTermsForm({ domain, terms, onSubmit, onBack }: S
     }
   };
 
+  const handleInput = (e: React.FormEvent<HTMLDivElement>) => {
+    console.log("handleInput");
+    tempTermsRef.current = e.currentTarget.innerHTML;
+    // console.log(tempTermsRef);
+  };
+
   // 인쇄 버튼
   const handlePrint = () => {
     const parser = new DOMParser();
-    const doc = parser.parseFromString(localTerms, 'text/html');
-    
+    const doc = parser.parseFromString(tempTermsRef.current, 'text/html');
+
     // 모든 button 요소 제거
     doc.querySelectorAll('button').forEach(button => button.remove());
 
@@ -134,9 +141,9 @@ export default function StandardTermsForm({ domain, terms, onSubmit, onBack }: S
   const handleSave = () => {
     console.log("handleSave");
     const parser = new DOMParser();
-    const doc = parser.parseFromString(localTerms, 'text/html');
+    const doc = parser.parseFromString(tempTermsRef.current, 'text/html');
     const hostname = process.env.NEXT_PUBLIC_HOSTNAME;
-    
+
     // 모든 button 요소 제거
     doc.querySelectorAll('button').forEach(button => button.remove());
 
@@ -151,9 +158,9 @@ export default function StandardTermsForm({ domain, terms, onSubmit, onBack }: S
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ 
-          title:domain.filename, 
-          result:editableContent, 
+        body: JSON.stringify({
+          title: domain.filename,
+          result: editableContent,
         }),
         credentials: "include",
       })
@@ -174,7 +181,7 @@ export default function StandardTermsForm({ domain, terms, onSubmit, onBack }: S
     console.log('handleAddLastSection');
 
     const parser = new DOMParser();
-    const doc = parser.parseFromString(localTerms, 'text/html'); // getElement가 아닌 상태를 가져옴
+    const doc = parser.parseFromString(tempTermsRef.current, 'text/html'); // getElement가 아닌 상태를 가져옴
     const editableContent = doc.body;
 
     if (editableContent) {
@@ -214,7 +221,7 @@ export default function StandardTermsForm({ domain, terms, onSubmit, onBack }: S
     console.log("handleAddTargetSection" + thisButton.id);
 
     const parser = new DOMParser();
-    const doc = parser.parseFromString(localTerms, 'text/html');
+    const doc = parser.parseFromString(tempTermsRef.current, 'text/html');
     const editableContent = doc.body;
     const targetButton = editableContent.querySelector(`#${thisButton.id}`);
 
@@ -250,12 +257,16 @@ export default function StandardTermsForm({ domain, terms, onSubmit, onBack }: S
     }
   }
 
-  // h4 태그 id 전부 라벨링하는 함수
+  // h4 태그 id 전부 라벨링 + button 추가하는 함수
   const labelHtag = (terms: string): string => {
     const parser = new DOMParser();
     const doc = parser.parseFromString(terms, 'text/html');
     const h4Tags = doc.getElementsByTagName('h4');
     for (let i = 0; i < h4Tags.length; i++) {
+
+      // h4태그 ID 다시 설정
+      h4Tags[i].id = `h4-${i + 1}`
+
       // button
       const addButton = document.createElement('button')
       addButton.id = `button-${i + 1}`
@@ -265,8 +276,6 @@ export default function StandardTermsForm({ domain, terms, onSubmit, onBack }: S
 
       // h4 태그 이전에 버튼 추가
       h4Tags[i].parentNode?.insertBefore(addButton, h4Tags[i]);
-
-      h4Tags[i].id = `h4-${i + 1}`;
     }
     setHtagscount(h4Tags.length);
     return doc.body.innerHTML;
@@ -289,10 +298,11 @@ export default function StandardTermsForm({ domain, terms, onSubmit, onBack }: S
   const observeDomChanges = () => {
     console.log("observeDomChanges");
 
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(localTerms, 'text/html');
-    const editableContent = doc.body;
-
+    // const parser = new DOMParser();
+    // const doc = parser.parseFromString(localTerms, 'text/html');
+    // const editableContent = doc.body;
+    const editableContent = document.querySelector('#editableContent');
+    
     if (editableContent) {
       const observer = new MutationObserver((mutations) => {
         mutations.forEach((mutation) => {
@@ -380,7 +390,13 @@ export default function StandardTermsForm({ domain, terms, onSubmit, onBack }: S
         #editableContent > ol > li:nth-child(14)::before { content: '⑭ '; }
         #editableContent > ol > li:nth-child(15)::before { content: '⑮ '; }
       `}</style>
-      <div id="editableContent" className="mb-4 border p-2" contentEditable="true" dangerouslySetInnerHTML={{ __html: localTerms }}></div>
+      <div
+        id="editableContent"
+        className="mb-4 border p-2"
+        contentEditable="true"
+        dangerouslySetInnerHTML={{ __html: localTerms }}
+        onInput={handleInput}
+      ></div>      
       <Button className="bg-black text-white hover:bg-blue-600 mt-4" onClick={handleAddLastSection}>마지막에 새 섹션 추가</Button>
       {/* <Button className="bg-black text-white hover:bg-blue-600 mt-4" onClick={() => onSubmit(localTerms)}>저장</Button>
       <Button className="bg-black text-white hover:bg-blue-600 mt-4" onClick={onBack}>뒤로</Button> */}
