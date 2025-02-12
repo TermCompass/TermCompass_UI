@@ -198,6 +198,7 @@ export default function AuthForm({ onSubmit, onCancel }: AuthFormProps) {
                 placeholder="name@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                autoComplete="username"
                 required
               />
             </div>
@@ -211,6 +212,7 @@ export default function AuthForm({ onSubmit, onCancel }: AuthFormProps) {
                   setPassword(e.target.value)
                   setPasswordMatch(e.target.value === passwordConfirm)
                 }}
+                autoComplete="new-password"
                 required
               />
             </div>
@@ -228,6 +230,7 @@ export default function AuthForm({ onSubmit, onCancel }: AuthFormProps) {
                       setHasStartedConfirmation(true)
                     }
                   }}
+                  autoComplete="new-password"
                   required
                 />
                 {!passwordMatch && hasStartedConfirmation && (
