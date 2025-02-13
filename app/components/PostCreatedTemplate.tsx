@@ -9,7 +9,7 @@ interface PostCreateProps {
     boardTitle?: string; // ✅ 게시판 이름을 동적으로 설정
 }
 
-export default function PostCreatePage({ boardTitle = "공지사항" }: PostCreateProps) {
+export default function PostCreatePage({ boardTitle = "게시판" }: PostCreateProps) {
     const router = useRouter()
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
@@ -74,11 +74,7 @@ export default function PostCreatePage({ boardTitle = "공지사항" }: PostCrea
         <Layout>
             {/* ✅ 헤더 배경 및 타이틀 */}
             <HeaderBanner
-                title="공지사항"
-                breadcrumb={[
-                    { label: "게시판", href: "/board" },
-                    { label: "공지사항", href: "/board" },
-                ]}
+                title="게시판"
             />
 
             {/* ✅ 게시물 작성 폼 */}
