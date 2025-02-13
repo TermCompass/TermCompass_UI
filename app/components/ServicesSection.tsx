@@ -78,14 +78,14 @@ export default function ServicesSection() {
   const nextSlide = () => {
     setCurrentIndex((prevIndex) => {
       const newIndex = prevIndex + slidesToShow;
-      return newIndex < websites.length ? newIndex : 0;
+      return newIndex < websites.length * 3 - 4 ? newIndex : 0;
     });
   };
 
   const prevSlide = () => {
     setCurrentIndex((prevIndex) => {
       const newIndex = prevIndex - slidesToShow;
-      return newIndex >= 0 ? newIndex : websites.length - slidesToShow;
+      return newIndex >= 0 ? newIndex : websites.length * 3 - 4 - slidesToShow;
     });
   };
 
@@ -127,7 +127,7 @@ export default function ServicesSection() {
           <div
             className="flex transition-transform duration-500 h-full"
             style={{
-              transform: `translateX(-${(currentIndex / slidesToShow) * 100}%)`,
+              transform: `translateX(-${(currentIndex / websites.length) * 100}%)`,
             }}
           >
             {websites.map((website, index) => (
