@@ -12,6 +12,6 @@ export default function writePage() {
 
 
     return (
-        <PostCreatePage boardTitle="공지사항" />
+        <PostCreatePage boardTitle="게시글" />
     );
 }
