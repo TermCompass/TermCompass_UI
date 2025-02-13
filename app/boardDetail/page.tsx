@@ -59,11 +59,7 @@ function BoardDetail() {
         <Layout>
             {/* 헤더 배경 및 타이틀 */}
             <HeaderBanner
-                title="공지사항"
-                breadcrumb={[
-                    { label: "게시판", href: "/board" },
-                    { label: "공지사항", href: "/board" },
-                ]}
+                title="게시판"
             />
 
             {/* 게시글 상세 내용 */}

@@ -183,7 +183,7 @@ export default function AdminDashboard() {
             </CardContent>
           </Card>
         </div>
-        <Card className="bg-white shadow-lg row-span-3 col-span-2">
+        {/* <Card className="bg-white shadow-lg row-span-3 col-span-2">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">등급 분포</CardTitle>
             <Star className="h-4 w-4 text-gray-600" />
@@ -200,7 +200,7 @@ export default function AdminDashboard() {
               </PieChart>
             </ResponsiveContainer>
           </CardContent>
-        </Card>
+        </Card> */}
       </div>
 
     </div>

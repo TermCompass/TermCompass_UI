@@ -9,6 +9,7 @@ import ServicesSection from './components/ServicesSection'
 import NewsAndNoticeSection from './components/NewsAndNoticeSection'
 import FooterSection from './components/FooterSection'
 import SectionNavigation from './components/SectionNavigation'
+import MiniChatbot from './components/MiniChatbot'
 
 export default function Home() {
   const scrollContainerRef = useRef<HTMLDivElement>(null)
@@ -104,6 +105,7 @@ export default function Home() {
         </div>
       </div>
       <SectionNavigation activeSection={activeSection} onNavigate={scrollToSection} />
+      <MiniChatbot />
     </Layout>
   )
 }
